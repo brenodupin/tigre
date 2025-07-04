@@ -1,17 +1,31 @@
-[project]
-name = "igre"
-version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
-authors = [
-    { name = "Breno Dupin", email = "breno.dupin@gmail.com" }
-]
-requires-python = ">=3.10"
-dependencies = []
-
-[project.scripts]
-igre = "igre:main"
-
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[project]
+name = "igre"
+dynamic = ["version"]
+description = "IGRE - InterGenic Region Extractor"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+
+authors = [
+    { name = "Breno Dupin", email = "breno.dupin@gmail.com" },
+    { name = "Matheus Sanita Lima", email = "msanital@uwo.ca" },
+]
+
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/brenodupin/igre"
+Source = "https://github.com/brenodupin/igre"
+
+[project.scripts]
+igre = "igre.cli:cli_entrypoint"
+
+[tool.hatch.version]
+path = "src/igre/__init__.py"
+
+[tool.black]
+line-length = 88
