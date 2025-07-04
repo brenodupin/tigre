@@ -15,7 +15,9 @@ authors = [
     { name = "Matheus Sanita Lima", email = "msanital@uwo.ca" },
 ]
 
-dependencies = []
+dependencies = [
+    "pandas>=1.5.3,<3.0.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/brenodupin/igre"
