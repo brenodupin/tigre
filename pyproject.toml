@@ -1,0 +1,17 @@
+[project]
+name = "igre"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Breno Dupin", email = "breno.dupin@gmail.com" }
+]
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+igre = "igre:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
