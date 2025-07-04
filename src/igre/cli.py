@@ -2,16 +2,12 @@
 """CLI Entry Point for IGRE - InterGenic Region Extractor."""
 
 
-from . import __version__
-from . import log_setup
+import argparse
 from pathlib import Path
 
-import argparse
+from . import __version__, log_setup
 
 C_RESET = "\033[0m"
-
-def create_clean_gff3():
-    pass
 
 
 def cli_entrypoint() -> None:
@@ -63,11 +59,13 @@ def cli_entrypoint() -> None:
     test_parser = subparsers.add_parser(
         "test",
         help="Test command for IGRE, to check if the CLI is working.",
-        description="Just a simple test command to check if the CLI is working," \
+        description="Just a simple test command to check if the CLI is working,"
         "if the logging is working, and if the version is correct.",
         parents=[global_flags],
     )
-    test_parser.set_defaults(func=lambda args: print("Test command executed successfully!"))
+    test_parser.set_defaults(
+        func=lambda args: print("Test command executed successfully!")
+    )
 
     args = main_parser.parse_args()
 
