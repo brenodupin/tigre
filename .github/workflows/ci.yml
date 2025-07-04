@@ -7,49 +7,50 @@ on:
     paths:
       - 'src/**'
 
-checks:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Install uv
-        uses: astral-sh/setup-uv@v6
-        with:
-          version: "latest"
-          enable-cache: true
-      
-      - name: Install project dependencies
-        run: uv sync
-      
-      - name: Install tools
-        run: |
-          uv tool install ruff
-          uv tool install "black[jupyter]"
-          uv tool install mypy --with pandas-stubs
-      
-      - name: Lint with ruff
-        id: lint
-        run: ruff check src/
-        continue-on-error: true
-      
-      - name: Format with black
-        id: format
-        run: black --check src/
-        continue-on-error: true
-      
-      - name: Type check with mypy
-        id: typecheck
-        run: mypy --strict src/
-        continue-on-error: true
-      
-      - name: Check if any step failed
-        run: |
-          if [[ "${{ steps.lint.outcome }}" == "failure" ]] || \
-             [[ "${{ steps.format.outcome }}" == "failure" ]] || \
-             [[ "${{ steps.typecheck.outcome }}" == "failure" ]]; then
-            echo "One or more checks failed:"
-            echo "  - Lint: ${{ steps.lint.outcome }}"
-            echo "  - Format: ${{ steps.format.outcome }}"
-            echo "  - Type check: ${{ steps.typecheck.outcome }}"
-            exit 1
-          fi
+jobs:
+  checks:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        
+        - name: Install uv
+          uses: astral-sh/setup-uv@v6
+          with:
+            version: "latest"
+            enable-cache: true
+        
+        - name: Install project dependencies
+          run: uv sync
+        
+        - name: Install tools
+          run: |
+            uv tool install ruff
+            uv tool install "black[jupyter]"
+            uv tool install mypy --with pandas-stubs
+        
+        - name: Lint with ruff
+          id: lint
+          run: ruff check src/
+          continue-on-error: true
+        
+        - name: Format with black
+          id: format
+          run: black --check src/
+          continue-on-error: true
+        
+        - name: Type check with mypy
+          id: typecheck
+          run: mypy --strict src/
+          continue-on-error: true
+        
+        - name: Check if any step failed
+          run: |
+            if [[ "${{ steps.lint.outcome }}" == "failure" ]] || \
+              [[ "${{ steps.format.outcome }}" == "failure" ]] || \
+              [[ "${{ steps.typecheck.outcome }}" == "failure" ]]; then
+              echo "One or more checks failed:"
+              echo "  - Lint: ${{ steps.lint.outcome }}"
+              echo "  - Format: ${{ steps.format.outcome }}"
+              echo "  - Type check: ${{ steps.typecheck.outcome }}"
+              exit 1
+            fi
