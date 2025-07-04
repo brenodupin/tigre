@@ -5,9 +5,20 @@
 import argparse
 from pathlib import Path
 
-from . import __version__, log_setup
+from . import __version__, log_setup, solve_overlaps
 
 C_RESET = "\033[0m"
+
+
+def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
+    """Clean command for IGRE, to clean the GFF3 files."""
+
+    tsv_path = Path(args.tsv)
+    if not tsv_path.is_file():
+        log.error(f"TSV file not found: {tsv_path}")
+        return
+
+    solve_overlaps.orchestration(tsv_path, log)
 
 
 def cli_entrypoint() -> None:
@@ -67,6 +78,19 @@ def cli_entrypoint() -> None:
         func=lambda args: print("Test command executed successfully!")
     )
 
+    clean_parser = subparsers.add_parser(
+        "clean",
+        help="Clean command for IGRE, to clean the GFF3 files.",
+        description="This command will clean the GFF3 files in the specified folder.",
+        parents=[global_flags],
+    )
+    clean_parser.add_argument(
+        "--tsv",
+        required=True,
+        type=str,
+        help="TSV file with the accession numbers (ANs) to be cleaned.",
+    )
+
     args = main_parser.parse_args()
 
     log = log_setup.setup_logger(args.debug, args.log, args.quiet)
@@ -78,3 +102,6 @@ def cli_entrypoint() -> None:
     if args.command == "test":
         log.debug("Executing test command")
         args.func(args)
+    elif args.command == "clean":
+        log.debug("Executing clean command")
+        clean_command(args, log)

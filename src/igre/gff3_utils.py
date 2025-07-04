@@ -38,7 +38,7 @@ def load_gff3(
     comment: str = "#",
     header: Optional[int] = None,
     names: tuple[str, ...] = GFF3_COLUMNS,
-    usecols: list[str] = ["type", "start", "end", "attributes"],
+    usecols: tuple[str, ...] = ("type", "start", "end", "attributes"),
     query_string: Optional[str] = None,
 ) -> pd.DataFrame:
     """Load a GFF3 file into a pandas DataFrame, optionally filtering by a query string.
@@ -94,6 +94,7 @@ def filter_orfs(
     return gff3_df[
         ~gff3_df["attributes"].str.contains("|".join(orfs_strings))
     ].reset_index(drop=True)
+
 
 class GFFPathBuilder:
     """Flexible class to build GFF3 file paths based on accession numbers.

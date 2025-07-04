@@ -11,3 +11,9 @@ wheels/
 
 # log_setup log files
 *.log
+
+# todo list
+TODOs
+
+# Some folder to exclude
+sandbox/
