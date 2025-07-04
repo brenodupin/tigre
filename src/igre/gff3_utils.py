@@ -10,7 +10,7 @@ https://github.com/brenodupin/gdt/blob/master/src/gdt/gff3_utils.py
 
 import re
 from pathlib import Path
-from typing import Optional, Union
+from typing import Callable, Optional, Union
 
 import pandas as pd
 
@@ -94,3 +94,140 @@ def filter_orfs(
     return gff3_df[
         ~gff3_df["attributes"].str.contains("|".join(orfs_strings))
     ].reset_index(drop=True)
+
+class GFFPathBuilder:
+    """Flexible class to build GFF3 file paths based on accession numbers.
+
+    This class provides a framework for building file paths with
+    different strategies that can be swapped at runtime.
+    """
+
+    def __init__(self) -> None:
+        """Initialize the builder with no build method set."""
+        self._build_method: Optional[Callable[[str], Path]] = None
+        self._str: str = "GFFPathBuilder(build=None)"
+
+    def build(self, an: str) -> Path:
+        """Build the path for a given accession number.
+
+        This method uses the currently active build strategy.
+
+        Args:
+            an (str): Accession number.
+
+        Returns:
+            Path: Path to the GFF3 file.
+
+        Raises:
+            ValueError: If no build method has been set.
+
+        """
+        if self._build_method is None:
+            raise ValueError(
+                "No build method set. Use one of the 'use_*_builder' methods first."
+            )
+        return self._build_method(an)
+
+    def use_standard_builder(
+        self,
+        base: Union[str, Path],
+        ext: str = ".gff3",
+        suffix: str = "",
+    ) -> "GFFPathBuilder":
+        """Set the standard filesystem-based build method.
+
+        This method expects files to be stored in a flat structure
+        under the specified base directory, with filenames formatted as
+        "<accession_number><suffix><ext>".
+
+        Args:
+            base (Union[str, Path]): Base directory where files are stored.
+            ext (str): File extension for files. Defaults to ".gff3".
+            suffix (str): Suffix to append to the filename. Defaults to "".
+
+        Returns:
+            GFFPathBuilder: Returns self.
+
+        """
+        base_path = Path(base).resolve()
+
+        def standard_builder(an: str) -> Path:
+            return base_path / f"{an}{suffix}{ext}"
+
+        self._build_method = standard_builder
+        self._str = (
+            f"GFFPathBuilder(build='standard', base='{base_path}', ext='{ext}', "
+            f"suffix='{suffix}')"
+        )
+        return self
+
+    def use_folder_builder(
+        self,
+        base: Union[str, Path],
+        ext: str = ".gff3",
+        suffix: str = "",
+    ) -> "GFFPathBuilder":
+        """Set the folder-based build method.
+
+        This method expects files to be stored in subfolders named after
+        the accession number, with filenames formatted as
+        "<accession_number><suffix><ext>".
+
+        Args:
+            base (Union[str, Path]): Base directory where files are stored.
+            ext (str): File extension for files. Defaults to ".gff3".
+            suffix (str): Suffix to append to the filename. Defaults to "".
+
+        Returns:
+            GFFPathBuilder: Returns self.
+
+        """
+        base_path = Path(base).resolve()
+
+        def folder_builder(an: str) -> Path:
+            return base_path / an / f"{an}{suffix}{ext}"
+
+        self._build_method = folder_builder
+        self._str = (
+            f"GFFPathBuilder(build='folder', base='{base_path}', ext='{ext}', "
+            f"suffix='{suffix}')"
+        )
+        return self
+
+    def use_custom_builder(
+        self,
+        builder_func: Callable[[str], Path],
+        help_text: Optional[str] = None,
+    ) -> "GFFPathBuilder":
+        """Set a custom build function as a drop-in replacement.
+
+        Args:
+            builder_func (Callable[[str], Path]): A function that takes an
+                accession number (str) and returns a Path object.
+            help_text (Optional[str]): Optional help text to describe the
+                custom builder function. Defaults to None, meaning it will print
+                the function name and its signature.
+
+        Returns:
+            GFFPathBuilder: Returns self.
+
+        Example:
+            def my_custom_builder(an: str) -> Path:
+                return Path(f"/custom/path/{an}_special.gff")
+
+            gff_path = GFFPathBuilder("/base/dir")
+            gff_path.use_custom_builder(my_custom_builder)
+            path = gff_path.build("NC_123456.1")
+
+        """
+        self._build_method = builder_func
+
+        if help_text is None:
+            help_text = getattr(builder_func, "__name__", "anonymous_function")
+
+        self._str = f"GFFPathBuilder(build='custom', help_text='{help_text}')"
+        return self
+
+    def __repr__(self) -> str:
+        """Return a string representation of the GFFPathBuilder."""
+        return self._str
