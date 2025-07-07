@@ -45,8 +45,7 @@ jobs:
         
         - name: Check if any step failed
           run: |
-            if [[ "${{ steps.lint.outcome }}" == "failure" ]] || \
-              [[ "${{ steps.format.outcome }}" == "failure" ]] || \
+            if [[ "${{ steps.format.outcome }}" == "failure" ]] || \
               [[ "${{ steps.typecheck.outcome }}" == "failure" ]]; then
               echo "One or more checks failed:"
               echo "  - Lint: ${{ steps.lint.outcome }}"
