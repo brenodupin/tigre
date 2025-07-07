@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""CLI Entry Point for IGRE - InterGenic Region Extractor."""
+"""CLI Entry Point for tigre - Tool for InterGenic Region Extraction"""
 
 
 import argparse
@@ -11,8 +11,7 @@ C_RESET = "\033[0m"
 
 
 def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
-    """Clean command for IGRE, to clean the GFF3 files."""
-
+    """Clean command for tigre, to clean the GFF3 files."""
     tsv_path = Path(args.tsv)
     if not tsv_path.is_file():
         log.error(f"TSV file not found: {tsv_path}")
@@ -22,7 +21,7 @@ def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
 
 
 def cli_entrypoint() -> None:
-    """Command line interface for the Gene Dictionary Tool (gdt)."""
+    """Command line interface for the tigre package."""
     # Global parser to add debug, log, and quiet flags to all subcommands
     global_flags = argparse.ArgumentParser(add_help=False)
     global_flags.add_argument(
@@ -53,13 +52,13 @@ def cli_entrypoint() -> None:
         description="<PLACE HOLDER BANNER>",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         parents=[global_flags],
-        epilog=f"Source ~ \033[32mhttps://github.com/brenodupin/igre{C_RESET}",
+        epilog=f"Source ~ \033[32mhttps://github.com/brenodupin/tigre{C_RESET}",
     )
     main_parser.add_argument(
         "--version",
         action="version",
-        version=f"igre {__version__}",
-        help="Show the version of the igre package.",
+        version=f"tigre {__version__}",
+        help="Show the version of the tigre package.",
     )
 
     subparsers = main_parser.add_subparsers(
@@ -69,7 +68,7 @@ def cli_entrypoint() -> None:
 
     test_parser = subparsers.add_parser(
         "test",
-        help="Test command for IGRE, to check if the CLI is working.",
+        help="Test command for tigre, to check if the CLI is working.",
         description="Just a simple test command to check if the CLI is working,"
         "if the logging is working, and if the version is correct.",
         parents=[global_flags],
@@ -80,7 +79,7 @@ def cli_entrypoint() -> None:
 
     clean_parser = subparsers.add_parser(
         "clean",
-        help="Clean command for IGRE, to clean the GFF3 files.",
+        help="Clean command for tigre, to clean the GFF3 files.",
         description="This command will clean the GFF3 files in the specified folder.",
         parents=[global_flags],
     )

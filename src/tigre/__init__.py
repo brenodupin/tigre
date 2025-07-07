@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""IGRE - InterGenic Region Extractor."""
+"""tigre - Tool for InterGenic Region Extraction."""
 
 __version__ = "0.1.0"
 

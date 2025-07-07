@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "igre"
+name = "tigre"
 dynamic = ["version"]
-description = "IGRE - InterGenic Region Extractor"
+description = "tigre - Tool for InterGenic Region Extraction"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
@@ -20,14 +20,14 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/brenodupin/igre"
-Source = "https://github.com/brenodupin/igre"
+Homepage = "https://github.com/brenodupin/tigre"
+Source = "https://github.com/brenodupin/tigre"
 
 [project.scripts]
-igre = "igre.cli:cli_entrypoint"
+igre = "tigre.cli:cli_entrypoint"
 
 [tool.hatch.version]
-path = "src/igre/__init__.py"
+path = "src/tigre/__init__.py"
 
 [tool.black]
 line-length = 88

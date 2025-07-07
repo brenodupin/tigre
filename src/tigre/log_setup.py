@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Logger setup and management for IGRE.
+"""Logger setup and management for tigre.
 
 This module comes directly from the GDT package, with the
 exclusion of `log_info` function, and some minor adjustments.

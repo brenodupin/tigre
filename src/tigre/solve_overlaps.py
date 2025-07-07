@@ -153,7 +153,7 @@ def clean_attr(
     try:
         gene_label = gene_dict[gene_id].label
     except KeyError:
-        #log.error(f"[{an}] No gene_dict for {gene_id}")
+        # log.error(f"[{an}] No gene_dict for {gene_id}")
         return f"name=NO_GENE_DICT_{gene_id};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{gene_id};"
 
     return f"name={gene_label};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{gene_id};"
@@ -179,7 +179,9 @@ def exec_single_an(
             df = multiple_regions_solver(df, an, log)
 
         log.trace(f"[{an}] Cleaning attributes...")
-        df.loc[1:, "attributes"] = df.loc[1:].apply(clean_attr, axis=1, an=an, gene_dict={}, log=log)
+        df.loc[1:, "attributes"] = df.loc[1:].apply(
+            clean_attr, axis=1, an=an, gene_dict={}, log=log
+        )
 
         if df["end"].idxmax() != 0:
             log.trace(f"[{an}] Region end is not the maximum, fixing...")

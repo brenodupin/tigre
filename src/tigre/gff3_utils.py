@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-"""Utilities for working with GFF3 files in the IGRE package.
+"""Utilities for working with GFF3 files in the tigre package.
 
 The base of this module is based on the GDT package, with some modifications
-to better suit the needs of IGRE.
+to better suit the needs of tigre.
 
 Source
 https://github.com/brenodupin/gdt/blob/master/src/gdt/gff3_utils.py
