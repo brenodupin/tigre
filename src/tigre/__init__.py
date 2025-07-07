@@ -6,4 +6,4 @@ __version__ = "0.1.0"
 from .cli import *
 from .gff3_utils import *
 from .log_setup import *
-from .solve_overlaps import *
+from .clean import *

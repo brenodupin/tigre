@@ -24,7 +24,7 @@ Homepage = "https://github.com/brenodupin/tigre"
 Source = "https://github.com/brenodupin/tigre"
 
 [project.scripts]
-igre = "tigre.cli:cli_entrypoint"
+tigre = "tigre.cli:cli_entrypoint"
 
 [tool.hatch.version]
 path = "src/tigre/__init__.py"
