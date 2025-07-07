@@ -1,13 +1,38 @@
 # -*- coding: utf-8 -*-
-"""CLI Entry Point for tigre - Tool for InterGenic Region Extraction"""
+"""CLI Entry Point for tigre - Tool for InterGenic Region Extraction."""
 
 
 import argparse
+import subprocess
 from pathlib import Path
 
-from . import __version__, log_setup, solve_overlaps
+from . import __version__, clean, extraction, log_setup
 
 C_RESET = "\033[0m"
+
+
+def extract_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
+    args.gff_in = Path(args.gff_in)
+    args.gff_out = Path(args.gff_out)
+
+    run_bedtools = bool(args.fasta_in)
+    log.debug(f"run_bedtools: {run_bedtools}")
+    if run_bedtools:  # check for bedtools
+        try:
+            args.fasta_in = Path(args.fasta_in)
+            args.fasta_out = Path(args.fasta_out)
+
+            a = subprocess.run(
+                ["bedtools", "--version"], check=True, capture_output=True
+            )
+            log.debug(f"bedtools --version: {a.stdout.decode().strip()}")
+        except (FileNotFoundError, subprocess.CalledProcessError) as ex:
+            log.error(f"Error checking bedtools version: {ex}")
+            raise SystemExit(
+                "bedtools not found. Please install bedtools if you want to create fasta from extracted intergenic regions."
+            )
+
+    extraction.execution(args, log)
 
 
 def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
@@ -17,7 +42,7 @@ def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
         log.error(f"TSV file not found: {tsv_path}")
         return
 
-    solve_overlaps.orchestration(tsv_path, log)
+    clean.orchestration(tsv_path, log)
 
 
 def cli_entrypoint() -> None:
@@ -90,6 +115,49 @@ def cli_entrypoint() -> None:
         help="TSV file with the accession numbers (ANs) to be cleaned.",
     )
 
+    ext_parser = subparsers.add_parser(
+        "extract single",
+        help="Extract intergenic regions from (clean) GFF3 files.",
+        description="This command will extract intergenic regions from the GFF3 files and optionally extract sequences from a FASTA file.",
+        parents=[global_flags],
+    )
+    ext_parser.add_argument(
+        "--gff-in",
+        "-gi",
+        required=True,
+        type=str,
+        help="GFF3 input file",
+    )
+    ext_parser.add_argument(
+        "--gff-out",
+        "-go",
+        required=True,
+        type=str,
+        help="GFF3 output file",
+    )
+    ext_parser.add_argument(
+        "--fasta-in",
+        "-fi",
+        required=False,
+        type=str,
+        help="Fasta input file",
+    )
+    ext_parser.add_argument(
+        "--fasta-out",
+        "-fo",
+        required=False,
+        type=str,
+        help="Fasta output file",
+    )
+    ext_parser.add_argument(
+        "--new-region-start",
+        "-nrs",
+        required=False,
+        type=int,
+        default=1,
+        help="Check the first row for region start (in case there's a tRNA that start before region end and ends after region start)",
+    )
+
     args = main_parser.parse_args()
 
     log = log_setup.setup_logger(args.debug, args.log, args.quiet)
@@ -104,3 +172,15 @@ def cli_entrypoint() -> None:
     elif args.command == "clean":
         log.debug("Executing clean command")
         clean_command(args, log)
+    elif args.command == "extract":
+        if bool(args.fasta_in) != bool(args.fasta_out):
+            log.error(f"fin: {args.fasta_in} | fout: {args.fasta_out}")
+            ext_parser.error(
+                "--fasta-in and --fasta-out must be provided together or not at all."
+            )
+        log.debug("Executing extract command")
+        extract_command(args, log)
+    else:
+        log.error(f"Unknown command: {args.command}")
+        main_parser.print_help()
+        exit(1)
