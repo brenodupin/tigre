@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Module to solve overlaps in GFF3 files."""
 
 import concurrent.futures as cf
 from pathlib import Path

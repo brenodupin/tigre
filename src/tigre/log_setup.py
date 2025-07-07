@@ -223,5 +223,6 @@ def setup_logger(
 def time_now() -> str:
     """Return the current time formatted as a string.
 
-    Formatted as "YYYY-MM-DD HH:MM"."""
+    Formatted as "YYYY-MM-DD HH:MM".
+    """
     return datetime.now().strftime("%Y-%m-%d %H:%M")
