@@ -8,10 +8,10 @@ Source
 https://github.com/brenodupin/gdt/blob/master/src/gdt/log_setup.py
 """
 
-import datetime
 import glob
 import logging
 import os
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Optional, Union, cast
 
@@ -97,9 +97,7 @@ def create_dev_logger(
 
         log_dir.mkdir(exist_ok=True)
 
-        # Create a timestamp-based log filename
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H_%M_%S")
-        log_file_path = log_dir / f"gdt_{timestamp}.log"
+        log_file_path = log_dir / f"gdt_{time_now}.log"
         _cleanup_logs(log_dir)
 
     # Create and configure logger
@@ -220,3 +218,10 @@ def setup_logger(
 
     log.trace("Logger setup complete.")
     return log
+
+
+def time_now() -> str:
+    """Return the current time formatted as a string.
+
+    Formatted as "YYYY-MM-DD HH:MM"."""
+    return datetime.now().strftime("%Y-%m-%d %H:%M")
