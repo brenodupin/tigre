@@ -11,7 +11,7 @@ https://github.com/brenodupin/gdt/blob/master/src/gdt/log_setup.py
 import glob
 import logging
 import os
-from datetime import datetime
+import datetime
 from pathlib import Path
 from typing import Any, Optional, Union, cast
 
@@ -58,7 +58,7 @@ def _cleanup_logs(log_dir: Path, max_files: int = 10) -> None:
         max_files (int): Maximum number of log files to keep. Defaults to 10.
 
     """
-    log_files = sorted(glob.glob(str(log_dir / "gdt_*.log")))
+    log_files = sorted(glob.glob(str(log_dir / "tigre_*.log")))
     for old_file in log_files[: -(max_files - 1)]:
         try:
             os.remove(old_file)
@@ -97,7 +97,8 @@ def create_dev_logger(
 
         log_dir.mkdir(exist_ok=True)
 
-        log_file_path = log_dir / f"gdt_{time_now}.log"
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H_%M_%S")
+        log_file_path = log_dir / f"tigre_{timestamp}.log"
         _cleanup_logs(log_dir)
 
     # Create and configure logger
@@ -218,11 +219,3 @@ def setup_logger(
 
     log.trace("Logger setup complete.")
     return log
-
-
-def time_now() -> str:
-    """Return the current time formatted as a string.
-
-    Formatted as "YYYY-MM-DD HH:MM".
-    """
-    return datetime.now().strftime("%Y-%m-%d %H:%M")

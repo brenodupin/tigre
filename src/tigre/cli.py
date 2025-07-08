@@ -99,7 +99,7 @@ def add_extract_multiple_args(parser: argparse.ArgumentParser) -> None:
         help="TSV file with indexed GFF3 files to standardize.",
     )
     parser.add_argument(
-        "--AN-column",
+        "--an-column",
         required=False,
         default="AN",
         type=str,
