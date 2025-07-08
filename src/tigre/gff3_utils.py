@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Callable, Optional, Union
 
 import pandas as pd
+from . import log_setup
 
 GFF3_COLUMNS: tuple[str, ...] = (
     "seqid",
@@ -232,3 +233,54 @@ class GFFPathBuilder:
     def __repr__(self) -> str:
         """Return a string representation of the GFFPathBuilder."""
         return self._str
+
+
+def _check_column(
+    log: log_setup.GDTLogger,
+    df: pd.DataFrame,
+    col: str,
+    df_txt: str = "TSV",
+) -> None:
+    """Check if a specific column exists in the DataFrame."""
+    log.trace(f"check_column called | col: {col} | df_txt: {df_txt}")
+    if col not in df.columns:
+        log.error(f"Column '{col}' not found in DataFrame")
+        log.error(f"Available columns: {df.columns}")
+        raise ValueError(
+            f"Column '{col}' not found in {df_txt}. Please check the file."
+        )
+
+
+def check_file_in_tsv(
+    log: log_setup.GDTLogger,
+    df: pd.DataFrame,
+    gff_builder: GFFPathBuilder,
+    an_column: str = "AN",
+    file_text: str = "GFF3",
+) -> None:
+    """Check if GFF3 files exist for each accession number in the DataFrame.
+
+    Args:
+        log (GDTLogger): Logger instance for logging messages.
+        df (pd.DataFrame): DataFrame containing accession numbers.
+        base_path (Path): Base path where GFF3 files are expected to be found.
+        gff_builder (GFFBuilder): Function to build GFF file paths.
+        an_column (str): Column name containing accession numbers. Default is "AN".
+        file_text (str): Name of the file type being checked (e.g., "GFF3"). Default is "GFF3".
+
+    """
+    log.trace(f"check_file_in_tsv called | {gff_builder}")
+    _check_column(log, df, an_column, "TSV")
+
+    no_files = [
+        (an, an_path)
+        for an in df[an_column]
+        if not (an_path := gff_builder.build(an)).is_file()
+    ]
+
+    if no_files:
+        for an, path in no_files:
+            log.error(f"{file_text} file not found for {an}, expected {path}")
+        raise FileNotFoundError(
+            f"Missing {len(no_files)} {file_text} files. Please check the log for details."
+        )
