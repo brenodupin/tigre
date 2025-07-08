@@ -57,16 +57,13 @@ def extract_single_command(
     args: argparse.Namespace,
     log: log_setup.GDTLogger,
 ) -> None:
-    args.gff_in = Path(args.gff_in)
-    args.gff_out = Path(args.gff_out)
+    args.gff_in = Path(args.gff_in).resolve()
+    args.gff_out = Path(args.gff_out).resolve()
 
     run_bedtools = bool(args.fasta_in)
     log.debug(f"run_bedtools: {run_bedtools}")
     if run_bedtools:  # check for bedtools
         try:
-            args.fasta_in = Path(args.fasta_in)
-            args.fasta_out = Path(args.fasta_out)
-
             a = subprocess.run(
                 ["bedtools", "--version"], check=True, capture_output=True
             )
@@ -77,8 +74,8 @@ def extract_single_command(
                 "bedtools not found. Please install bedtools if you want to create fasta from extracted intergenic regions."
             )
 
-    args.fasta_in = Path(args.fasta_in) if args.fasta_in else None
-    args.fasta_out = Path(args.fasta_out) if args.fasta_out else None
+    args.fasta_in = Path(args.fasta_in).resolve() if args.fasta_in else None
+    args.fasta_out = Path(args.fasta_out).resolve() if args.fasta_out else None
 
     extraction.execution(
         log,
@@ -166,7 +163,7 @@ def extract_multiple_command(
     log: log_setup.GDTLogger,
 ) -> None:
     """Extract intergenic regions from multiple GFF3 files, indexed via a TSV file."""
-    args.tsv = Path(args.tsv)
+    args.tsv = Path(args.tsv).resolve()
     if not args.tsv.is_file():
         log.error(f"TSV file not found: {args.tsv}")
         raise FileNotFoundError(
@@ -239,7 +236,7 @@ def add_clean_args(parser: argparse.ArgumentParser) -> None:
 
 def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
     """Clean command for tigre, to clean the GFF3 files."""
-    tsv_path = Path(args.tsv)
+    tsv_path = Path(args.tsv).resolve()
     if not tsv_path.is_file():
         log.error(f"TSV file not found: {tsv_path}")
         return
@@ -359,7 +356,7 @@ def cli_entrypoint() -> None:
     log = log_setup.setup_logger(args.debug, args.log, args.quiet)
     log.trace("CLI execution started")
     log.trace(f"call path: {Path().resolve()}")
-    log.trace(f"cli  path: {Path(__file__)}")
+    log.trace(f"cli  path: {Path(__file__).resolve()}")
     log.trace(f"args: {args}")
 
     if args.command == "test":
