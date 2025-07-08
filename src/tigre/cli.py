@@ -21,7 +21,7 @@ def deploy_gdt_support(
     gdt_path: Union[str, Path],
 ) -> Callable[["pd.Series", log_setup.GDTLogger], str]:
     try:
-        import gdt
+        import gdt  # type: ignore[import-not-found]
     except ImportError as ex:
         raise SystemExit(
             "GDT package not found. Please install gdt package to use the --gdict option."
