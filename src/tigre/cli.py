@@ -3,6 +3,7 @@
 
 
 import argparse
+import os
 import subprocess
 from pathlib import Path
 
@@ -11,7 +12,7 @@ from . import __version__, clean, extraction, log_setup
 C_RESET = "\033[0m"
 
 
-def extract_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
+def extract_single_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
     args.gff_in = Path(args.gff_in)
     args.gff_out = Path(args.gff_out)
 
@@ -32,7 +33,43 @@ def extract_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
                 "bedtools not found. Please install bedtools if you want to create fasta from extracted intergenic regions."
             )
 
-    extraction.execution(args, log)
+    args.fasta_in = Path(args.fasta_in) if args.fasta_in else None
+    args.fasta_out = Path(args.fasta_out) if args.fasta_out else None
+
+    extraction.execution(
+        log,
+        args.gff_in,
+        args.gff_out,
+        args.fasta_in,
+        args.fasta_out,
+        run_bedtools,
+        args.new_region_start,
+    )
+
+
+def extract_multiple_command(
+    args: argparse.Namespace, log: log_setup.GDTLogger
+) -> None:
+    """Extract intergenic regions from multiple GFF3 files, indexed via a TSV file."""
+    args.tsv = Path(args.tsv)
+    if not args.tsv.is_file():
+        log.error(f"TSV file not found: {args.tsv}")
+        raise FileNotFoundError(
+            f"TSV file not found: {args.tsv}. Please provide a valid TSV file."
+        )
+
+    extraction.multiple_execution(
+        log,
+        args.tsv,
+        args.AN_column,
+        args.workers,
+        args.gff_ext,
+        args.fasta_ext,
+        args.out_suffix,
+        args.gff_suffix,
+        args.fasta_suffix,
+        args.have_fasta,
+    )
 
 
 def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
@@ -115,47 +152,114 @@ def cli_entrypoint() -> None:
         help="TSV file with the accession numbers (ANs) to be cleaned.",
     )
 
-    ext_parser = subparsers.add_parser(
-        "extract single",
-        help="Extract intergenic regions from (clean) GFF3 files.",
-        description="This command will extract intergenic regions from the GFF3 files and optionally extract sequences from a FASTA file.",
+    extS_parser = subparsers.add_parser(
+        "extract-single",
+        help="Extract intergenic regions from a (clean) GFF3 file.",
+        description="This command will extract intergenic regions from the GFF3 file and optionally extract sequences from a FASTA file.",
         parents=[global_flags],
     )
-    ext_parser.add_argument(
+    extS_parser.add_argument(
         "--gff-in",
         "-gi",
         required=True,
         type=str,
         help="GFF3 input file",
     )
-    ext_parser.add_argument(
+    extS_parser.add_argument(
         "--gff-out",
         "-go",
         required=True,
         type=str,
         help="GFF3 output file",
     )
-    ext_parser.add_argument(
+    extS_parser.add_argument(
         "--fasta-in",
         "-fi",
         required=False,
+        default=None,
         type=str,
         help="Fasta input file",
     )
-    ext_parser.add_argument(
+    extS_parser.add_argument(
         "--fasta-out",
         "-fo",
         required=False,
+        default=None,
         type=str,
         help="Fasta output file",
     )
-    ext_parser.add_argument(
+    extS_parser.add_argument(
         "--new-region-start",
         "-nrs",
         required=False,
         type=int,
         default=1,
         help="Check the first row for region start (in case there's a tRNA that start before region end and ends after region start)",
+    )
+
+    extM_parser = subparsers.add_parser(
+        "extract-multiple",
+        help="Extract intergenic regions from multiple (clean) GFF3 files, indexed via a TSV file.",
+        description="This command will execute `extract-single` for each GFF3 file listed in the TSV file.",
+        parents=[global_flags],
+    )
+    extM_parser.add_argument(
+        "--tsv",
+        required=True,
+        type=str,
+        help="TSV file with indexed GFF3 files to standardize.",
+    )
+    extM_parser.add_argument(
+        "--AN-column",
+        required=False,
+        default="AN",
+        type=str,
+        help="Column name for NCBI Accession Number inside the TSV. Default: AN",
+    )
+    extM_parser.add_argument(
+        "--gff-ext",
+        required=False,
+        default=".gff3",
+        type=str,
+        help="File Extension for GFF files. Default: '.gff3'",
+    )
+    extM_parser.add_argument(
+        "--gff-suffix",
+        required=False,
+        default="_clean",
+        type=str,
+        help="Suffix to be added when building GFF Paths from the TSV file. "
+        "Example: '_clean' will create GFF paths like '<AN>_clean.gff3' if "
+        "--gff-ext is '.gff3'. Default: '_clean'",
+    )
+    extM_parser.add_argument(
+        "--have-fasta",
+        "-hf",
+        required=False,
+        type=str,
+        help="If true, will look for a fasta file using GFF3 of TSV. Expected format: '<AN><fasta_ext>'.",
+    )
+    extM_parser.add_argument(
+        "--fasta-ext",
+        required=False,
+        default=".fasta",
+        type=str,
+        help="File Extension for Fasta files. Default: '.fasta'",
+    )
+    extM_parser.add_argument(
+        "--out-suffix",
+        required=False,
+        default="_intergenic",
+        type=str,
+        help="Suffix to be added to the output GFF3 files (and Fasta if --have-fasta is true). Default: '_intergenic'",
+    )
+    extM_parser.add_argument(
+        "--workers",
+        required=False,
+        default=0,
+        type=int,
+        help="Number of workers to use. "
+        f"Default: 0 (use all available cores: {os.cpu_count()})",
     )
 
     args = main_parser.parse_args()
@@ -169,17 +273,24 @@ def cli_entrypoint() -> None:
     if args.command == "test":
         log.debug("Executing test command")
         args.func(args)
+
     elif args.command == "clean":
         log.debug("Executing clean command")
         clean_command(args, log)
-    elif args.command == "extract":
+
+    elif args.command == "extract-single":
         if bool(args.fasta_in) != bool(args.fasta_out):
             log.error(f"fin: {args.fasta_in} | fout: {args.fasta_out}")
-            ext_parser.error(
+            extS_parser.error(
                 "--fasta-in and --fasta-out must be provided together or not at all."
             )
+
         log.debug("Executing extract command")
-        extract_command(args, log)
+        extract_single_command(args, log)
+
+    elif args.command == "extract-multiple":
+        extract_multiple_command(args, log)
+
     else:
         log.error(f"Unknown command: {args.command}")
         main_parser.print_help()
