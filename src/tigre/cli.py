@@ -174,7 +174,7 @@ def extract_multiple_command(
         log,
         args.tsv,
         args.an_column,
-        args.workers,
+        workers_count(args),
         args.gff_ext,
         args.fasta_ext,
         args.out_suffix,
@@ -248,7 +248,7 @@ def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
         args.gff_suffix,
         args.out_suffix,
         args.an_column,
-        args.workers,
+        workers_count(args, threading=True),
     )
 
 
@@ -301,6 +301,14 @@ def add_global_args(parser: argparse.ArgumentParser) -> None:
     )
 
 
+def workers_count(args: argparse.Namespace, threading: bool = False) -> int:
+    cpu_count = os.cpu_count() or 1
+
+    max_limit = cpu_count * 4 if threading else cpu_count
+
+    return max_limit if args.workers <= 0 else min(args.workers, max_limit)
+
+
 def cli_entrypoint() -> None:
     """Command line interface for the tigre package."""
     # Global parser to add debug, log, and quiet flags to all subcommands
@@ -344,14 +352,6 @@ def cli_entrypoint() -> None:
     add_test(subs, global_args)
 
     args = main.parse_args()
-
-    if "workers" in args:
-        max_workers = os.cpu_count() or 1
-        args.workers = (
-            args.workers
-            if args.workers > 0 and args.workers <= max_workers
-            else max_workers
-        )
 
     log = log_setup.setup_logger(args.debug, args.log, args.quiet)
     log.trace("CLI execution started")
