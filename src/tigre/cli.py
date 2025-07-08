@@ -12,7 +12,51 @@ from . import __version__, clean, extraction, log_setup
 C_RESET = "\033[0m"
 
 
-def extract_single_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
+def add_extract_single_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--gff-in",
+        "-gi",
+        required=True,
+        type=str,
+        help="GFF3 input file",
+    )
+    parser.add_argument(
+        "--gff-out",
+        "-go",
+        required=True,
+        type=str,
+        help="GFF3 output file",
+    )
+    parser.add_argument(
+        "--fasta-in",
+        "-fi",
+        required=False,
+        default=None,
+        type=str,
+        help="Fasta input file",
+    )
+    parser.add_argument(
+        "--fasta-out",
+        "-fo",
+        required=False,
+        default=None,
+        type=str,
+        help="Fasta output file",
+    )
+    parser.add_argument(
+        "--new-region-start",
+        "-nrs",
+        required=False,
+        type=int,
+        default=1,
+        help="Check the first row for region start (in case there's a tRNA that start before region end and ends after region start)",
+    )
+
+
+def extract_single_command(
+    args: argparse.Namespace,
+    log: log_setup.GDTLogger,
+) -> None:
     args.gff_in = Path(args.gff_in)
     args.gff_out = Path(args.gff_out)
 
@@ -47,8 +91,79 @@ def extract_single_command(args: argparse.Namespace, log: log_setup.GDTLogger) -
     )
 
 
+def add_extract_multiple_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--tsv",
+        required=True,
+        type=str,
+        help="TSV file with indexed GFF3 files to standardize.",
+    )
+    parser.add_argument(
+        "--AN-column",
+        required=False,
+        default="AN",
+        type=str,
+        help="Column name for NCBI Accession Number inside the TSV. Default: AN",
+    )
+    parser.add_argument(
+        "--gff-ext",
+        required=False,
+        default=".gff3",
+        type=str,
+        help="File Extension for GFF files. Default: '.gff3'",
+    )
+    parser.add_argument(
+        "--gff-suffix",
+        required=False,
+        default="_clean",
+        type=str,
+        help="Suffix to be added when building GFF Paths from the TSV file. "
+        "Example: '_clean' will create GFF paths like '<AN>_clean.gff3' if "
+        "--gff-ext is '.gff3'. Default: '_clean'",
+    )
+    parser.add_argument(
+        "--have-fasta",
+        "-hf",
+        required=False,
+        type=str,
+        help="If true, will look for a fasta file using GFF3 of TSV. Expected format: '<AN><fasta_ext>'.",
+    )
+    parser.add_argument(
+        "--fasta-ext",
+        required=False,
+        default=".fasta",
+        type=str,
+        help="File Extension for Fasta files. Default: '.fasta'",
+    )
+    parser.add_argument(
+        "--fasta-suffix",
+        required=False,
+        default="",
+        type=str,
+        help="Suffix to be added when building Fasta Paths from the TSV file. "
+        "Example: '_merged' will create Fasta paths like '<AN>_merged.fasta' if "
+        "`--fasta-ext '.fasta'`. Default: ''",
+    )
+    parser.add_argument(
+        "--out-suffix",
+        required=False,
+        default="_intergenic",
+        type=str,
+        help="Suffix to be added to the output GFF3 files (and Fasta if --have-fasta is true). Default: '_intergenic'",
+    )
+    parser.add_argument(
+        "--workers",
+        required=False,
+        default=0,
+        type=int,
+        help="Number of workers to use. "
+        f"Default: 0 (use all available cores: {os.cpu_count()})",
+    )
+
+
 def extract_multiple_command(
-    args: argparse.Namespace, log: log_setup.GDTLogger
+    args: argparse.Namespace,
+    log: log_setup.GDTLogger,
 ) -> None:
     """Extract intergenic regions from multiple GFF3 files, indexed via a TSV file."""
     args.tsv = Path(args.tsv)
@@ -61,7 +176,7 @@ def extract_multiple_command(
     extraction.multiple_execution(
         log,
         args.tsv,
-        args.AN_column,
+        args.an_column,
         args.workers,
         args.gff_ext,
         args.fasta_ext,
@@ -72,188 +187,47 @@ def extract_multiple_command(
     )
 
 
-def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
-    """Clean command for tigre, to clean the GFF3 files."""
-    tsv_path = Path(args.tsv)
-    if not tsv_path.is_file():
-        log.error(f"TSV file not found: {tsv_path}")
-        return
-
-    clean.orchestration(tsv_path, log)
-
-
-def cli_entrypoint() -> None:
-    """Command line interface for the tigre package."""
-    # Global parser to add debug, log, and quiet flags to all subcommands
-    global_flags = argparse.ArgumentParser(add_help=False)
-    global_flags.add_argument(
-        "--debug",
-        required=False,
-        default=False,
-        action="store_true",
-        help="Enable TRACE level in file, and DEBUG on console. "
-        "Default: DEBUG level on file and INFO on console.",
-    )
-    global_flags.add_argument(
-        "--log",
-        required=False,
-        default=None,
-        type=str,
-        help="Path to the log file. "
-        "If not provided, a default log file will be created.",
-    )
-    global_flags.add_argument(
-        "--quiet",
-        required=False,
-        default=False,
-        action="store_true",
-        help="Suppress console output. Default: console output enabled.",
-    )
-
-    main_parser = argparse.ArgumentParser(
-        description="<PLACE HOLDER BANNER>",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        parents=[global_flags],
-        epilog=f"Source ~ \033[32mhttps://github.com/brenodupin/tigre{C_RESET}",
-    )
-    main_parser.add_argument(
-        "--version",
-        action="version",
-        version=f"tigre {__version__}",
-        help="Show the version of the tigre package.",
-    )
-
-    subparsers = main_parser.add_subparsers(
-        dest="command",
-        required=True,
-    )
-
-    test_parser = subparsers.add_parser(
-        "test",
-        help="Test command for tigre, to check if the CLI is working.",
-        description="Just a simple test command to check if the CLI is working,"
-        "if the logging is working, and if the version is correct.",
-        parents=[global_flags],
-    )
-    test_parser.set_defaults(
-        func=lambda args: print("Test command executed successfully!")
-    )
-
-    clean_parser = subparsers.add_parser(
-        "clean",
-        help="Clean command for tigre, to clean the GFF3 files.",
-        description="This command will clean the GFF3 files in the specified folder.",
-        parents=[global_flags],
-    )
-    clean_parser.add_argument(
+def add_clean_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
         "--tsv",
         required=True,
         type=str,
         help="TSV file with the accession numbers (ANs) to be cleaned.",
     )
-
-    extS_parser = subparsers.add_parser(
-        "extract-single",
-        help="Extract intergenic regions from a (clean) GFF3 file.",
-        description="This command will extract intergenic regions from the GFF3 file and optionally extract sequences from a FASTA file.",
-        parents=[global_flags],
-    )
-    extS_parser.add_argument(
-        "--gff-in",
-        "-gi",
-        required=True,
-        type=str,
-        help="GFF3 input file",
-    )
-    extS_parser.add_argument(
-        "--gff-out",
-        "-go",
-        required=True,
-        type=str,
-        help="GFF3 output file",
-    )
-    extS_parser.add_argument(
-        "--fasta-in",
-        "-fi",
-        required=False,
-        default=None,
-        type=str,
-        help="Fasta input file",
-    )
-    extS_parser.add_argument(
-        "--fasta-out",
-        "-fo",
-        required=False,
-        default=None,
-        type=str,
-        help="Fasta output file",
-    )
-    extS_parser.add_argument(
-        "--new-region-start",
-        "-nrs",
-        required=False,
-        type=int,
-        default=1,
-        help="Check the first row for region start (in case there's a tRNA that start before region end and ends after region start)",
-    )
-
-    extM_parser = subparsers.add_parser(
-        "extract-multiple",
-        help="Extract intergenic regions from multiple (clean) GFF3 files, indexed via a TSV file.",
-        description="This command will execute `extract-single` for each GFF3 file listed in the TSV file.",
-        parents=[global_flags],
-    )
-    extM_parser.add_argument(
-        "--tsv",
-        required=True,
-        type=str,
-        help="TSV file with indexed GFF3 files to standardize.",
-    )
-    extM_parser.add_argument(
-        "--AN-column",
-        required=False,
-        default="AN",
-        type=str,
-        help="Column name for NCBI Accession Number inside the TSV. Default: AN",
-    )
-    extM_parser.add_argument(
+    parser.add_argument(
         "--gff-ext",
         required=False,
         default=".gff3",
         type=str,
         help="File Extension for GFF files. Default: '.gff3'",
     )
-    extM_parser.add_argument(
+    parser.add_argument(
         "--gff-suffix",
         required=False,
-        default="_clean",
+        default="",
         type=str,
         help="Suffix to be added when building GFF Paths from the TSV file. "
         "Example: '_clean' will create GFF paths like '<AN>_clean.gff3' if "
-        "--gff-ext is '.gff3'. Default: '_clean'",
+        "--gff-ext is '.gff3'. Default: ''",
     )
-    extM_parser.add_argument(
-        "--have-fasta",
-        "-hf",
-        required=False,
-        type=str,
-        help="If true, will look for a fasta file using GFF3 of TSV. Expected format: '<AN><fasta_ext>'.",
-    )
-    extM_parser.add_argument(
-        "--fasta-ext",
-        required=False,
-        default=".fasta",
-        type=str,
-        help="File Extension for Fasta files. Default: '.fasta'",
-    )
-    extM_parser.add_argument(
+    parser.add_argument(
         "--out-suffix",
         required=False,
-        default="_intergenic",
+        default="_clean",
         type=str,
-        help="Suffix to be added to the output GFF3 files (and Fasta if --have-fasta is true). Default: '_intergenic'",
+        help="Suffix to be added to the output GFF3 files. `--out-suffix` replaces "
+        "`--gff-suffix` on the output. Example: `--out-suffix '_clean' --gff-suffix '_merged' --gff-ext '.gff3'`, "
+        "will build the input like <AN>_merged.gff3 and the output like <AN>_clean.gff3."
+        " Default: '_clean'",
     )
-    extM_parser.add_argument(
+    parser.add_argument(
+        "--an-column",
+        required=False,
+        default="AN",
+        type=str,
+        help="Column name for NCBI Accession Number inside the TSV. Default: AN",
+    )
+    parser.add_argument(
         "--workers",
         required=False,
         default=0,
@@ -262,7 +236,125 @@ def cli_entrypoint() -> None:
         f"Default: 0 (use all available cores: {os.cpu_count()})",
     )
 
-    args = main_parser.parse_args()
+
+def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
+    """Clean command for tigre, to clean the GFF3 files."""
+    tsv_path = Path(args.tsv)
+    if not tsv_path.is_file():
+        log.error(f"TSV file not found: {tsv_path}")
+        return
+
+    clean.orchestration(
+        log,
+        tsv_path,
+        args.gff_ext,
+        args.gff_suffix,
+        args.out_suffix,
+        args.an_column,
+        args.workers,
+    )
+
+
+def add_main_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"tigre {__version__}",
+        help="Show the version of the tigre package.",
+    )
+
+
+def add_test(
+    subparser: "argparse._SubParsersAction[argparse.ArgumentParser]",
+    global_args: argparse.ArgumentParser,
+) -> None:
+    test = subparser.add_parser(
+        "test",
+        help="Test command for tigre, to check if the CLI is working.",
+        description="Just a simple test command to check if the CLI is working,"
+        "if the logging is working, and if the version is correct.",
+        parents=[global_args],
+    )
+    test.set_defaults(func=lambda args: print("Test command executed successfully!"))
+
+
+def add_global_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--debug",
+        required=False,
+        default=False,
+        action="store_true",
+        help="Enable TRACE level in file, and DEBUG on console. "
+        "Default: DEBUG level on file and INFO on console.",
+    )
+    parser.add_argument(
+        "--log",
+        required=False,
+        default=None,
+        type=str,
+        help="Path to the log file. "
+        "If not provided, a default log file will be created.",
+    )
+    parser.add_argument(
+        "--quiet",
+        required=False,
+        default=False,
+        action="store_true",
+        help="Suppress console output. Default: console output enabled.",
+    )
+
+
+def cli_entrypoint() -> None:
+    """Command line interface for the tigre package."""
+    # Global parser to add debug, log, and quiet flags to all subcommands
+    global_args = argparse.ArgumentParser(add_help=False)
+    add_global_args(global_args)
+
+    main = argparse.ArgumentParser(
+        description="<PLACE HOLDER BANNER>",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        parents=[global_args],
+        epilog=f"Source ~ \033[32mhttps://github.com/brenodupin/tigre{C_RESET}",
+    )
+    add_main_args(main)
+
+    subs = main.add_subparsers(dest="command", required=True)
+
+    clean = subs.add_parser(
+        "clean",
+        help="Clean command for tigre, to clean the GFF3 files.",
+        description="This command will clean the GFF3 files in the specified folder.",
+        parents=[global_args],
+    )
+    add_clean_args(clean)
+
+    extract_single = subs.add_parser(
+        "extract-single",
+        help="Extract intergenic regions from a (clean) GFF3 file.",
+        description="This command will extract intergenic regions from the GFF3 file and optionally extract sequences from a FASTA file.",
+        parents=[global_args],
+    )
+    add_extract_single_args(extract_single)
+
+    extract_multiple = subs.add_parser(
+        "extract-multiple",
+        help="Extract intergenic regions from multiple (clean) GFF3 files, indexed via a TSV file.",
+        description="This command will execute `extract-single` for each GFF3 file listed in the TSV file.",
+        parents=[global_args],
+    )
+    add_extract_multiple_args(extract_multiple)
+
+    add_test(subs, global_args)
+
+    args = main.parse_args()
+
+    if "workers" in args:
+        max_workers = os.cpu_count() or 1
+        args.workers = (
+            args.workers
+            if args.workers > 0 and args.workers <= max_workers
+            else max_workers
+        )
 
     log = log_setup.setup_logger(args.debug, args.log, args.quiet)
     log.trace("CLI execution started")
@@ -281,7 +373,7 @@ def cli_entrypoint() -> None:
     elif args.command == "extract-single":
         if bool(args.fasta_in) != bool(args.fasta_out):
             log.error(f"fin: {args.fasta_in} | fout: {args.fasta_out}")
-            extS_parser.error(
+            extract_single.error(
                 "--fasta-in and --fasta-out must be provided together or not at all."
             )
 
@@ -293,5 +385,5 @@ def cli_entrypoint() -> None:
 
     else:
         log.error(f"Unknown command: {args.command}")
-        main_parser.print_help()
+        main.print_help()
         exit(1)
