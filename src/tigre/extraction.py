@@ -359,30 +359,36 @@ def multiple_execution(
     have_fasta: bool = False,
 ) -> None:
     tsv = pd.read_csv(tsv_path, sep="\t")
-    gin_builder = gff3_utils.GFFPathBuilder().use_folder_builder(
+    gff_in_builder = gff3_utils.PathBuilder(gff_ext).use_folder_builder(
         tsv_path.parent,
-        gff_ext,
         gff_suffix,
     )
-    gout_builder = gff3_utils.GFFPathBuilder().use_folder_builder(
+    gff_out_builder = gff3_utils.PathBuilder(gff_ext).use_folder_builder(
         tsv_path.parent,
-        gff_ext,
         out_suffix,
     )
-    gff3_utils.check_file_in_tsv(log, tsv, gin_builder, an_column)
+    gff3_utils.check_file_in_tsv(
+        log,
+        tsv,
+        gff_in_builder,
+        an_column,
+    )
 
     if have_fasta:
-        fin_builder = gff3_utils.GFFPathBuilder().use_folder_builder(
+        fasta_in_builder = gff3_utils.PathBuilder(fasta_ext).use_folder_builder(
             tsv_path.parent,
-            fasta_ext,
             fasta_suffix,
         )
-        fout_builder = gff3_utils.GFFPathBuilder().use_folder_builder(
+        fasta_out_builder = gff3_utils.PathBuilder(fasta_ext).use_folder_builder(
             tsv_path.parent,
-            fasta_ext,
             out_suffix,
         )
-        gff3_utils.check_file_in_tsv(log, tsv, fin_builder, an_column)
+        gff3_utils.check_file_in_tsv(
+            log,
+            tsv,
+            fasta_in_builder,
+            an_column,
+        )
 
     log.info(f"Processing {len(tsv)} ANs with {workers} workers")
     with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as executor:
@@ -390,10 +396,10 @@ def multiple_execution(
             executor.submit(
                 execution,
                 log,
-                gin_builder.build(an),
-                gout_builder.build(an),
-                fin_builder.build(an) if have_fasta else None,
-                fout_builder.build(an) if have_fasta else None,
+                gff_in_builder.build(an),
+                gff_out_builder.build(an),
+                fasta_in_builder.build(an) if have_fasta else None,
+                fasta_out_builder.build(an) if have_fasta else None,
                 have_fasta,
             )
             for an in tsv[an_column]

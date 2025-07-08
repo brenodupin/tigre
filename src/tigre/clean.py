@@ -11,7 +11,9 @@ from . import gff3_utils, log_setup
 
 
 def multiple_regions_solver(
-    df: pd.DataFrame, an: str, log: log_setup.GDTLogger
+    df: pd.DataFrame,
+    an: str,
+    log: log_setup.GDTLogger,
 ) -> pd.DataFrame:
     log.warning(f"[{an}] Multiple regions found:")
     for row in df[df["type"] == "region"].itertuples():
@@ -27,7 +29,9 @@ def multiple_regions_solver(
 
 
 def bigger_than_region_solver(
-    df: pd.DataFrame, an: str, log: log_setup.GDTLogger
+    df: pd.DataFrame,
+    an: str,
+    log: log_setup.GDTLogger,
 ) -> pd.DataFrame:
     region_end = df.at[0, "end"]
     log.warning(f"[{an}] Genes with 'end' bigger than region: {region_end}")
@@ -64,7 +68,9 @@ def bigger_than_region_solver(
 
 
 def overlaps_chooser(
-    overlaps_in: list[pd.Series | pd.DataFrame], an: str, log: log_setup.GDTLogger
+    overlaps_in: list[pd.Series | pd.DataFrame],
+    an: str,
+    log: log_setup.GDTLogger,
 ) -> str:
     overlaps = pd.DataFrame(overlaps_in).sort_values("start", ignore_index=True)
 
@@ -90,20 +96,31 @@ def overlaps_chooser(
     return f"{name_replace_bool(left.iat[0, 8], is_left=True)}{name_replace_bool(right.iat[0, 8], is_left=False)}"
 
 
-def name_replace_bool(s: str, is_left: bool) -> str:
+def name_replace_bool(
+    s: str,
+    is_left: bool,
+) -> str:
     if is_left:
         return s.replace("name=", "name_left=").replace("source=", "source_left=")
     return s.replace("name=", "name_right=").replace("source=", "source_right=")
 
 
-def create_header(region_att: str, an: str, region_end: int) -> str:
+def create_header(
+    region_att: str,
+    an: str,
+    region_end: int,
+) -> str:
     header = f"##gff-version 3\n#!gff-spec-version 1.26\n#!processor [PLACE_H0LDER_NAME]\n##sequence-region {an} 1 {region_end}\n"
     taxon_start = region_att.find("taxon:") + 6
     header += f"##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={region_att[taxon_start : region_att.find(';', taxon_start)]}\n"
     return header
 
 
-def overlap_solver(df: pd.DataFrame, an: str, log: log_setup.GDTLogger) -> pd.DataFrame:
+def overlap_solver(
+    df: pd.DataFrame,
+    an: str,
+    log: log_setup.GDTLogger,
+) -> pd.DataFrame:
     df_clean = df.iloc[0:1].copy()  # copia region, index 0
 
     next_index = 1  # itera sobre as linhas do dataframe, começando da segunda
@@ -148,7 +165,10 @@ def overlap_solver(df: pd.DataFrame, an: str, log: log_setup.GDTLogger) -> pd.Da
 
 
 def clean_attr(
-    row: pd.Series, an: str, gene_dict: Any, log: log_setup.GDTLogger
+    row: pd.Series,
+    an: str,
+    gene_dict: Any,
+    log: log_setup.GDTLogger,
 ) -> str:
     gene_id = row.attributes.split(";", 1)[0].split("ID=", 1)[1]
     try:
@@ -161,14 +181,17 @@ def clean_attr(
 
 
 def exec_single_an(
-    an: str, an_path: Path, clean_path: Path, log: log_setup.GDTLogger
+    an: str,
+    gff_in: Path,
+    gff_out: Path,
+    log: log_setup.GDTLogger,
 ) -> tuple[bool, str]:
     try:
         log.info(f"[{an}] -- Start --")
 
-        log.trace(f"[{an}] Loading GFF3 file: {an_path}")
+        log.trace(f"[{an}] Loading GFF3 file: {gff_in}")
         df = gff3_utils.load_gff3(
-            an_path,
+            gff_in,
             usecols=gff3_utils.GFF3_COLUMNS,
             query_string='type == ["gene", "region"]',
         )
@@ -197,7 +220,7 @@ def exec_single_an(
         df = overlap_solver(df, an, log)
 
         # add header to the file
-        with open(clean_path, "w") as f:
+        with open(gff_out, "w") as f:
             f.write(header)
             df.to_csv(f, sep="\t", header=False, index=False)
 
@@ -209,29 +232,44 @@ def exec_single_an(
         return False, an
 
 
-def orchestration(tsv_path: Path, log: log_setup.GDTLogger) -> None:
+def orchestration(
+    log: log_setup.GDTLogger,
+    tsv_path: Path,
+    gff_ext: str = ".gff3",
+    gff_suffix: str = "",
+    out_suffix: str = "_clean",
+    an_column: str = "AN",
+    workers: int = 0,
+) -> None:
     """Orchestrates the execution of the ans."""
-    num_workers = 38
-
     tsv = pd.read_csv(tsv_path, sep="\t")
-    folder = tsv_path.parent
 
-    an_builder = gff3_utils.GFFPathBuilder().use_folder_builder(folder)
-    clean_builder = gff3_utils.GFFPathBuilder().use_folder_builder(
-        folder, suffix="_clean"
+    gff_in_builder = gff3_utils.PathBuilder(gff_ext).use_folder_builder(
+        tsv_path.parent,
+        gff_suffix,
+    )
+    gff_out_builder = gff3_utils.PathBuilder(gff_ext).use_folder_builder(
+        tsv_path.parent,
+        out_suffix,
+    )
+    gff3_utils.check_file_in_tsv(
+        log,
+        tsv,
+        gff_in_builder,
+        an_column,
     )
 
-    print(f"Processing {len(tsv)} ans with {num_workers} workers")
-    with cf.ProcessPoolExecutor(max_workers=num_workers) as executor:
+    print(f"Processing {len(tsv)} ans with {workers} workers")
+    with cf.ProcessPoolExecutor(max_workers=workers) as executor:
         futures = [
             executor.submit(
                 exec_single_an,
                 an,
-                an_builder.build(an),
-                clean_builder.build(an),
+                gff_in_builder.build(an),
+                gff_out_builder.build(an),
                 log,
             )
-            for an in tsv["AN"]
+            for an in tsv[an_column]
         ]
     cf.wait(futures)
 
@@ -243,6 +281,7 @@ def orchestration(tsv_path: Path, log: log_setup.GDTLogger) -> None:
 
 def clean_log(folder: str) -> None:
     time_l, msg_lvl_l, msg_l = [], [], []
+
     with open(f"{folder}_overlaps_raw_final.log", "r") as f:
         for line in f.readlines():
             time, msg_lvl, msg = line.split(" - ", 2)
