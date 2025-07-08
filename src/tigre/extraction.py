@@ -5,8 +5,14 @@ import argparse
 import subprocess
 from pathlib import Path
 from shutil import copy2
+from typing import Optional
+from typing_extensions import Final
+import pandas as pd
 
 from . import log_setup
+from . import gff3_utils
+
+import concurrent.futures
 
 IGRegion = tuple[int, int, int, str]  # gene_id, start, end, attributes
 
@@ -40,11 +46,11 @@ def get_names_ig(log: log_setup.GDTLogger, att: str, suffix: str) -> str:
     return f"{att[name_start:name_end]};{att[source_start:source_end]};"
 
 
-def run_bedtools(
+def exec_bedtools(
     log: log_setup.GDTLogger, fasta_in: Path, gff_in: Path, fasta_out: Path
 ) -> None:
     log.debug(
-        f"run_bedtools | cmd: bedtools getfasta -name+ -fi {fasta_in} -bed {gff_in} -fo {fasta_out}"
+        f"exec_bedtools | cmd: bedtools getfasta -name+ -fi {fasta_in} -bed {gff_in} -fo {fasta_out}"
     )
     a = subprocess.run(
         [
@@ -128,11 +134,27 @@ def save_gff_with_frag(
 
 # ('seqid', 'source', 'type', 'start', 'end', 'score', 'strand', 'phase', 'attributes')
 #     0        1        2       3        4      5         6        7         8
-def execution(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
+def execution(
+    log: log_setup.GDTLogger,
+    gff_in: Path,
+    gff_out: Path,
+    fasta_in: Optional[Path],
+    fasta_out: Optional[Path],
+    run_bedtools: bool = False,
+    new_region_start: int = 1,
+) -> None:
     rs, re = False, False
     first_att = ""
     header = []
-    with open(file=args.gff_in) as gff_file:
+    if run_bedtools:
+        if fasta_in is None or fasta_out is None:
+            raise ValueError(
+                "Fasta input and output files must be provided when run_bedtools is True."
+            )
+        fasta_in_path: Path = fasta_in
+        fasta_out_path: Path = fasta_out
+
+    with open(gff_in) as gff_file:
         for header_line in gff_file:
             if not header_line.startswith("#"):
                 break
@@ -153,10 +175,10 @@ def execution(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
         gene_id = 1
         first_line = gff_file.readline().strip().split("\t")
         prev_end = 1
-        if (c_start := int(first_line[3])) != args.new_region_start:
+        if (c_start := int(first_line[3])) != new_region_start:
             c_att = first_line[8]
             log.debug(
-                f"First row does not start from {args.new_region_start}. Start: {c_start}"
+                f"First row does not start from {new_region_start}. Start: {c_start}"
             )
             if (
                 first_line[2][1] == "v"
@@ -170,15 +192,15 @@ def execution(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
             c_att = change_names(log, c_att, "dw")
             fatt = f"name_up=region_start;source_up=region_start;{c_att}"
             log.trace(
-                f"New IG from {args.new_region_start} to {c_start - 1} | att: {fatt}",
+                f"New IG from {new_region_start} to {c_start - 1} | att: {fatt}",
             )
-            ig_regions.append((gene_id, args.new_region_start, c_start - 1, fatt))
+            ig_regions.append((gene_id, new_region_start, c_start - 1, fatt))
             gene_id += 1
             prev_end = int(first_line[4])
             rs = True
         else:
             log.debug(
-                f"First row does start from {args.new_region_start}. No intergenic region needed."
+                f"First row does start from {new_region_start}. No intergenic region needed."
             )
             prev_end = int(first_line[4])
             if first_line[2][1] == "v":  # type = overlapping_feature_set
@@ -234,15 +256,16 @@ def execution(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
         if rs and re:  # merge the first and last regions
             log.debug("RS and RE are True, Merge required.")
             log.debug("Saving premerge gff3 file, to run bedtools on it.")
-            premerge_gff = args.gff_out.parent / f"{args.gff_out.stem}_premerged.gff3"
-            premerge_fasta = (
-                args.fasta_out.parent / f"{args.fasta_out.stem}_premerged.fasta"
-            )
+            premerge_gff = gff_out.parent / f"{gff_out.stem}_premerged.gff3"
+
             save_gff_with_frag(
                 log, premerge_gff, ig_regions, seqid, source, header=header
             )
-            if args.run_bedtools:
-                run_bedtools(log, args.fasta_in, premerge_gff, premerge_fasta)
+            if run_bedtools:
+                premerge_fasta = (
+                    fasta_out_path.parent / f"{fasta_out_path.stem}_premerged.fasta"
+                )
+                exec_bedtools(log, fasta_in_path, premerge_gff, premerge_fasta)
 
             # merge the first and last regions
             first_ig = ig_regions.pop(0)
@@ -258,29 +281,26 @@ def execution(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
             )  # merge attributes of the last and first regions
 
             log.debug("Saving merged final gff3 file.")
-            save_gff_with_merge(
-                log, args.gff_out, ig_regions, seqid, source, header=header
-            )
+            save_gff_with_merge(log, gff_out, ig_regions, seqid, source, header=header)
 
-            if (
-                args.run_bedtools
-            ):  # update fasta file to reflect the merged region in gff
+            # update fasta file to reflect the merged region in gff
+            if run_bedtools:
                 log.debug("Updating fasta file to reflect the merged gff3.")
                 from Bio import SeqIO
                 from Bio.SeqRecord import SeqRecord
 
-                copy2(premerge_fasta, args.fasta_out)
+                copy2(premerge_fasta, fasta_out_path)
                 log.trace(
-                    f"copy2 | src: {premerge_fasta} | dst: {args.fasta_out}",
+                    f"copy2 | src: {premerge_fasta} | dst: {fasta_out_path}",
                 )
-                records: list[SeqRecord] = list(SeqIO.parse(args.fasta_out, "fasta"))  # type: ignore[no-untyped-call]
+                records: list[SeqRecord] = list(SeqIO.parse(fasta_out_path, "fasta"))  # type: ignore[no-untyped-call]
                 drop = records.pop(0)
                 new_seq = records.pop(-1)
                 assert new_seq.seq is not None
                 new_seq.seq += drop.seq
                 new_seq.id = f"intergenic_region_merged::{seqid}:{ig_regions[-1][1] - 1}-{ig_regions[-1][2]}"
                 new_seq.description = f" merged region {seqid}:{ig_regions[-1][1] - 1}-{genome_size} with {seqid}:{first_ig[1] - 1}-{first_ig[2]}"
-                SeqIO.write(records + [new_seq], args.fasta_out, "fasta")
+                SeqIO.write(records + [new_seq], fasta_out_path, "fasta")
 
         elif re:  # update last region, no merge
             log.debug("Only RE is True, updating the last region.")
@@ -292,10 +312,10 @@ def execution(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
                 get_names_ig(log, ig_regions[-1][3], suffix="up")
                 + change_names(log, first_att, "dw"),
             )
-            save_gff(log, args.gff_out, ig_regions, seqid, source, header=header)
+            save_gff(log, gff_out, ig_regions, seqid, source, header=header)
 
-            if args.run_bedtools:
-                run_bedtools(log, args.fasta_in, args.gff_out, args.fasta_out)
+            if run_bedtools:
+                exec_bedtools(log, fasta_in_path, gff_out, fasta_out_path)
 
         elif rs:  # update first region, no merge
             log.debug("Only RS is True. Updating the first region.")
@@ -308,19 +328,74 @@ def execution(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
                 + get_names_ig(log, ig_regions[0][3], suffix="dw"),
             )
 
-            save_gff(log, args.gff_out, ig_regions, seqid, source, header=header)
+            save_gff(log, gff_out, ig_regions, seqid, source, header=header)
 
-            if args.run_bedtools:
-                run_bedtools(log, args.fasta_in, args.gff_out, args.fasta_out)
+            if run_bedtools:
+                exec_bedtools(log, fasta_in_path, gff_out, fasta_out_path)
 
         else:  # no RS|RE
             log.debug("No RS|RE. Doing nothing about RS|RE.")
-            save_gff(log, args.gff_out, ig_regions, seqid, source, header=header)
-            if args.run_bedtools:
-                run_bedtools(log, args.fasta_in, args.gff_out, args.fasta_out)
+            save_gff(log, gff_out, ig_regions, seqid, source, header=header)
+            if run_bedtools:
+                exec_bedtools(log, fasta_in_path, gff_out, fasta_out_path)
 
     else:  # linear genome
         log.debug("Linear genome detected. Doing nothing about RS|RE.")
-        save_gff(log, args.gff_out, ig_regions, seqid, source, header=header)
-        if args.run_bedtools:
-            run_bedtools(log, args.fasta_in, args.gff_out, args.fasta_out)
+        save_gff(log, gff_out, ig_regions, seqid, source, header=header)
+        if run_bedtools:
+            exec_bedtools(log, fasta_in_path, gff_out, fasta_out_path)
+
+
+def multiple_execution(
+    log: log_setup.GDTLogger,
+    tsv_path: Path,
+    an_column: str = "AN",
+    workers: int = 0,
+    gff_ext: str = ".gff3",
+    fasta_ext: str = ".fasta",
+    out_suffix: str = "_intergenic",
+    gff_suffix: str = "",
+    fasta_suffix: str = "",
+    have_fasta: bool = False,
+) -> None:
+    tsv = pd.read_csv(tsv_path, sep="\t")
+    gin_builder = gff3_utils.GFFPathBuilder().use_folder_builder(
+        tsv_path.parent,
+        gff_ext,
+        gff_suffix,
+    )
+    gout_builder = gff3_utils.GFFPathBuilder().use_folder_builder(
+        tsv_path.parent,
+        gff_ext,
+        out_suffix,
+    )
+    gff3_utils.check_file_in_tsv(log, tsv, gin_builder, an_column)
+
+    if have_fasta:
+        fin_builder = gff3_utils.GFFPathBuilder().use_folder_builder(
+            tsv_path.parent,
+            fasta_ext,
+            fasta_suffix,
+        )
+        fout_builder = gff3_utils.GFFPathBuilder().use_folder_builder(
+            tsv_path.parent,
+            fasta_ext,
+            out_suffix,
+        )
+        gff3_utils.check_file_in_tsv(log, tsv, fin_builder, an_column)
+
+    log.info(f"Processing {len(tsv)} ANs with {workers} workers")
+    with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as executor:
+        futures = [
+            executor.submit(
+                execution,
+                log,
+                gin_builder.build(an),
+                gout_builder.build(an),
+                fin_builder.build(an) if have_fasta else None,
+                fout_builder.build(an) if have_fasta else None,
+                have_fasta,
+            )
+            for an in tsv[an_column]
+        ]
+    concurrent.futures.wait(futures)
