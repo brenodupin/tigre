@@ -6,10 +6,51 @@ import argparse
 import os
 import subprocess
 from pathlib import Path
+from typing import TYPE_CHECKING, Callable, Optional, Union
 
 from . import __version__, clean, extraction, log_setup
 
 C_RESET = "\033[0m"
+
+if TYPE_CHECKING:
+    import pandas as pd
+
+
+def deploy_gdt_support(
+    log: log_setup.GDTLogger,
+    gdt_path: Union[str, Path],
+) -> Callable[["pd.Series", log_setup.GDTLogger], str]:
+    try:
+        import gdt
+    except ImportError as ex:
+        raise SystemExit(
+            "GDT package not found. Please install gdt package to use the --gdict option."
+        )
+    else:
+        log.debug(f"GDT package version: {gdt.__version__}")
+        gdt_path = Path(gdt_path).resolve()
+        if not gdt_path.is_file():
+            log.error(f"GDT .gdict file not found: {gdt_path}")
+            raise FileNotFoundError(f"GDT .gdict file not found: {gdt_path}")
+
+        gdict = gdt.read_gdict(gdt_path, lazy_info=False)
+        gdt.log_info(log, gdict)
+
+        def clean_att_gdt(
+            row: "pd.Series",
+            log: log_setup.GDTLogger,
+        ) -> str:
+            """Clean attributes using GDT."""
+            try:
+                label = gdict[row.gene_id].label
+            except KeyError:
+                log.error(
+                    f"Gene ID {row.gene_id} not found in GDT dictionary. Using default format."
+                )
+                label = row.gene_id
+            return f"name={label};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
+
+        return clean_att_gdt
 
 
 def add_extract_single_args(parser: argparse.ArgumentParser) -> None:
@@ -232,6 +273,14 @@ def add_clean_args(parser: argparse.ArgumentParser) -> None:
         help="Number of workers to use. "
         f"Default: 0 (use all available cores: {os.cpu_count()})",
     )
+    parser.add_argument(
+        "--gdict",
+        required=False,
+        default=None,
+        dest="gdt",
+        type=str,
+        help="Path to a GDT .gdict file, used in the cleaning of GFF3 file. This requires the `gdt` package to be installed.",
+    )
 
 
 def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
@@ -241,6 +290,8 @@ def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
         log.error(f"TSV file not found: {tsv_path}")
         return
 
+    clean_func = deploy_gdt_support(log, args.gdt) if args.gdt else clean.clean_attr
+
     clean.orchestration(
         log,
         tsv_path,
@@ -249,6 +300,7 @@ def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
         args.out_suffix,
         args.an_column,
         workers_count(args, threading=True),
+        clean_func,
     )
 
 

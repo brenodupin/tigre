@@ -3,7 +3,7 @@
 
 import concurrent.futures as cf
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import pandas as pd
 
@@ -166,25 +166,17 @@ def overlap_solver(
 
 def clean_attr(
     row: pd.Series,
-    an: str,
-    gene_dict: Any,
     log: log_setup.GDTLogger,
 ) -> str:
-    gene_id = row.attributes.split(";", 1)[0].split("ID=", 1)[1]
-    try:
-        gene_label = gene_dict[gene_id].label
-    except KeyError:
-        # log.error(f"[{an}] No gene_dict for {gene_id}")
-        return f"name=NO_GENE_DICT_{gene_id};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{gene_id};"
-
-    return f"name={gene_label};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{gene_id};"
+    return f"name={row.gene_id};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
 
 
 def exec_single_an(
+    log: log_setup.GDTLogger,
     an: str,
     gff_in: Path,
     gff_out: Path,
-    log: log_setup.GDTLogger,
+    clean_func: Callable[[pd.Series, log_setup.GDTLogger], str],
 ) -> tuple[bool, str]:
     try:
         log.info(f"[{an}] -- Start --")
@@ -197,15 +189,14 @@ def exec_single_an(
         )
         df = gff3_utils.filter_orfs(df)
         header = create_header(df.at[0, "attributes"], an, df.at[0, "end"])
+        df["gene_id"] = df["attributes"].str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
 
         if (df["type"] == "region").sum() > 1:
             log.trace(f"[{an}] More than one region found, solving...")
             df = multiple_regions_solver(df, an, log)
 
         log.trace(f"[{an}] Cleaning attributes...")
-        df.loc[1:, "attributes"] = df.loc[1:].apply(
-            clean_attr, axis=1, an=an, gene_dict={}, log=log
-        )
+        df.loc[1:, "attributes"] = df.loc[1:].apply(clean_func, axis=1, log=log)
 
         if df["end"].idxmax() != 0:
             log.trace(f"[{an}] Region end is not the maximum, fixing...")
@@ -218,6 +209,7 @@ def exec_single_an(
 
         log.trace(f"[{an}] Overlaps solver...")
         df = overlap_solver(df, an, log)
+        df = df.drop(columns=["gene_id"], errors="ignore")
 
         # add header to the file
         with open(gff_out, "w") as f:
@@ -240,6 +232,7 @@ def orchestration(
     out_suffix: str = "_clean",
     an_column: str = "AN",
     workers: int = 0,
+    clean_func: Callable[[pd.Series, log_setup.GDTLogger], str] = clean_attr,
 ) -> None:
     """Orchestrates the execution of the ans."""
     tsv = pd.read_csv(tsv_path, sep="\t")
@@ -260,14 +253,15 @@ def orchestration(
     )
 
     print(f"Processing {len(tsv)} ans with {workers} workers")
-    with cf.ProcessPoolExecutor(max_workers=workers) as executor:
+    with cf.ThreadPoolExecutor(max_workers=workers) as executor:
         futures = [
             executor.submit(
                 exec_single_an,
+                log,
                 an,
                 gff_in_builder.build(an),
                 gff_out_builder.build(an),
-                log,
+                clean_func,
             )
             for an in tsv[an_column]
         ]
