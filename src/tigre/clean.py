@@ -265,18 +265,18 @@ def orchestration(
             )
             for an in tsv[an_column]
         ]
-    
+
     for future in cf.as_completed(futures):
         success, an, records = future.result()
         if success:
             log.info(f"[{an}] Processed successfully.")
-        
+
         else:
             log.error(f"[{an}] Failed to process.")
-        
+
         for record in records:
             log.log(record.level, record.msg)
-    
+
     log.info("All ans processed.")
 
 

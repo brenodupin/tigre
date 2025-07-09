@@ -18,46 +18,48 @@ from dataclasses import dataclass
 
 TRACE = 5
 
+
 @dataclass(slots=True, frozen=True)
 class _RawMsg:
     """Data class to hold raw log record information."""
+
     level: int
     msg: str
 
 
-class TempLogger():
+class TempLogger:
     def __init__(self) -> None:
         """Initialize the buffered logger with a maximum size."""
         self.buffer: list[_RawMsg] = []
-    
+
     def _log(self, level: int, msg: str) -> None:
-        """Log a message at the specified level."""      
+        """Log a message at the specified level."""
         self.buffer.append(_RawMsg(level, msg))
-    
+
     def error(self, msg: str) -> None:
         """Log an error message."""
         self._log(logging.ERROR, msg)
-    
+
     def warning(self, msg: str) -> None:
         """Log a warning message."""
         self._log(logging.WARNING, msg)
-    
+
     def info(self, msg: str) -> None:
         """Log an info message."""
         self._log(logging.INFO, msg)
-    
+
     def debug(self, msg: str) -> None:
         """Log a debug message."""
         self._log(logging.DEBUG, msg)
-    
+
     def trace(self, msg: str) -> None:
         """Log a trace message."""
         self._log(TRACE, msg)
-    
+
     def get_records(self) -> list[_RawMsg]:
         """Return the list of log records."""
         return self.buffer
-    
+
     def _clear(self) -> None:
         """Clear the buffer."""
         self.buffer.clear()
@@ -78,7 +80,7 @@ class GDTLogger(logging.Logger):
         """
         if self.isEnabledFor(TRACE):
             self._log(TRACE, message, args, **kwargs)
-    
+
     def spawn_buffer(self) -> TempLogger:
         """Create a buffered logger to collect log records."""
         return TempLogger()
