@@ -163,7 +163,8 @@ def add_extract_multiple_args(parser: argparse.ArgumentParser) -> None:
         "--have-fasta",
         "-hf",
         required=False,
-        type=str,
+        action="store_true",
+        default=False,
         help="If true, will look for a fasta file using GFF3 of TSV. Expected format: '<AN><fasta_ext>'.",
     )
     parser.add_argument(
