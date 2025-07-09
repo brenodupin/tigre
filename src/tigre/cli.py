@@ -215,7 +215,7 @@ def extract_multiple_command(
         log,
         args.tsv,
         args.an_column,
-        workers_count(args),
+        _workers_count(args.workers),
         args.gff_ext,
         args.fasta_ext,
         args.out_suffix,
@@ -299,7 +299,7 @@ def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
         args.gff_suffix,
         args.out_suffix,
         args.an_column,
-        workers_count(args, threading=True),
+        _workers_count(args.workers, threading=True),
         clean_func,
     )
 
@@ -353,12 +353,20 @@ def add_global_args(parser: argparse.ArgumentParser) -> None:
     )
 
 
-def workers_count(args: argparse.Namespace, threading: bool = False) -> int:
+def _workers_count(
+    user_workers: int,
+    *,
+    threading: bool = False,
+    process_multiplier: int = 1,
+    thread_multiplier: int = 4,
+) -> int:
     cpu_count = os.cpu_count() or 1
 
-    max_limit = cpu_count * 4 if threading else cpu_count
+    max_limit = (
+        cpu_count * thread_multiplier if threading else cpu_count * process_multiplier
+    )
 
-    return max_limit if args.workers <= 0 else min(args.workers, max_limit)
+    return max_limit if user_workers <= 0 else min(user_workers, max_limit)
 
 
 def cli_entrypoint() -> None:
