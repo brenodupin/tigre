@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 def deploy_gdt_support(
     log: log_setup.GDTLogger,
     gdt_path: Union[str, Path],
-) -> Callable[["pd.Series", log_setup.GDTLogger], str]:
+) -> Callable[["pd.Series", log_setup.TempLogger], str]:
     try:
         import gdt  # type: ignore[import-not-found]
     except ImportError as ex:
@@ -38,7 +38,7 @@ def deploy_gdt_support(
 
         def clean_att_gdt(
             row: "pd.Series",
-            log: log_setup.GDTLogger,
+            log: log_setup.TempLogger,
         ) -> str:
             """Clean attributes using GDT."""
             try:

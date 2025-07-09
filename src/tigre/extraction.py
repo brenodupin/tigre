@@ -392,7 +392,7 @@ def multiple_execution(
 
     log.info(f"Processing {len(tsv)} ANs with {workers} workers")
     with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as executor:
-        futures = [
+        task = [
             executor.submit(
                 execution,
                 log,
@@ -404,4 +404,4 @@ def multiple_execution(
             )
             for an in tsv[an_column]
         ]
-    concurrent.futures.wait(futures)
+    concurrent.futures.wait(task)

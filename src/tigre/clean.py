@@ -3,7 +3,7 @@
 
 import concurrent.futures as cf
 from pathlib import Path
-from typing import Any, Callable
+from typing import Callable
 
 import pandas as pd
 
@@ -13,7 +13,7 @@ from . import gff3_utils, log_setup
 def multiple_regions_solver(
     df: pd.DataFrame,
     an: str,
-    log: log_setup.GDTLogger,
+    log: log_setup.TempLogger,
 ) -> pd.DataFrame:
     log.warning(f"[{an}] Multiple regions found:")
     for row in df[df["type"] == "region"].itertuples():
@@ -31,7 +31,7 @@ def multiple_regions_solver(
 def bigger_than_region_solver(
     df: pd.DataFrame,
     an: str,
-    log: log_setup.GDTLogger,
+    log: log_setup.TempLogger,
 ) -> pd.DataFrame:
     region_end = df.at[0, "end"]
     log.warning(f"[{an}] Genes with 'end' bigger than region: {region_end}")
@@ -70,7 +70,7 @@ def bigger_than_region_solver(
 def overlaps_chooser(
     overlaps_in: list[pd.Series | pd.DataFrame],
     an: str,
-    log: log_setup.GDTLogger,
+    log: log_setup.TempLogger,
 ) -> str:
     overlaps = pd.DataFrame(overlaps_in).sort_values("start", ignore_index=True)
 
@@ -119,7 +119,7 @@ def create_header(
 def overlap_solver(
     df: pd.DataFrame,
     an: str,
-    log: log_setup.GDTLogger,
+    log: log_setup.TempLogger,
 ) -> pd.DataFrame:
     df_clean = df.iloc[0:1].copy()  # copia region, index 0
 
@@ -166,18 +166,18 @@ def overlap_solver(
 
 def clean_attr(
     row: pd.Series,
-    log: log_setup.GDTLogger,
+    log: log_setup.TempLogger,
 ) -> str:
     return f"name={row.gene_id};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
 
 
 def exec_single_an(
-    log: log_setup.GDTLogger,
+    log: log_setup.TempLogger,
     an: str,
     gff_in: Path,
     gff_out: Path,
-    clean_func: Callable[[pd.Series, log_setup.GDTLogger], str],
-) -> tuple[bool, str]:
+    clean_func: Callable[[pd.Series, log_setup.TempLogger], str],
+) -> tuple[bool, str, list[log_setup._RawMsg]]:
     try:
         log.info(f"[{an}] -- Start --")
 
@@ -217,11 +217,11 @@ def exec_single_an(
             df.to_csv(f, sep="\t", header=False, index=False)
 
         log.info(f"[{an}] -- End --")
-        return True, an
+        return True, an, log.get_records()
     except Exception as e:
         log.error(f"[{an}] Error: {str(e)}")
         log.info(f"[{an}] -- End --")
-        return False, an
+        return False, an, log.get_records()
 
 
 def orchestration(
@@ -232,7 +232,7 @@ def orchestration(
     out_suffix: str = "_clean",
     an_column: str = "AN",
     workers: int = 0,
-    clean_func: Callable[[pd.Series, log_setup.GDTLogger], str] = clean_attr,
+    clean_func: Callable[[pd.Series, log_setup.TempLogger], str] = clean_attr,
 ) -> None:
     """Orchestrates the execution of the ans."""
     tsv = pd.read_csv(tsv_path, sep="\t")
@@ -257,7 +257,7 @@ def orchestration(
         futures = [
             executor.submit(
                 exec_single_an,
-                log,
+                log.spawn_buffer(),
                 an,
                 gff_in_builder.build(an),
                 gff_out_builder.build(an),
@@ -265,12 +265,19 @@ def orchestration(
             )
             for an in tsv[an_column]
         ]
-    cf.wait(futures)
-
-    for future in futures:
-        r = future.result()
-        if not r[0]:
-            print(f"Error on {r[1]}")
+    
+    for future in cf.as_completed(futures):
+        success, an, records = future.result()
+        if success:
+            log.info(f"[{an}] Processed successfully.")
+        
+        else:
+            log.error(f"[{an}] Failed to process.")
+        
+        for record in records:
+            log.log(record.level, record.msg)
+    
+    log.info("All ans processed.")
 
 
 def clean_log(folder: str) -> None:
