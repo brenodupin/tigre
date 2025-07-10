@@ -10,6 +10,8 @@ import pandas as pd
 
 from . import gff3_utils, log_setup
 
+species_url = "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id="
+
 
 def multiple_regions_solver(
     log: log_setup.TempLogger,
@@ -75,7 +77,6 @@ def overlaps_chooser(
 ) -> str:
     overlaps = pd.DataFrame(overlaps_in).sort_values("start", ignore_index=True)
 
-    log.debug(f"[{an}] Overlaps found: {overlaps.shape[0]}")
     left = overlaps[overlaps.start == overlaps.start.min()]
     if left.shape[0] > 1:
         log.warning(
@@ -86,7 +87,7 @@ def overlaps_chooser(
             log.warning(
                 f"[{an}] Genes with same start and end, choosing the first one: {left.iat[0, 8]}"
             )
-            return f"{name_replace_bool(left.iat[0, 8], is_left=True)}{name_replace_bool(left.iat[0, 8], is_left=False)}"
+            return f"{name_replace(left.iat[0, 8], is_left=True)}{name_replace(left.iat[0, 8])}"
 
     right = overlaps[overlaps.end == overlaps.end.max()]
     if right.shape[0] > 1:
@@ -94,26 +95,28 @@ def overlaps_chooser(
             f"[{an}] More than one element with the highest end: {overlaps.end.max()}"
         )
         right = right[right.start == right.start.min()]
-    return f"{name_replace_bool(left.iat[0, 8], is_left=True)}{name_replace_bool(right.iat[0, 8], is_left=False)}"
+    return (
+        f"{name_replace(left.iat[0, 8], is_left=True)}{name_replace(right.iat[0, 8])}"
+    )
 
 
-def name_replace_bool(
-    s: str,
-    is_left: bool,
+def name_replace(
+    string: str,
+    is_left: bool = False,
 ) -> str:
     if is_left:
-        return s.replace("name=", "name_left=").replace("source=", "source_left=")
-    return s.replace("name=", "name_right=").replace("source=", "source_right=")
+        return string.replace("name=", "name_left=").replace("source=", "source_left=")
+    return string.replace("name=", "name_right=").replace("source=", "source_right=")
 
 
 def create_header(
     an: str,
-    region_att: str,
-    region_end: int,
+    attributes: str,
+    end: int,
 ) -> str:
-    header = f"##gff-version 3\n#!gff-spec-version 1.26\n#!processor [PLACE_H0LDER_NAME]\n##sequence-region {an} 1 {region_end}\n"
-    taxon_start = region_att.find("taxon:") + 6
-    header += f"##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id={region_att[taxon_start : region_att.find(';', taxon_start)]}\n"
+    header = f"##gff-version 3\n#!gff-spec-version 1.26\n#!processor [PLACE_H0LDER_NAME]\n##sequence-region {an} 1 {end}\n"
+    taxon_match = gff3_utils._RE_region_taxon.search(attributes)
+    header += f"##species {species_url + taxon_match.group(1) if taxon_match else 'taxon_id_not_found'}\n"
     return header
 
 
@@ -150,14 +153,14 @@ def overlap_solver(
                 f"[{an}] overlap found, region: {row.start} - {end_region} | length: {end_region - row.start + 1}"
             )
             for r in overlaps:
-                log.trace(f"[{an}] s: {r.start} | e: {r.end} | {r.attributes}")
+                log.trace(f"[{an}] {r.start} | {r.end} | {r.type} | {r.attributes}")
 
             # modify the current row with overlap_region info
             row.end = end_region
             row.type = "overlapping_feature_set"
             # row.strand = '+'
             row.attributes = overlaps_chooser(log, overlaps, an)
-            log.debug(f"[{an}] Att: {row.attributes}")
+            log.debug(f"[{an}] Result: {row.attributes}")
 
         # append the row to the df_clean, be it modified (and therefor overlap_region) or not
         df_clean = pd.concat([df_clean, row.to_frame().T], ignore_index=True)
@@ -172,12 +175,14 @@ def clean_attr(
     return f"name={row.gene_id};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
 
 
-def exec_single_an(
+def _exec_single_an(
     log: log_setup.TempLogger,
     an: str,
     gff_in: Path,
     gff_out: Path,
     clean_func: Callable[[log_setup.TempLogger, pd.Series], str],
+    query_string: str,
+    keep_orfs: bool,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     try:
         log.info(f"[{an}] -- Start --")
@@ -186,21 +191,21 @@ def exec_single_an(
         df = gff3_utils.load_gff3(
             gff_in,
             usecols=gff3_utils.GFF3_COLUMNS,
-            query_string='type == ["gene", "region"]',
+            query_string=query_string,
         )
-        df = gff3_utils.filter_orfs(df)
-        header = create_header(df.at[0, "attributes"], an, df.at[0, "end"])
+        if not keep_orfs:
+            df = gff3_utils.filter_orfs(df)
+
+        header = create_header(an, df.at[0, "attributes"], df.at[0, "end"])
         df["gene_id"] = df["attributes"].str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
 
         if (df["type"] == "region").sum() > 1:
-            log.trace(f"[{an}] More than one region found, solving...")
             df = multiple_regions_solver(log, df, an)
 
-        log.trace(f"[{an}] Cleaning attributes...")
+        log.trace(f"[{an}] Cleaning function: {clean_func.__name__}.")
         df.loc[1:, "attributes"] = df.loc[1:].apply(clean_func, axis=1, log=log)
 
         if df["end"].idxmax() != 0:
-            log.trace(f"[{an}] Region end is not the maximum, fixing...")
             df = bigger_than_region_solver(log, df, an)
 
         log.trace(f"[{an}] Sorting DataFrame by start and type...")
@@ -213,35 +218,45 @@ def exec_single_an(
         df = df.drop(columns=["gene_id"], errors="ignore")
 
         # add header to the file
-        with open(gff_out, "w") as f:
-            f.write(header)
-            df.to_csv(f, sep="\t", header=False, index=False)
+        with open(gff_out, "w", encoding="utf-8") as file_handler:
+            file_handler.write(header)
+            df.to_csv(file_handler, sep="\t", header=False, index=False)
 
         log.info(f"[{an}] -- End --")
         return True, an, log.get_records()
     except Exception as e:
-        log.error(f"[{an}] Error: {str(e)}")
+        log.error(f"[{an}] Error: {e}")
         log.info(f"[{an}] -- End --")
         return False, an, log.get_records()
 
 
-def exec_single_an_with_pool(
+def _exec_single_an_with_pool(
     pool: queue.Queue[log_setup.TempLogger],
     an: str,
     gff_in: Path,
     gff_out: Path,
     clean_func: Callable[[log_setup.TempLogger, pd.Series], str],
+    query_string: str,
+    keep_orfs: bool,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Execute a single AN with a thread pool."""
     log = pool.get()
     try:
-        return exec_single_an(log, an, gff_in, gff_out, clean_func)
+        return _exec_single_an(
+            log,
+            an,
+            gff_in,
+            gff_out,
+            clean_func,
+            query_string,
+            keep_orfs,
+        )
     finally:
         log.clear()
         pool.put(log)
 
 
-def orchestration(
+def clean_multiple(
     log: log_setup.GDTLogger,
     tsv_path: Path,
     gff_ext: str = ".gff3",
@@ -250,6 +265,8 @@ def orchestration(
     an_column: str = "AN",
     workers: int = 0,
     clean_func: Callable[[log_setup.TempLogger, pd.Series], str] = clean_attr,
+    query_string: str = gff3_utils.QS_GENE_TRNA_RRNA_REGION,
+    keep_orfs: bool = False,
 ) -> None:
     """Orchestrates the execution of the ans."""
     tsv = pd.read_csv(tsv_path, sep="\t")
@@ -277,12 +294,14 @@ def orchestration(
     with cf.ThreadPoolExecutor(max_workers=workers) as executor:
         tasks = [
             executor.submit(
-                exec_single_an_with_pool,
+                _exec_single_an_with_pool,
                 logger_pool,
                 an,
                 gff_in_builder.build(an),
                 gff_out_builder.build(an),
                 clean_func,
+                query_string,
+                keep_orfs,
             )
             for an in tsv[an_column]
         ]

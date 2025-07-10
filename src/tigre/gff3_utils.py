@@ -9,6 +9,7 @@ https://github.com/brenodupin/gdt/blob/master/src/gdt/gff3_utils.py
 """
 
 import re
+from functools import partial
 from pathlib import Path
 from typing import Callable, Optional, Union
 
@@ -29,9 +30,10 @@ GFF3_COLUMNS: tuple[str, ...] = (
 )
 QS_GENE = "type == 'gene'"
 QS_GENE_TRNA_RRNA = "type in ('gene', 'tRNA', 'rRNA')"
+QS_GENE_TRNA_RRNA_REGION = "type in ('gene', 'tRNA', 'rRNA', 'region')"
 
 _RE_ID = re.compile(r"ID=([^;]+)")
-_RE_dbxref_GeneID = re.compile(r"Dbxref=.*GeneID:")
+_RE_region_taxon = re.compile(r"taxon:([^;,]+)")
 
 
 def load_gff3(
@@ -98,6 +100,26 @@ def filter_orfs(
     ].reset_index(drop=True)
 
 
+# will be pre-compiled by the PathBuilder class
+def _std_builder(
+    base_path: Path,
+    suffix: str,
+    ext: str,
+    an: str,
+) -> Path:
+    return base_path / f"{an}{suffix}{ext}"
+
+
+# will be pre-compiled by the PathBuilder class
+def _folder_builder(
+    base_path: Path,
+    suffix: str,
+    ext: str,
+    an: str,
+) -> Path:
+    return base_path / an / f"{an}{suffix}{ext}"
+
+
 class PathBuilder:
     """Flexible class to build paths (mostly GFF/Fasta) based on accession numbers.
 
@@ -153,10 +175,12 @@ class PathBuilder:
         """
         base_path = Path(base).resolve()
 
-        def standard_builder(an: str) -> Path:
-            return base_path / f"{an}{suffix}{self.ext}"
-
-        self._build_method = standard_builder
+        self._build_method = partial(
+            _std_builder,
+            base_path,
+            suffix,
+            self.ext,
+        )
         self._str = (
             f"PathBuilder('{self.ext}', build='std', base='{base_path}', "
             f"suffix='{suffix}')"
@@ -184,10 +208,13 @@ class PathBuilder:
         """
         base_path = Path(base).resolve()
 
-        def folder_builder(an: str) -> Path:
-            return base_path / an / f"{an}{suffix}{self.ext}"
+        self._build_method = partial(
+            _folder_builder,
+            base_path,
+            suffix,
+            self.ext,
+        )
 
-        self._build_method = folder_builder
         self._str = (
             f"PathBuilder('{self.ext}', build='folder', base='{base_path}', "
             f"suffix='{suffix}')"
