@@ -2,6 +2,7 @@
 """Module to solve overlaps in GFF3 files."""
 
 import concurrent.futures as cf
+import queue
 from pathlib import Path
 from typing import Callable
 
@@ -11,9 +12,9 @@ from . import gff3_utils, log_setup
 
 
 def multiple_regions_solver(
+    log: log_setup.TempLogger,
     df: pd.DataFrame,
     an: str,
-    log: log_setup.TempLogger,
 ) -> pd.DataFrame:
     log.warning(f"[{an}] Multiple regions found:")
     for row in df[df["type"] == "region"].itertuples():
@@ -29,9 +30,9 @@ def multiple_regions_solver(
 
 
 def bigger_than_region_solver(
+    log: log_setup.TempLogger,
     df: pd.DataFrame,
     an: str,
-    log: log_setup.TempLogger,
 ) -> pd.DataFrame:
     region_end = df.at[0, "end"]
     log.warning(f"[{an}] Genes with 'end' bigger than region: {region_end}")
@@ -68,9 +69,9 @@ def bigger_than_region_solver(
 
 
 def overlaps_chooser(
+    log: log_setup.TempLogger,
     overlaps_in: list[pd.Series | pd.DataFrame],
     an: str,
-    log: log_setup.TempLogger,
 ) -> str:
     overlaps = pd.DataFrame(overlaps_in).sort_values("start", ignore_index=True)
 
@@ -106,8 +107,8 @@ def name_replace_bool(
 
 
 def create_header(
-    region_att: str,
     an: str,
+    region_att: str,
     region_end: int,
 ) -> str:
     header = f"##gff-version 3\n#!gff-spec-version 1.26\n#!processor [PLACE_H0LDER_NAME]\n##sequence-region {an} 1 {region_end}\n"
@@ -117,9 +118,9 @@ def create_header(
 
 
 def overlap_solver(
+    log: log_setup.TempLogger,
     df: pd.DataFrame,
     an: str,
-    log: log_setup.TempLogger,
 ) -> pd.DataFrame:
     df_clean = df.iloc[0:1].copy()  # copia region, index 0
 
@@ -155,7 +156,7 @@ def overlap_solver(
             row.end = end_region
             row.type = "overlapping_feature_set"
             # row.strand = '+'
-            row.attributes = overlaps_chooser(overlaps, an, log)
+            row.attributes = overlaps_chooser(log, overlaps, an)
             log.debug(f"[{an}] Att: {row.attributes}")
 
         # append the row to the df_clean, be it modified (and therefor overlap_region) or not
@@ -165,8 +166,8 @@ def overlap_solver(
 
 
 def clean_attr(
-    row: pd.Series,
     log: log_setup.TempLogger,
+    row: pd.Series,
 ) -> str:
     return f"name={row.gene_id};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
 
@@ -176,7 +177,7 @@ def exec_single_an(
     an: str,
     gff_in: Path,
     gff_out: Path,
-    clean_func: Callable[[pd.Series, log_setup.TempLogger], str],
+    clean_func: Callable[[log_setup.TempLogger, pd.Series], str],
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     try:
         log.info(f"[{an}] -- Start --")
@@ -193,14 +194,14 @@ def exec_single_an(
 
         if (df["type"] == "region").sum() > 1:
             log.trace(f"[{an}] More than one region found, solving...")
-            df = multiple_regions_solver(df, an, log)
+            df = multiple_regions_solver(log, df, an)
 
         log.trace(f"[{an}] Cleaning attributes...")
         df.loc[1:, "attributes"] = df.loc[1:].apply(clean_func, axis=1, log=log)
 
         if df["end"].idxmax() != 0:
             log.trace(f"[{an}] Region end is not the maximum, fixing...")
-            df = bigger_than_region_solver(df, an, log)
+            df = bigger_than_region_solver(log, df, an)
 
         log.trace(f"[{an}] Sorting DataFrame by start and type...")
         df.at[df[df["type"] == "region"].index[0], "type"] = "_"
@@ -208,7 +209,7 @@ def exec_single_an(
         df.at[0, "type"] = "region"
 
         log.trace(f"[{an}] Overlaps solver...")
-        df = overlap_solver(df, an, log)
+        df = overlap_solver(log, df, an)
         df = df.drop(columns=["gene_id"], errors="ignore")
 
         # add header to the file
@@ -224,6 +225,22 @@ def exec_single_an(
         return False, an, log.get_records()
 
 
+def exec_single_an_with_pool(
+    pool: queue.Queue[log_setup.TempLogger],
+    an: str,
+    gff_in: Path,
+    gff_out: Path,
+    clean_func: Callable[[log_setup.TempLogger, pd.Series], str],
+) -> tuple[bool, str, list[log_setup._RawMsg]]:
+    """Execute a single AN with a thread pool."""
+    log = pool.get()
+    try:
+        return exec_single_an(log, an, gff_in, gff_out, clean_func)
+    finally:
+        log.clear()
+        pool.put(log)
+
+
 def orchestration(
     log: log_setup.GDTLogger,
     tsv_path: Path,
@@ -232,7 +249,7 @@ def orchestration(
     out_suffix: str = "_clean",
     an_column: str = "AN",
     workers: int = 0,
-    clean_func: Callable[[pd.Series, log_setup.TempLogger], str] = clean_attr,
+    clean_func: Callable[[log_setup.TempLogger, pd.Series], str] = clean_attr,
 ) -> None:
     """Orchestrates the execution of the ans."""
     tsv = pd.read_csv(tsv_path, sep="\t")
@@ -252,12 +269,16 @@ def orchestration(
         an_column,
     )
 
-    print(f"Processing {len(tsv)} ans with {workers} workers")
+    logger_pool: queue.Queue[log_setup.TempLogger] = queue.Queue()
+    for _ in range(workers + 1):
+        logger_pool.put(log.spawn_buffer())
+
+    log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
     with cf.ThreadPoolExecutor(max_workers=workers) as executor:
-        futures = [
+        tasks = [
             executor.submit(
-                exec_single_an,
-                log.spawn_buffer(),
+                exec_single_an_with_pool,
+                logger_pool,
                 an,
                 gff_in_builder.build(an),
                 gff_out_builder.build(an),
@@ -266,49 +287,12 @@ def orchestration(
             for an in tsv[an_column]
         ]
 
-    for future in cf.as_completed(futures):
-        success, an, records = future.result()
-        if success:
-            log.info(f"[{an}] Processed successfully.")
+        for future in cf.as_completed(tasks):
+            success, an, records = future.result()
+            if not success:
+                log.error(f"[{an}] Failed to process.")
 
-        else:
-            log.error(f"[{an}] Failed to process.")
+            for record in records:
+                log.log(record[0], record[1])
 
-        for record in records:
-            log.log(record.level, record.msg)
-
-    log.info("All ans processed.")
-
-
-def clean_log(folder: str) -> None:
-    time_l, msg_lvl_l, msg_l = [], [], []
-
-    with open(f"{folder}_overlaps_raw_final.log", "r") as f:
-        for line in f.readlines():
-            time, msg_lvl, msg = line.split(" - ", 2)
-            time_l.append(time)
-            msg_lvl_l.append(msg_lvl)
-            msg_l.append(msg.strip())
-
-    df_log = pd.DataFrame({"time": time_l, "msg_lvl": msg_lvl_l, "msg": msg_l})
-    df_log[["an", "msg"]] = df_log["msg"].str.split("] ", n=1, expand=True)
-    df_log["an"] = df_log["an"].str.replace("[", "")
-    df_log["time"] = pd.to_datetime(df_log["time"], format="%Y-%m-%d %H:%M:%S,%f")
-    df_log = df_log[df_log["msg"] != "-- End --"]
-    df_log = df_log[["an", "time", "msg_lvl", "msg"]]
-
-    with open(f"{folder}_overlaps_clean_final.log", "w+") as f:
-
-        def format_row(row: pd.Series) -> str:
-            if row.msg == "-- Start --":
-                return f"{row.time} - {row.msg_lvl} - [{row.an}] {row.msg}"
-            return f"{row.time} - {row.msg_lvl} - {row.msg}"
-
-        df_log["formatted"] = df_log.apply(format_row, axis=1)
-        df_log["extra_newline"] = (
-            df_log["msg"].str.startswith("Att: ").map({True: "\n", False: ""})
-        )
-
-        for an, group in df_log.groupby("an", sort=False):
-            group_text = "\n".join(group["formatted"] + group["extra_newline"]) + "\n\n"
-            f.write(group_text)
+        log.info("All processed.")
