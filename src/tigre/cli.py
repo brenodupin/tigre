@@ -8,7 +8,7 @@ import subprocess
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Union
 
-from . import __version__, clean, extraction, log_setup
+from . import __version__, clean, extraction, gff3_utils, log_setup
 
 C_RESET = "\033[0m"
 
@@ -16,10 +16,10 @@ if TYPE_CHECKING:
     import pandas as pd
 
 
-def deploy_gdt_support(
+def _deploy_gdt_support(
     log: log_setup.GDTLogger,
     gdt_path: Union[str, Path],
-) -> Callable[[log_setup.TempLogger, "pd.Series"], str]:
+) -> Callable[["pd.Series", log_setup.TempLogger], str]:
     try:
         import gdt  # type: ignore[import-not-found]
     except ImportError:
@@ -36,9 +36,9 @@ def deploy_gdt_support(
         gdict = gdt.read_gdict(gdt_path, lazy_info=False)
         gdt.log_info(log, gdict)
 
-        def clean_att_gdt(
-            log: log_setup.TempLogger,
+        def gdt_clean(
             row: "pd.Series",
+            log: log_setup.TempLogger,
         ) -> str:
             """Clean attributes using GDT."""
             try:
@@ -50,7 +50,7 @@ def deploy_gdt_support(
                 label = row.gene_id
             return f"name={label};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
 
-        return clean_att_gdt
+        return gdt_clean
 
 
 def add_extract_single_args(parser: argparse.ArgumentParser) -> None:
@@ -282,6 +282,21 @@ def add_clean_args(parser: argparse.ArgumentParser) -> None:
         type=str,
         help="Path to a GDT .gdict file, used in the cleaning of GFF3 file. This requires the `gdt` package to be installed.",
     )
+    parser.add_argument(
+        "--query-string",
+        required=False,
+        default=gff3_utils.QS_GENE_TRNA_RRNA_REGION,
+        type=str,
+        help="Query string that pandas filter features in GFF. "
+        f"Default: '{gff3_utils.QS_GENE_TRNA_RRNA_REGION}'",
+    )
+    parser.add_argument(
+        "--keep-orfs",
+        required=False,
+        default=False,
+        action="store_true",
+        help="Keep ORFs. Default: exclude ORFs",
+    )
 
 
 def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
@@ -291,9 +306,9 @@ def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
         log.error(f"TSV file not found: {tsv_path}")
         return
 
-    clean_func = deploy_gdt_support(log, args.gdt) if args.gdt else clean.clean_attr
+    clean_func = _deploy_gdt_support(log, args.gdt) if args.gdt else clean.clean_attr
 
-    clean.orchestration(
+    clean.clean_multiple(
         log,
         tsv_path,
         args.gff_ext,
@@ -302,6 +317,8 @@ def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
         args.an_column,
         _workers_count(args.workers, threading=True),
         clean_func,
+        args.query_string,
+        args.keep_orfs,
     )
 
 

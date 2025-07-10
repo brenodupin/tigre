@@ -169,8 +169,8 @@ def overlap_solver(
 
 
 def clean_attr(
-    log: log_setup.TempLogger,
     row: pd.Series,
+    log: log_setup.TempLogger,
 ) -> str:
     return f"name={row.gene_id};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
 
@@ -180,7 +180,7 @@ def _exec_single_an(
     an: str,
     gff_in: Path,
     gff_out: Path,
-    clean_func: Callable[[log_setup.TempLogger, pd.Series], str],
+    clean_func: Callable[[pd.Series, log_setup.TempLogger], str],
     query_string: str,
     keep_orfs: bool,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
@@ -235,7 +235,7 @@ def _exec_single_an_with_pool(
     an: str,
     gff_in: Path,
     gff_out: Path,
-    clean_func: Callable[[log_setup.TempLogger, pd.Series], str],
+    clean_func: Callable[[pd.Series, log_setup.TempLogger], str],
     query_string: str,
     keep_orfs: bool,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
@@ -264,7 +264,7 @@ def clean_multiple(
     out_suffix: str = "_clean",
     an_column: str = "AN",
     workers: int = 0,
-    clean_func: Callable[[log_setup.TempLogger, pd.Series], str] = clean_attr,
+    clean_func: Callable[[pd.Series, log_setup.TempLogger], str] = clean_attr,
     query_string: str = gff3_utils.QS_GENE_TRNA_RRNA_REGION,
     keep_orfs: bool = False,
 ) -> None:
@@ -287,7 +287,7 @@ def clean_multiple(
     )
 
     logger_pool: queue.Queue[log_setup.TempLogger] = queue.Queue()
-    for _ in range(workers + 1):
+    for _ in range(workers):
         logger_pool.put(log.spawn_buffer())
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
