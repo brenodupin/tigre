@@ -8,33 +8,39 @@ Source
 https://github.com/brenodupin/gdt/blob/master/src/gdt/log_setup.py
 """
 
+import datetime
 import glob
 import logging
 import os
-import datetime
 from pathlib import Path
 from typing import Any, Optional, Union, cast
-from dataclasses import dataclass
 
 TRACE = 5
 
-
-@dataclass(slots=True, frozen=True)
-class _RawMsg:
-    """Data class to hold raw log record information."""
-
-    level: int
-    msg: str
+_RawMsg = tuple[int, str]
 
 
 class TempLogger:
-    def __init__(self) -> None:
-        """Initialize the buffered logger with a maximum size."""
+    """Temporary logger to buffer log messages.
+
+    This logger buffers messages in memory and can be used to collect logs
+    during a specific operation, such as cleaning GFF files. It supports
+    logging at various levels, including a custom TRACE level.
+
+    This approach is thread-safe and allows for easy collection of log records
+    without writing to a file or console immediately.
+    """
+
+    __slots__ = ("buffer", "trace_enable")
+
+    def __init__(self, trace_enable: bool = False) -> None:
+        """Initialize the buffered logger."""
         self.buffer: list[_RawMsg] = []
+        self.trace_enable = trace_enable
 
     def _log(self, level: int, msg: str) -> None:
         """Log a message at the specified level."""
-        self.buffer.append(_RawMsg(level, msg))
+        self.buffer.append((level, msg))
 
     def error(self, msg: str) -> None:
         """Log an error message."""
@@ -54,13 +60,14 @@ class TempLogger:
 
     def trace(self, msg: str) -> None:
         """Log a trace message."""
-        self._log(TRACE, msg)
+        if self.trace_enable:
+            self._log(TRACE, msg)
 
     def get_records(self) -> list[_RawMsg]:
         """Return the list of log records."""
-        return self.buffer
+        return self.buffer.copy()
 
-    def _clear(self) -> None:
+    def clear(self) -> None:
         """Clear the buffer."""
         self.buffer.clear()
 
@@ -68,10 +75,20 @@ class TempLogger:
 class GDTLogger(logging.Logger):
     """Extended logger class for GDT with TRACE (5) level support."""
 
+    def __init__(self, name: str, level: int = logging.NOTSET) -> None:
+        """Initialize the GDT logger with custom TRACE level."""
+        super().__init__(name, level)
+        self._trace_enabled = self.level <= TRACE
+
+    def setLevel(self, level: Union[int, str]) -> None:  # noqa: N802
+        """Override setLevel to update cached trace status."""
+        super().setLevel(level)
+        self._trace_enabled = self.level <= TRACE
+
     def trace(self, message: Any, *args: Any, **kwargs: Any) -> None:
         """Log 'msg % args' with severity 'TRACE'.
 
-        Trace is a custom level below DEBUG, but above INFO, valued at 5.
+        Trace is a custom level below DEBUG (10), but above NOTSET (0), valued at 5.
 
         To pass exception information, use the keyword argument exc_info with
         a true value, e.g.
@@ -83,7 +100,7 @@ class GDTLogger(logging.Logger):
 
     def spawn_buffer(self) -> TempLogger:
         """Create a buffered logger to collect log records."""
-        return TempLogger()
+        return TempLogger(self._trace_enabled)
 
 
 logging.addLevelName(TRACE, "TRACE")
@@ -154,7 +171,7 @@ def create_dev_logger(
 
     # Create and configure logger
     log = cast(GDTLogger, logging.getLogger("gdt"))
-    log.setLevel(TRACE)
+    log.setLevel(min(console_level_int, file_level_int))
 
     # Remove any existing handlers (in case logger was already configured)
     for handler in log.handlers[:]:
@@ -204,7 +221,7 @@ def create_simple_logger(
 
     """
     log = cast(GDTLogger, logging.getLogger("gdt"))
-    log.setLevel(TRACE)
+    levels = []
     # Remove any existing handlers
     for handler in log.handlers[:]:
         log.removeHandler(handler)
@@ -218,6 +235,7 @@ def create_simple_logger(
         )
         console_handler.setFormatter(console_formatter)
         log.addHandler(console_handler)
+        levels.append(console_level_int)
 
     if save_to_file:
         if log_file is None:
@@ -236,7 +254,9 @@ def create_simple_logger(
         file_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
         file_handler.setFormatter(file_formatter)
         log.addHandler(file_handler)
+        levels.append(file_level_int)
 
+    log.setLevel(min(levels) if levels else _logging_levels["DISABLE"])
     log.propagate = False
     log.debug("Simple log setup complete.")
     log.debug(f"Console logging level {console_level if print_to_console else 'None'}")
