@@ -6,7 +6,7 @@ import argparse
 import os
 import subprocess
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Optional, Union
+from typing import TYPE_CHECKING, Callable, Union
 
 from . import __version__, clean, extraction, log_setup
 
@@ -19,10 +19,10 @@ if TYPE_CHECKING:
 def deploy_gdt_support(
     log: log_setup.GDTLogger,
     gdt_path: Union[str, Path],
-) -> Callable[["pd.Series", log_setup.TempLogger], str]:
+) -> Callable[[log_setup.TempLogger, "pd.Series"], str]:
     try:
         import gdt  # type: ignore[import-not-found]
-    except ImportError as ex:
+    except ImportError:
         raise SystemExit(
             "GDT package not found. Please install gdt package to use the --gdict option."
         )
@@ -37,8 +37,8 @@ def deploy_gdt_support(
         gdt.log_info(log, gdict)
 
         def clean_att_gdt(
-            row: "pd.Series",
             log: log_setup.TempLogger,
+            row: "pd.Series",
         ) -> str:
             """Clean attributes using GDT."""
             try:

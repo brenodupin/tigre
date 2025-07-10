@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import Callable, Optional, Union
 
 import pandas as pd
+
 from . import log_setup
 
 GFF3_COLUMNS: tuple[str, ...] = (

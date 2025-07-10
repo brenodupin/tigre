@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 """Module to extract intergenic regions from GFF3 files."""
 
-import argparse
+import concurrent.futures
 import subprocess
 from pathlib import Path
 from shutil import copy2
 from typing import Optional
-from typing_extensions import Final
+
 import pandas as pd
 
-from . import log_setup
-from . import gff3_utils
-
-import concurrent.futures
+from . import gff3_utils, log_setup
 
 IGRegion = tuple[int, int, int, str]  # gene_id, start, end, attributes
 
