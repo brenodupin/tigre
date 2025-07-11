@@ -7,4 +7,5 @@ from .clean import *
 from .cli import *
 from .extraction import *
 from .gff3_utils import *
+from .igr import *
 from .log_setup import *
