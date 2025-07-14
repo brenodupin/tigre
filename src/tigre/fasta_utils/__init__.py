@@ -25,13 +25,13 @@ except ImportError:
 
     # stub function if biopython is not available
     def biopython_getfasta(
-        log: "log_setup.GDTLogger",
+        log: "log_setup.TempLogger",
         an: str,
         gff_in: "Path",
         fasta_in: "Path",
         fasta_out: "Path",
-        bedtools_idx: bool = False,
-    ) -> None:
+        use_bedtools_index: bool = True,
+    ) -> tuple[bool, str, list[tuple[int, str]]]:
         raise ImportError(
             "Biopython is required for `biopython_getfasta`. "
             "Install it with: pip install biopython or pip install tigre[bio]"
