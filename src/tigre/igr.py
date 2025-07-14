@@ -33,6 +33,7 @@ def extract_intergenic_regions(
     gff_in: Path,
     gff_out: Path,
     keep_orfs: bool = False,
+    add_region: bool = False,
 ) -> None:
     """Extract intergenic regions from a GFF3 file and save to a new file.
 
@@ -112,6 +113,12 @@ def extract_intergenic_regions(
     log.trace(f"Writing intergenic regions to {gff_out}.")
     with open(gff_out, "w") as f:
         f.write("\n".join(header) + "\n")
+        if add_region:
+            log.trace("Adding region line to output.")
+            f.write(
+                f"{seqid}\t{source}\tregion\t1\t{region_size}\t.\t+\t.\t"
+                f"{region.attributes}\n"
+            )
         df_ig.to_csv(f, sep="\t", index=False, header=False)
 
 
