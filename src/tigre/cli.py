@@ -5,6 +5,7 @@
 import argparse
 import os
 import subprocess
+from functools import partial
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Union
 
@@ -13,7 +14,25 @@ from . import __version__, clean, extraction, gff3_utils, log_setup
 C_RESET = "\033[0m"
 
 if TYPE_CHECKING:
+    import gdt  # type: ignore[import-not-found]
     import pandas as pd
+
+
+# pre-compile functions for GDT cleaning
+def _gdt_clean(
+    gdt: "gdt.GeneDictionary",
+    row: "pd.Series",
+    log: log_setup.TempLogger,
+) -> str:
+    """Clean attributes using GDT."""
+    try:
+        label = gdt[row.gene_id].label
+    except KeyError:
+        log.error(
+            f"Gene ID {row.gene_id} not found in GDT dictionary. Using default format."
+        )
+        label = row.gene_id
+    return f"name={label};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
 
 
 def _deploy_gdt_support(
@@ -21,36 +40,23 @@ def _deploy_gdt_support(
     gdt_path: Union[str, Path],
 ) -> Callable[["pd.Series", log_setup.TempLogger], str]:
     try:
-        import gdt  # type: ignore[import-not-found]
+        import gdt
     except ImportError:
         raise SystemExit(
             "GDT package not found. Please install gdt package to use the --gdict option."
         )
-    else:
-        log.debug(f"GDT package version: {gdt.__version__}")
-        gdt_path = Path(gdt_path).resolve()
-        if not gdt_path.is_file():
-            log.error(f"GDT .gdict file not found: {gdt_path}")
-            raise FileNotFoundError(f"GDT .gdict file not found: {gdt_path}")
 
-        gdict = gdt.read_gdict(gdt_path, lazy_info=False)
-        gdt.log_info(log, gdict)
+    log.debug(f"GDT package version: {gdt.__version__}")
+    gdt_path = Path(gdt_path).resolve()
+    if not gdt_path.is_file():
+        log.error(f"GDT .gdict file not found: {gdt_path}")
+        raise FileNotFoundError(f"GDT .gdict file not found: {gdt_path}")
 
-        def gdt_clean(
-            row: "pd.Series",
-            log: log_setup.TempLogger,
-        ) -> str:
-            """Clean attributes using GDT."""
-            try:
-                label = gdict[row.gene_id].label
-            except KeyError:
-                log.error(
-                    f"Gene ID {row.gene_id} not found in GDT dictionary. Using default format."
-                )
-                label = row.gene_id
-            return f"name={label};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
-
-        return gdt_clean
+    gdict = gdt.read_gdict(gdt_path, lazy_info=False)
+    gdt.log_info(log, gdict)
+    gdt_clean = partial(_gdt_clean, gdict)
+    log.debug("GDT support deployed successfully.")
+    return gdt_clean
 
 
 def add_extract_single_args(parser: argparse.ArgumentParser) -> None:
@@ -315,7 +321,7 @@ def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
         args.gff_suffix,
         args.out_suffix,
         args.an_column,
-        _workers_count(args.workers, threading=True),
+        _workers_count(args.workers, threading=False),
         clean_func,
         args.query_string,
         args.keep_orfs,

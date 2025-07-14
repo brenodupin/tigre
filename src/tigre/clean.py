@@ -2,7 +2,6 @@
 """Module to solve overlaps in GFF3 files."""
 
 import concurrent.futures as cf
-import queue
 from pathlib import Path
 from typing import Callable
 
@@ -18,15 +17,15 @@ def multiple_regions_solver(
     df: pd.DataFrame,
     an: str,
 ) -> pd.DataFrame:
-    log.warning(f"[{an}] Multiple regions found:")
+    log.warning("Multiple regions found:")
     for row in df[df["type"] == "region"].itertuples():
-        log.warning(f"[{an}] s: {row.start} e: {row.end} | {row.attributes}")
+        log.warning(f" s: {row.start} e: {row.end} | {row.attributes}")
 
     region_mask = df["type"] == "region"
     if region_mask.sum() > 1:
         df = df[~region_mask | (df.index == 0)].reset_index(drop=True)
     log.warning(
-        f"[{an}] Chosen s: {df.at[0, 'start']} e: {df.at[0, 'end']} | {df.at[0, 'attributes']}"
+        f" Chosen s: {df.at[0, 'start']} e: {df.at[0, 'end']} | {df.at[0, 'attributes']}"
     )
     return df
 
@@ -37,19 +36,17 @@ def bigger_than_region_solver(
     an: str,
 ) -> pd.DataFrame:
     region_end = df.at[0, "end"]
-    log.warning(f"[{an}] Genes with 'end' bigger than region: {region_end}")
+    log.warning(f"Genes with 'end' bigger than region: {region_end}")
     for row in df[df["end"] > region_end].itertuples():
-        log.warning(
-            f"[{an}] s: {row.start} e: {row.end} | t: {row.type} | {row.attributes}"
-        )
+        log.warning(f" s: {row.start} e: {row.end} | t: {row.type} | {row.attributes}")
 
     new_rows = []
     for index, row in df[df["end"] > region_end].iterrows():
         row_type = row.type
-        log.debug(f"[{an}] Processing type {row_type}: {row.attributes}")
+        log.debug(f"Processing type {row_type}: {row.attributes}")
 
         if row.end // region_end > 1:
-            log.error(f"[{an}] Gene is bigger than region! g:{row.end} r:{region_end}")
+            log.error(f" Gene is bigger than region! g:{row.end} r:{region_end}")
 
         # Handle overlap
         overlap = row.end - region_end
@@ -63,9 +60,7 @@ def bigger_than_region_solver(
         new_row.type = row_type + "_region"
         new_rows.append(new_row)
 
-        log.debug(
-            f"[{an}] s: {new_row.start} | e: {new_row.end} | {new_row.attributes}"
-        )
+        log.debug(f" s: {new_row.start} | e: {new_row.end} | {new_row.attributes}")
 
     return pd.concat([df, pd.DataFrame(new_rows)])
 
@@ -79,21 +74,19 @@ def overlaps_chooser(
 
     left = overlaps[overlaps.start == overlaps.start.min()]
     if left.shape[0] > 1:
-        log.warning(
-            f"[{an}] More than one element with the lowest start: {overlaps.start.min()}"
+        log.trace(
+            f" More than one element with the lowest start: {overlaps.start.min()}"
         )
         left = left[left.end == left.end.max()]
         if left.shape[0] > 1 and left.end.max() == overlaps.end.max():
-            log.warning(
-                f"[{an}] Genes with same start and end, choosing the first one: {left.iat[0, 8]}"
+            log.trace(
+                f" Genes with same start and end, choosing the first one: {left.iat[0, 8]}"
             )
             return f"{name_replace(left.iat[0, 8], is_left=True)}{name_replace(left.iat[0, 8])}"
 
     right = overlaps[overlaps.end == overlaps.end.max()]
     if right.shape[0] > 1:
-        log.warning(
-            f"[{an}] More than one element with the highest end: {overlaps.end.max()}"
-        )
+        log.trace(f" More than one element with the highest end: {overlaps.end.max()}")
         right = right[right.start == right.start.min()]
     return (
         f"{name_replace(left.iat[0, 8], is_left=True)}{name_replace(right.iat[0, 8])}"
@@ -150,17 +143,17 @@ def overlap_solver(
         if overlaps:
             overlaps.insert(0, row.copy())  # insert current row at index 0
             log.debug(
-                f"[{an}] overlap found, region: {row.start} - {end_region} | length: {end_region - row.start + 1}"
+                f"overlap found, region: {row.start} - {end_region} | length: {end_region - row.start + 1}"
             )
             for r in overlaps:
-                log.trace(f"[{an}] {r.start} | {r.end} | {r.type} | {r.attributes}")
+                log.trace(f" {r.start} | {r.end} | {r.type} | {r.attributes}")
 
             # modify the current row with overlap_region info
             row.end = end_region
             row.type = "overlapping_feature_set"
             # row.strand = '+'
             row.attributes = overlaps_chooser(log, overlaps, an)
-            log.debug(f"[{an}] Result: {row.attributes}")
+            log.debug(f"Result: {row.attributes}")
 
         # append the row to the df_clean, be it modified (and therefor overlap_region) or not
         df_clean = pd.concat([df_clean, row.to_frame().T], ignore_index=True)
@@ -187,7 +180,7 @@ def _exec_single_an(
     try:
         log.info(f"[{an}] -- Start --")
 
-        log.trace(f"[{an}] Loading GFF3 file: {gff_in}")
+        log.trace(f" Loading GFF3 file: {gff_in}")
         df = gff3_utils.load_gff3(
             gff_in,
             usecols=gff3_utils.GFF3_COLUMNS,
@@ -202,18 +195,18 @@ def _exec_single_an(
         if (df["type"] == "region").sum() > 1:
             df = multiple_regions_solver(log, df, an)
 
-        log.trace(f"[{an}] Cleaning function: {clean_func.__name__}.")
+        log.trace(f" Cleaning function: {clean_func}.")
         df.loc[1:, "attributes"] = df.loc[1:].apply(clean_func, axis=1, log=log)
 
         if df["end"].idxmax() != 0:
             df = bigger_than_region_solver(log, df, an)
 
-        log.trace(f"[{an}] Sorting DataFrame by start and type...")
+        log.trace(" Sorting DataFrame by start and type...")
         df.at[df[df["type"] == "region"].index[0], "type"] = "_"
         df = df.sort_values(by=["start", "type"], ascending=True, ignore_index=True)
         df.at[0, "type"] = "region"
 
-        log.trace(f"[{an}] Overlaps solver...")
+        log.trace(" Overlaps solver...")
         df = overlap_solver(log, df, an)
         df = df.drop(columns=["gene_id"], errors="ignore")
 
@@ -228,32 +221,6 @@ def _exec_single_an(
         log.error(f"[{an}] Error: {e}")
         log.info(f"[{an}] -- End --")
         return False, an, log.get_records()
-
-
-def _exec_single_an_with_pool(
-    pool: queue.Queue[log_setup.TempLogger],
-    an: str,
-    gff_in: Path,
-    gff_out: Path,
-    clean_func: Callable[[pd.Series, log_setup.TempLogger], str],
-    query_string: str,
-    keep_orfs: bool,
-) -> tuple[bool, str, list[log_setup._RawMsg]]:
-    """Execute a single AN with a thread pool."""
-    log = pool.get()
-    try:
-        return _exec_single_an(
-            log,
-            an,
-            gff_in,
-            gff_out,
-            clean_func,
-            query_string,
-            keep_orfs,
-        )
-    finally:
-        log.clear()
-        pool.put(log)
 
 
 def clean_multiple(
@@ -286,16 +253,12 @@ def clean_multiple(
         an_column,
     )
 
-    logger_pool: queue.Queue[log_setup.TempLogger] = queue.Queue()
-    for _ in range(workers):
-        logger_pool.put(log.spawn_buffer())
-
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
-    with cf.ThreadPoolExecutor(max_workers=workers) as executor:
+    with cf.ProcessPoolExecutor(max_workers=workers) as executor:
         tasks = [
             executor.submit(
-                _exec_single_an_with_pool,
-                logger_pool,
+                _exec_single_an,
+                log.spawn_buffer(),
                 an,
                 gff_in_builder.build(an),
                 gff_out_builder.build(an),
