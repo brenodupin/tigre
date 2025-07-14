@@ -11,7 +11,7 @@ https://github.com/brenodupin/gdt/blob/master/src/gdt/gff3_utils.py
 import re
 from functools import partial
 from pathlib import Path
-from typing import Callable, Optional, Union
+from typing import Any, Callable, Optional, Union
 
 import pandas as pd
 
@@ -44,6 +44,7 @@ def load_gff3(
     names: tuple[str, ...] = GFF3_COLUMNS,
     usecols: tuple[str, ...] = ("type", "start", "end", "attributes"),
     query_string: Optional[str] = None,
+    **kwargs: Any,
 ) -> pd.DataFrame:
     """Load a GFF3 file into a pandas DataFrame, optionally filtering by a query string.
 
@@ -55,13 +56,14 @@ def load_gff3(
         names (tuple[str, ...]): Tuple of column names to use.
         usecols (list[str]): List of columns to read from the file.
         query_string (str or None): Query string to filter the DataFrame.
+        **kwargs: Additional keyword arguments passed to `pd.read_csv`.
 
     Returns:
         pd.DataFrame: DataFrame containing the filtered GFF3 data.
 
     """
     if query_string:
-        return (
+        df: pd.DataFrame = (
             pd.read_csv(
                 filename,
                 sep=sep,
@@ -69,16 +71,25 @@ def load_gff3(
                 header=header,
                 names=names,
                 usecols=usecols,
+                **kwargs,
             )
             .query(query_string)
             .sort_values(
                 by=["start", "end"], ascending=[True, False], ignore_index=True
             )
         )
+        return df
 
-    return pd.read_csv(
-        filename, sep=sep, comment=comment, header=header, names=names, usecols=usecols
+    df = pd.read_csv(
+        filename,
+        sep=sep,
+        comment=comment,
+        header=header,
+        names=names,
+        usecols=usecols,
+        **kwargs,
     ).sort_values(by=["start", "end"], ascending=[True, False], ignore_index=True)
+    return df
 
 
 def filter_orfs(
