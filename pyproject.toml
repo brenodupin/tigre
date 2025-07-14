@@ -19,6 +19,10 @@ dependencies = [
     "pandas>=1.5.3,<3.0.0",
 ]
 
+[project.optional-dependencies]
+bio = ["biopython>=1.80"]
+all = ["tigre[bio]"]
+
 [project.urls]
 Homepage = "https://github.com/brenodupin/tigre"
 Source = "https://github.com/brenodupin/tigre"
