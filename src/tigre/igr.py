@@ -9,6 +9,7 @@ import pandas as pd
 
 from . import gff3_utils, log_setup
 
+START_IDX = 3
 END_IDX = 4
 
 NAME_LEFT_IDX = 9  # df['name_left']
@@ -32,7 +33,7 @@ def extract_intergenic_regions(
     gff_in: Path,
     gff_out: Path,
     keep_orfs: bool = False,
-) -> tuple[pd.DataFrame, pd.DataFrame]:
+) -> None:
     """Extract intergenic regions from a GFF3 file and save to a new file.
 
     Args:
@@ -40,11 +41,6 @@ def extract_intergenic_regions(
         gff_in (Path): Input GFF3 file path.
         gff_out (Path): Output GFF3 file path.
         keep_orfs (bool): Whether to keep ORF entries in the output.
-
-    Returns:
-        tuple[pd.DataFrame, pd.DataFrame]: DataFrames containing the
-                                           original GFF3 data and the
-                                           intergenic regions.
 
     """
     log.debug(f"Extracting intergenic regions from {gff_in} to {gff_out}...")
@@ -98,12 +94,12 @@ def extract_intergenic_regions(
     )
 
     if df_ig.empty and not boundary:
-        log.warning("No intergenic regions found. Returning empty DataFrame.")
-        return df, pd.DataFrame()
+        log.error(f"No intergenic regions found. Did {gff_in} contain any features?")
+        return
 
     if boundary:
         df_ig = (
-            pd.concat([df_ig, pd.DataFrame(boundary)], ignore_index=True)
+            pd.concat([df_ig, pd.DataFrame(boundary)])
             .sort_values(by=["start", "end"])
             .reset_index(drop=True)
         )
@@ -113,11 +109,10 @@ def extract_intergenic_regions(
         f"ID={i};{attr}" for i, attr in enumerate(df_ig["attributes"], start)
     ]
 
+    log.trace(f"Writing intergenic regions to {gff_out}.")
     with open(gff_out, "w") as f:
         f.write("\n".join(header) + "\n")
         df_ig.to_csv(f, sep="\t", index=False, header=False)
-
-    return df, df_ig
 
 
 def _solve_boundaries(
@@ -128,11 +123,21 @@ def _solve_boundaries(
     source: str,
     circular: bool,
 ) -> list[dict[str, Union[str, int]]]:
+    # Legend:
+    # [---] feature (gene, trna, rrna)
+    # [== igr ==] intergenic region
+    # || genome boundary, i.e. position where region_size rolls over to 1
 
-    first_start = df.at[0, "start"]
-    last_end = df.iat[-1, END_IDX]
+    first_start = df.iat[0, START_IDX]  # of a feature
+    last_end = df.iat[-1, END_IDX]  # of a feature
     log.debug(f"First start: {first_start}, Last end: {last_end}")
 
+    # ...---][== igr ==]||[== igr ==][---...
+    # if the first start is greater than 1 and the last end is less than
+    # the region size, we have an intergenic region that spans the whole
+    # region, so we create an intergenic region from first_start to
+    # last_end. This only happens if the region is circular, otherwise
+    # we skip the merge and let the other checks handle the intergenic regions.
     if circular and first_start > 1 and last_end < region_size:
         return [
             {
@@ -152,6 +157,10 @@ def _solve_boundaries(
         ]
 
     regions: list[dict[str, Union[str, int]]] = []
+    # ...||[== igr ==][---...
+    # if the first start is greater than 1, we have an intergenic region
+    # before the first feature, so we create an intergenic region from 1 to
+    # first_start - 1.
     if first_start > 1:
         regions.append(
             {
@@ -171,6 +180,10 @@ def _solve_boundaries(
                 f"source_dw={df.iat[0, SOURCE_LEFT_IDX]};",
             }
         )
+    # [---...][== igr ==]||...
+    # if the last end is less than the region size, we have an intergenic
+    # region after the last feature, so we create an intergenic region from
+    # last_end + 1 to region_size.
     if last_end < region_size:
         regions.append(
             {
@@ -200,9 +213,11 @@ def _create_intergenic(
     source: str,
 ) -> pd.DataFrame:
 
+    # we change the original df, so as to not have to copy it
     df["start"] = df["start"] - 1
     df["end"] = df["end"] + 1
 
+    # we create a shifted version with only the data we'll use
     shifted = df[["end", "name_right", "source_right"]].shift(1)
     valid_gaps = shifted["end"] <= df["start"]
 
@@ -234,7 +249,10 @@ def _create_intergenic(
     )
 
 
-def _split_attributes(log: log_setup.GDTLogger, df: pd.DataFrame) -> pd.DataFrame:
+def _split_attributes(
+    log: log_setup.GDTLogger,
+    df: pd.DataFrame,
+) -> pd.DataFrame:
     df["name_left"] = (
         df["attributes"]
         .str.extract(_RE_name, expand=False)  # type: ignore[call-overload]
