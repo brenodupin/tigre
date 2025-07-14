@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """Logger setup and management for tigre.
 
-This module comes directly from the GDT package, with the
-exclusion of `log_info` function, and some minor adjustments.
+The base code for this module (log_setup.py from GDT package) has been
+adapted for the TIGRE project.
 
 Source
 https://github.com/brenodupin/gdt/blob/master/src/gdt/log_setup.py
