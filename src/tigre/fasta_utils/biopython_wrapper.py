@@ -16,7 +16,7 @@ def biopython_getfasta(
     gff_in: Path,
     fasta_in: Path,
     fasta_out: Path,
-    bedtools_idx: bool = False,
+    use_bedtools_index: bool = True,
 ) -> None:
     log.debug(f"Extracting sequences from {fasta_in} using Biopython...")
 
@@ -25,7 +25,7 @@ def biopython_getfasta(
     log.debug(f"fasta_in: {fasta_in}")
     log.debug(f"fasta_out: {fasta_out}")
 
-    idx_fix = 0 if bedtools_idx else 1
+    idx_fix = 0 if use_bedtools_index else 1
     fasta = SeqIO.read(fasta_in, "fasta").seq  # type: ignore[no-untyped-call]
     records = []
 
@@ -37,8 +37,8 @@ def biopython_getfasta(
 
     seqid = df.iat[0, 0]
     df["start"] = df["start"] - 1
-    has_merge = df.iat[-1, 3] == "intergenic_region_merged"
-    df_fast = df.iloc[:-1] if has_merge else df
+    has_ig_merged = df.iat[-1, 3] == "intergenic_region_merged"
+    df_fast = df.iloc[:-1] if has_ig_merged else df
 
     for row in df_fast.itertuples():
         start = cast(int, row.start)
@@ -51,7 +51,7 @@ def biopython_getfasta(
             )
         )
 
-    if has_merge:
+    if has_ig_merged:
         start = cast(int, df.iat[-1, 1])
         end = cast(int, df.iat[-1, 2])
         records.append(
