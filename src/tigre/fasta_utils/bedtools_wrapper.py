@@ -4,22 +4,22 @@
 import concurrent.futures as cf
 import subprocess
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 import pandas as pd
 
 from .. import gff3_utils, log_setup
 
 
-def check_bedtools_available(bedtools_path: Union[Path, str] = "bedtools") -> bool:
+def get_bedtools_version(bedtools_path: Union[Path, str] = "bedtools") -> Optional[str]:
     """Check if bedtools is available in the system."""
     try:
         result = subprocess.run(
             [bedtools_path, "--version"], capture_output=True, text=True, timeout=5
         )
-        return result.returncode == 0
+        return result.stdout.strip() if result.returncode == 0 else None
     except (subprocess.TimeoutExpired, FileNotFoundError):
-        return False
+        return None
 
 
 def bedtools_getfasta(

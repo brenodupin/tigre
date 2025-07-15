@@ -3,7 +3,7 @@
 
 from typing import TYPE_CHECKING
 
-from .bedtools_wrapper import bedtools_getfasta, check_bedtools_available
+from .bedtools_wrapper import bedtools_getfasta, bedtools_multiple, get_bedtools_version
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -26,21 +26,40 @@ except ImportError:
     # stub function if biopython is not available
     def biopython_getfasta(
         log: "log_setup.TempLogger",
-        an: str,
         gff_in: "Path",
         fasta_in: "Path",
         fasta_out: "Path",
-        use_bedtools_index: bool = True,
+        bedtools_compatible: bool = False,
     ) -> tuple[bool, str, list[tuple[int, str]]]:
         raise ImportError(
             "Biopython is required for `biopython_getfasta`. "
             "Install it with: pip install biopython or pip install tigre[bio]"
         )
 
+    def biopython_multiple(
+        log: log_setup.GDTLogger,
+        tsv_path: Path,
+        gff_in_ext: str = ".gff3",
+        gff_in_suffix: str = "_intergenic",
+        fasta_in_ext: str = ".fasta",
+        fasta_in_suffix: str = "",
+        fasta_out_ext: str = ".fasta",
+        fasta_out_suffix: str = "_intergenic",
+        an_column: str = "AN",
+        workers: int = 0,
+        bedtools_compatible: bool = False,
+    ) -> None:
+        raise ImportError(
+            "Biopython is required for `biopython_multiple`. "
+            "Install it with: pip install biopython or pip install tigre[bio]"
+        )
+
 
 __all__ = [
     "bedtools_getfasta",
+    "bedtools_multiple",
     "biopython_getfasta",
-    "check_bedtools_available",
+    "biopython_multiple",
+    "get_bedtools_version",
     "BIOPYTHON_AVAILABLE",
 ]
