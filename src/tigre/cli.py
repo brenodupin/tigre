@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Union
 
 from . import __version__, clean, extraction, gff3_utils, log_setup
+from .fasta_utils import BIOPYTHON_AVAILABLE, bedtools_wrapper, biopython_wrapper
 
 C_RESET = "\033[0m"
 
@@ -328,6 +329,298 @@ def clean_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
     )
 
 
+def getfasta_multiple_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--tsv",
+        required=True,
+        type=str,
+        help="TSV file with indexed GFF3 files to standardize.",
+    )
+    extraction_group = parser.add_mutually_exclusive_group()
+    extraction_group.add_argument(
+        "--bedtools",
+        required=False,
+        default=False,
+        action="store_true",
+        help="If true, will use bedtools to extract sequences from the GFF3 files.",
+    )
+    extraction_group.add_argument(
+        "--biopython",
+        required=False,
+        default=False,
+        action="store_true",
+        help="If true, will use Biopython to extract sequences from the GFF3 files.",
+    )
+    parser.add_argument(
+        "--an-column",
+        required=False,
+        default="AN",
+        type=str,
+        help="Column name for NCBI Accession Number inside the TSV. Default: AN",
+    )
+    parser.add_argument(
+        "--gff-ext",
+        required=False,
+        default=".gff3",
+        type=str,
+        help="File Extension for GFF files. Default: '.gff3'",
+    )
+    parser.add_argument(
+        "--gff-suffix",
+        required=False,
+        default="_intergenic",
+        type=str,
+        help="Suffix to be added when building GFF Paths from the TSV file. "
+        "Example: '_intergenic' will create GFF paths like '<AN>_intergenic.gff3' if "
+        "--gff-ext is '.gff3'. Default: '_intergenic'",
+    )
+    parser.add_argument(
+        "--fasta-in-ext",
+        required=False,
+        default=".fasta",
+        type=str,
+        help="File Extension for Input Fasta files. Default: '.fasta'",
+    )
+    parser.add_argument(
+        "--fasta-in-suffix",
+        required=False,
+        default="",
+        type=str,
+        help="Suffix to be added when building Input Fasta Paths from the TSV file. "
+        "Example: '_merged' will create Fasta paths like '<AN>_merged.fasta' if "
+        "`--fasta-in-ext '.fasta'`. Default: ''",
+    )
+    parser.add_argument(
+        "--fasta-out-ext",
+        required=False,
+        default=".fasta",
+        type=str,
+        help="File Extension for Output Fasta files. Default: '.fasta'",
+    )
+    parser.add_argument(
+        "--fasta-out-suffix",
+        required=False,
+        default="_intergenic",
+        type=str,
+        help="Suffix to be added when building Output Fasta Paths from the TSV file. "
+        "Example: '_merged' will create Fasta paths like '<AN>_merged.fasta' if "
+        "`--fasta-in-ext '.fasta'`. Default: '_intergenic'",
+    )
+    parser.add_argument(
+        "--workers",
+        required=False,
+        default=0,
+        type=int,
+        help="Number of workers to use. "
+        f"Default: 0 (use all available cores: {os.cpu_count()})",
+    )
+    parser.add_argument(
+        "--bedtools-path",
+        required=False,
+        default="bedtools",
+        type=str,
+        help="Path to the bedtools executable. Default: 'bedtools'. "
+        "If bedtools is installed in your PATH, you can leave this as default. "
+        "Use with --bedtools.",
+    )
+    parser.add_argument(
+        "--name-args",
+        required=False,
+        default="-name+",
+        type=str,
+        help="Arguments to pass to bedtools getfasta. Default: '-name+' "
+        "(uses feature name as sequence ID in output FASTA). "
+        "Use with --bedtools.",
+    )
+    parser.add_argument(
+        "--bedtools-compatible",
+        required=False,
+        default=False,
+        action="store_true",
+        help="If true, adjust FASTA sequence labels to use 0-based indexing (bedtools compatible). "
+        "By default, labels are adjusted to match GFF3 1-based indexing. "
+        "Only affects sequence labels, not the actual sequences. Use with --biopython.",
+    )
+
+
+def getfasta_multiple_command(
+    args: argparse.Namespace, log: log_setup.GDTLogger
+) -> None:
+    tsv_path = Path(args.tsv).resolve()
+
+    if not tsv_path.is_file():
+        log.error(f"TSV file not found: {tsv_path}")
+        return
+
+    if bool(args.bedtools) == bool(args.biopython):
+        log.error("You must specify only one of --bedtools or --biopython.")
+        return
+
+    if args.bedtools:
+        bedtools_version = bedtools_wrapper.get_bedtools_version(args.bedtools_path)
+        log.debug(f"bedtools version: {bedtools_version}")
+
+        if bedtools_version == None:
+            log.error("bedtools not found or not executable. Please install bedtools.")
+            return
+
+        bedtools_wrapper.bedtools_multiple(
+            log,
+            tsv_path,
+            args.gff_ext,
+            args.gff_suffix,
+            args.fasta_in_ext,
+            args.fasta_in_suffix,
+            args.fasta_out_ext,
+            args.fasta_out_suffix,
+            args.an_column,
+            _workers_count(args.workers, threading=False),
+            args.bedtools_path,
+            args.name_args,
+        )
+
+    elif args.biopython:
+        if not BIOPYTHON_AVAILABLE:
+            log.error(
+                "Biopython is not available. Please install it with: pip install biopython or pip install tigre[bio]"
+            )
+            return
+
+        biopython_wrapper.biopython_multiple(
+            log,
+            tsv_path,
+            args.gff_ext,
+            args.gff_suffix,
+            args.fasta_in_ext,
+            args.fasta_in_suffix,
+            args.fasta_out_ext,
+            args.fasta_out_suffix,
+            args.an_column,
+            _workers_count(args.workers, threading=False),
+            args.bedtools_compatible,
+        )
+
+
+def getfasta_single_args(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--gff-in",
+        required=True,
+        type=str,
+        help="GFF3 input file",
+    )
+    parser.add_argument(
+        "--fasta-in",
+        required=True,
+        type=str,
+        help="Fasta input file",
+    )
+    parser.add_argument(
+        "--fasta-out",
+        required=True,
+        type=str,
+        help="Fasta output file",
+    )
+    extraction_group = parser.add_mutually_exclusive_group()
+    extraction_group.add_argument(
+        "--bedtools",
+        required=False,
+        default=False,
+        action="store_true",
+        help="If true, will use bedtools to extract sequences from the GFF3 file.",
+    )
+    extraction_group.add_argument(
+        "--biopython",
+        required=False,
+        default=False,
+        action="store_true",
+        help="If true, will use Biopython to extract sequences from the GFF3 file.",
+    )
+    parser.add_argument(
+        "--bedtools-path",
+        required=False,
+        default="bedtools",
+        type=str,
+        help="Path to the bedtools executable. Default: 'bedtools'. "
+        "If bedtools is installed in your PATH, you can leave this as default. "
+        "Use with --bedtools.",
+    )
+    parser.add_argument(
+        "--name-args",
+        required=False,
+        default="-name+",
+        type=str,
+        help="Arguments to pass to bedtools getfasta. Default: '-name+' "
+        "(uses feature name as sequence ID in output FASTA). "
+        "Use with --bedtools.",
+    )
+    parser.add_argument(
+        "--bedtools-compatible",
+        required=False,
+        default=False,
+        action="store_true",
+        help="If true, adjust FASTA sequence labels to use 0-based indexing (bedtools compatible). "
+        "By default, labels are adjusted to match GFF3 1-based indexing. "
+        "Only affects sequence labels, not the actual sequences. Use with --biopython.",
+    )
+
+
+def getfasta_single_command(args: argparse.Namespace, log: log_setup.GDTLogger) -> None:
+    args.gff_in = Path(args.gff_in).resolve()
+    args.fasta_in = Path(args.fasta_in).resolve()
+    args.fasta_out = Path(args.fasta_out).resolve()
+
+    if not args.gff_in.is_file():
+        log.error(f"GFF3 input file not found: {args.gff_in}")
+        return
+
+    if not args.fasta_in.is_file():
+        log.error(f"Fasta input file not found: {args.fasta_in}")
+        return
+
+    if bool(args.bedtools) == bool(args.biopython):
+        log.error("You must specify only one of --bedtools or --biopython.")
+        return
+
+    if args.bedtools:
+        bedtools_version = bedtools_wrapper.get_bedtools_version(args.bedtools_path)
+        log.debug(f"bedtools version: {bedtools_version}")
+
+        if bedtools_version == None:
+            log.error("bedtools not found or not executable. Please install bedtools.")
+            return
+
+        success, an, records = bedtools_wrapper.bedtools_getfasta(
+            log.spawn_buffer(),
+            args.gff_in,
+            args.fasta_in,
+            args.fasta_out,
+            args.bedtools_path,
+            args.name_args,
+        )
+
+    elif args.biopython:
+        if not BIOPYTHON_AVAILABLE:
+            log.error(
+                "Biopython is not available. Please install it with: pip install biopython or pip install tigre[bio]"
+            )
+            return
+
+        success, an, records = biopython_wrapper.biopython_getfasta(
+            log.spawn_buffer(),
+            args.gff_in,
+            args.fasta_in,
+            args.fasta_out,
+            args.bedtools_compatible,
+        )
+
+    for record in records:
+        log.log(record[0], record[1])
+
+    if not success:
+        log.error(f"Error extracting sequences with bedtools: {an}")
+        return
+
+
 def add_main_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--version",
@@ -433,6 +726,22 @@ def cli_entrypoint() -> None:
     )
     add_extract_multiple_args(extract_multiple)
 
+    getfasta_multiple = subs.add_parser(
+        "getfasta-multiple",
+        help="Extract sequences from multiple GFF3 files, indexed via a TSV file.",
+        description="This command will extract sequences from the GFF3 files listed in the TSV file, using either bedtools or Biopython.",
+        parents=[global_args],
+    )
+    getfasta_multiple_args(getfasta_multiple)
+
+    getfasta_single = subs.add_parser(
+        "getfasta-single",
+        help="Extract sequences from a GFF3 file.",
+        description="This command will extract sequences from a GFF3 file, using either bedtools or Biopython.",
+        parents=[global_args],
+    )
+    getfasta_single_args(getfasta_single)
+
     add_test(subs, global_args)
 
     args = main.parse_args()
@@ -452,17 +761,20 @@ def cli_entrypoint() -> None:
         clean_command(args, log)
 
     elif args.command == "extract-single":
-        if bool(args.fasta_in) != bool(args.fasta_out):
-            log.error(f"fin: {args.fasta_in} | fout: {args.fasta_out}")
-            extract_single.error(
-                "--fasta-in and --fasta-out must be provided together or not at all."
-            )
-
         log.debug("Executing extract command")
         extract_single_command(args, log)
 
     elif args.command == "extract-multiple":
+        log.debug("Executing extract multiple command")
         extract_multiple_command(args, log)
+
+    elif args.command == "getfasta-multiple":
+        log.debug("Executing getfasta multiple command")
+        getfasta_multiple_command(args, log)
+
+    elif args.command == "getfasta-single":
+        log.debug("Executing getfasta single command")
+        getfasta_single_command(args, log)
 
     else:
         log.error(f"Unknown command: {args.command}")
