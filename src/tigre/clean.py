@@ -168,9 +168,8 @@ def clean_attr(
     return f"name={row.gene_id};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
 
 
-def _exec_single_an(
+def clean_an(
     log: log_setup.TempLogger,
-    an: str,
     gff_in: Path,
     gff_out: Path,
     clean_func: Callable[[pd.Series, log_setup.TempLogger], str],
@@ -178,7 +177,7 @@ def _exec_single_an(
     keep_orfs: bool,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     try:
-        log.info(f"[{an}] -- Start --")
+        log.info(f"[{gff_in.name}] -- Start --")
 
         log.trace(f" Loading GFF3 file: {gff_in}")
         df = gff3_utils.load_gff3(
@@ -188,7 +187,7 @@ def _exec_single_an(
         )
         if not keep_orfs:
             df = gff3_utils.filter_orfs(df)
-
+        an = df.at[0, "seqid"]
         header = create_header(an, df.at[0, "attributes"], df.at[0, "end"])
         df["gene_id"] = df["attributes"].str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
 
@@ -217,6 +216,7 @@ def _exec_single_an(
 
         log.info(f"[{an}] -- End --")
         return True, an, log.get_records()
+
     except Exception as e:
         log.error(f"[{an}] Error: {e}")
         log.info(f"[{an}] -- End --")
@@ -226,40 +226,44 @@ def _exec_single_an(
 def clean_multiple(
     log: log_setup.GDTLogger,
     tsv_path: Path,
-    gff_ext: str = ".gff3",
-    gff_suffix: str = "",
-    out_suffix: str = "_clean",
+    gff_in_ext: str = ".gff3",
+    gff_in_suffix: str = "",
+    gff_out_ext: str = ".gff3",
+    gff_out_suffix: str = "_clean",
     an_column: str = "AN",
     workers: int = 0,
     clean_func: Callable[[pd.Series, log_setup.TempLogger], str] = clean_attr,
     query_string: str = gff3_utils.QS_GENE_TRNA_RRNA_REGION,
     keep_orfs: bool = False,
+    overwrite: bool = False,
 ) -> None:
     """Orchestrates the execution of the ans."""
     tsv = pd.read_csv(tsv_path, sep="\t")
 
-    gff_in_builder = gff3_utils.PathBuilder(gff_ext).use_folder_builder(
+    gff_in_builder = gff3_utils.PathBuilder(gff_in_ext).use_folder_builder(
         tsv_path.parent,
-        gff_suffix,
+        gff_in_suffix,
     )
-    gff_out_builder = gff3_utils.PathBuilder(gff_ext).use_folder_builder(
+    gff_out_builder = gff3_utils.PathBuilder(gff_out_ext).use_folder_builder(
         tsv_path.parent,
-        out_suffix,
+        gff_out_suffix,
     )
-    gff3_utils.check_file_in_tsv(
+    gff3_utils.check_tsv(
         log,
         tsv,
         gff_in_builder,
+        gff_out_builder,
         an_column,
+        "GFF3",
+        overwrite,
     )
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
     with cf.ProcessPoolExecutor(max_workers=workers) as executor:
         tasks = [
             executor.submit(
-                _exec_single_an,
+                clean_an,
                 log.spawn_buffer(),
-                an,
                 gff_in_builder.build(an),
                 gff_out_builder.build(an),
                 clean_func,

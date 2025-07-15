@@ -4,6 +4,7 @@
 
 import argparse
 import os
+import sys
 from functools import partial
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Union
@@ -16,6 +17,117 @@ C_RESET = "\033[0m"
 if TYPE_CHECKING:
     import gdt  # type: ignore[import-not-found]
     import pandas as pd
+
+
+def handle_single_result(
+    log: log_setup.GDTLogger,
+    result: tuple[bool, str, list[log_setup._RawMsg]],
+    error_msg: str,
+) -> None:
+    """Handle the result of single execution."""
+    success, an, records = result
+
+    for record in records:
+        log.log(record[0], record[1])
+
+    if not success:
+        log.error(f"{error_msg}: {an}")
+        sys.exit(1)
+
+
+def ensure_exists(
+    log: log_setup.GDTLogger,
+    path: Path,
+    desc: str = "file",
+) -> None:
+    if not path.is_file():
+        log.error(f"{desc.upper()} not found: {path}")
+        sys.exit(1)
+
+
+def ensure_not_exists_or_overwrite(
+    log: log_setup.GDTLogger,
+    path: Path,
+    desc: str = "file",
+    overwrite: bool = False,
+) -> None:
+    if path.is_file() and not overwrite:
+        log.error(
+            f"{desc.upper()} already exists: {path}. Use --overwrite to replace it."
+        )
+        sys.exit(1)
+
+
+def args_multiple(
+    parser: argparse._ArgumentGroup,
+    file: str = "gff",
+    io: str = "in",
+    ext: str = ".gff3",
+    suffix: str = "_clean",
+    req: bool = False,
+) -> None:
+    """Add common arguments for multiple file processing."""
+    up = file.upper()
+    parser.add_argument(
+        f"--{file}-{io}-ext",
+        required=req,
+        type=str,
+        default=ext,
+        help=f"File Extension for {io}put {up} files. Default: '{ext}'",
+    )
+    parser.add_argument(
+        f"--{file}-{io}-suffix",
+        required=req,
+        type=str,
+        default=suffix,
+        help=f"Suffix to be added when building {io}put {up} Paths from the TSV file. "
+        f"Example: '{suffix}' will create {up} paths like '<AN>{suffix}.gff3' if "
+        f"--{file}-{io}-ext is '{ext}'. Default: '{suffix}'",
+    )
+
+
+def args_single(
+    parser: argparse._ArgumentGroup,
+    file: str = "gff",
+    io: str = "in",
+    req: bool = True,
+) -> None:
+    """Add common arguments for single file processing."""
+    parser.add_argument(
+        f"--{file}-{io}",
+        required=req,
+        type=str,
+        help=f"{file.upper()} {io}put file",
+    )
+
+
+def args_tsv(
+    parser: argparse._ArgumentGroup,
+    action: str,
+) -> None:
+
+    parser.add_argument(
+        "--tsv",
+        required=True,
+        type=str,
+        help="TSV file with column of Accession Numbers,"
+        f" which file paths are derive from to {action}",
+    )
+    parser.add_argument(
+        "--an-column",
+        required=False,
+        default="AN",
+        type=str,
+        help="Column name for Accession Number inside the TSV. Default: 'AN'",
+    )
+    parser.add_argument(
+        "--workers",
+        required=False,
+        default=0,
+        type=int,
+        help="Number of workers to use in parallel processing. "
+        f"Default: 0 (use all available cores: {os.cpu_count()})",
+    )
 
 
 # pre-compile functions for GDT cleaning
@@ -35,7 +147,7 @@ def _gdt_clean(
     return f"name={label};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
 
 
-def _deploy_gdt_support(
+def _gdt(
     log: log_setup.GDTLogger,
     gdt_path: Union[str, Path],
 ) -> Callable[["pd.Series", log_setup.TempLogger], str]:
@@ -50,9 +162,10 @@ def _deploy_gdt_support(
     gdt_path = Path(gdt_path).resolve()
     if not gdt_path.is_file():
         log.error(f"GDT .gdict file not found: {gdt_path}")
-        raise FileNotFoundError(f"GDT .gdict file not found: {gdt_path}")
+        sys.exit(1)
 
     gdict = gdt.read_gdict(gdt_path, lazy_info=False)
+    log.info(f"GDT dictionary loaded from {gdt_path}")
     gdt.log_info(log, gdict)
     gdt_clean = partial(_gdt_clean, gdict)
     log.debug("GDT support deployed successfully.")
@@ -195,103 +308,62 @@ def extract_multiple_command(
     )
 
 
-def clean_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(
-        "--tsv",
-        required=True,
-        type=str,
-        help="TSV file with the accession numbers (ANs) to be cleaned.",
-    )
-    parser.add_argument(
-        "--gff-ext",
-        required=False,
-        default=".gff3",
-        type=str,
-        help="File Extension for GFF files. Default: '.gff3'",
-    )
-    parser.add_argument(
-        "--gff-suffix",
-        required=False,
-        default="",
-        type=str,
-        help="Suffix to be added when building GFF Paths from the TSV file. "
-        "Example: '_clean' will create GFF paths like '<AN>_clean.gff3' if "
-        "--gff-ext is '.gff3'. Default: ''",
-    )
-    parser.add_argument(
-        "--out-suffix",
-        required=False,
-        default="_clean",
-        type=str,
-        help="Suffix to be added to the output GFF3 files. `--out-suffix` replaces "
-        "`--gff-suffix` on the output. Example: `--out-suffix '_clean' --gff-suffix '_merged' --gff-ext '.gff3'`, "
-        "will build the input like <AN>_merged.gff3 and the output like <AN>_clean.gff3."
-        " Default: '_clean'",
-    )
-    parser.add_argument(
-        "--an-column",
-        required=False,
-        default="AN",
-        type=str,
-        help="Column name for NCBI Accession Number inside the TSV. Default: AN",
-    )
-    parser.add_argument(
-        "--workers",
-        required=False,
-        default=0,
-        type=int,
-        help="Number of workers to use. "
-        f"Default: 0 (use all available cores: {os.cpu_count()})",
-    )
-    parser.add_argument(
-        "--gdict",
-        required=False,
-        default=None,
-        dest="gdt",
-        type=str,
-        help="Path to a GDT .gdict file, used in the cleaning of GFF3 file. This requires the `gdt` package to be installed.",
-    )
-    parser.add_argument(
-        "--query-string",
-        required=False,
-        default=gff3_utils.QS_GENE_TRNA_RRNA_REGION,
-        type=str,
-        help="Query string that pandas filter features in GFF. "
-        f"Default: '{gff3_utils.QS_GENE_TRNA_RRNA_REGION}'",
-    )
-    parser.add_argument(
-        "--keep-orfs",
-        required=False,
-        default=False,
-        action="store_true",
-        help="Keep ORFs. Default: exclude ORFs",
-    )
-
-
 def clean_command(
     args: argparse.Namespace,
     log: log_setup.GDTLogger,
 ) -> None:
     """Clean command for tigre, to clean the GFF3 files."""
-    tsv_path = Path(args.tsv).resolve()
-    if not tsv_path.is_file():
-        log.error(f"TSV file not found: {tsv_path}")
-        return
 
-    clean_func = _deploy_gdt_support(log, args.gdt) if args.gdt else clean.clean_attr
+    clean_func = _gdt(log, args.gdt) if args.gdt else clean.clean_attr
 
-    clean.clean_multiple(
-        log,
-        tsv_path,
-        args.gff_ext,
-        args.gff_suffix,
-        args.out_suffix,
-        args.an_column,
-        _workers_count(args.workers, threading=False),
-        clean_func,
-        args.query_string,
-        args.keep_orfs,
-    )
+    if args.mode == "single":
+        args.gff_in = Path(args.gff_in).resolve()
+        args.gff_out = Path(args.gff_out).resolve()
+
+        ensure_exists(
+            log,
+            args.gff_in,
+            "GFF3 input",
+        )
+        ensure_not_exists_or_overwrite(
+            log,
+            args.gff_out,
+            "GFF3 output",
+            args.overwrite,
+        )
+
+        result = clean.clean_an(
+            log.spawn_buffer(),
+            args.gff_in,
+            args.gff_out,
+            clean_func,
+            args.query_string,
+            args.keep_orfs,
+        )
+        handle_single_result(log, result, "Error cleaning GFF3 single")
+
+    elif args.mode == "multiple":
+        args.tsv = Path(args.tsv).resolve()
+        ensure_exists(
+            log,
+            args.tsv,
+            "TSV file",
+        )
+
+        clean.clean_multiple(
+            log,
+            args.tsv,
+            args.gff_in_ext,
+            args.gff_in_suffix,
+            args.gff_out_ext,
+            args.gff_out_suffix,
+            args.an_column,
+            _workers_count(args.workers, threading=False),
+            clean_func,
+            args.query_string,
+            args.keep_orfs,
+            args.overwrite,
+        )
 
 
 def getfasta_multiple_args(parser: argparse.ArgumentParser) -> None:
@@ -612,8 +684,9 @@ def add_test(
     test.set_defaults(func=lambda args: print("Test command executed successfully!"))
 
 
-def add_global_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(
+def args_log(parser: argparse.ArgumentParser) -> None:
+    group = parser.add_argument_group("log options")
+    group.add_argument(
         "--debug",
         required=False,
         default=False,
@@ -621,7 +694,7 @@ def add_global_args(parser: argparse.ArgumentParser) -> None:
         help="Enable TRACE level in file, and DEBUG on console. "
         "Default: DEBUG level on file and INFO on console.",
     )
-    parser.add_argument(
+    group.add_argument(
         "--log",
         required=False,
         default=None,
@@ -629,13 +702,78 @@ def add_global_args(parser: argparse.ArgumentParser) -> None:
         help="Path to the log file. "
         "If not provided, a default log file will be created.",
     )
-    parser.add_argument(
+    group.add_argument(
         "--quiet",
         required=False,
         default=False,
         action="store_true",
         help="Suppress console output. Default: console output enabled.",
     )
+
+
+def add_clean_group(parser: argparse.ArgumentParser) -> None:
+    group = parser.add_argument_group("clean options")
+    group.add_argument(
+        "--gdict",
+        required=False,
+        type=str,
+        dest="gdt",
+        help="Gene dictionary file",
+    )
+    group.add_argument(
+        "--query-string",
+        required=False,
+        type=str,
+        help="Query string for filtering",
+    )
+    group.add_argument(
+        "--keep-orfs",
+        required=False,
+        action="store_true",
+        help="Keep ORF sequences in output",
+    )
+    group.add_argument(
+        "--overwrite",
+        required=False,
+        action="store_true",
+        help="Overwrite existing output files. Default: False (do not overwrite).",
+    )
+
+
+def clean_parser(
+    sub: "argparse._SubParsersAction[argparse.ArgumentParser]",
+    global_args: argparse.ArgumentParser,
+) -> None:
+    """Create clean command parser and add it to the subparsers."""
+    clean = sub.add_parser(
+        "clean",
+        help="Clean command for tigre, to clean the GFF3 files.",
+        parents=[global_args],
+    )
+    add_clean_group(clean)
+
+    clean_sub = clean.add_subparsers(metavar="mode", dest="mode", required=True)
+
+    single_parser = clean_sub.add_parser(
+        "single",
+        help="Process a single GFF file",
+        parents=[global_args],
+    )
+    add_clean_group(single_parser)
+    single = single_parser.add_argument_group("single file options")
+    args_single(single, "gff", "in")
+    args_single(single, "gff", "out")
+
+    multiple_parser = clean_sub.add_parser(
+        "multiple",
+        help="Process multiple GFF files from TSV",
+        parents=[global_args],
+    )
+    add_clean_group(multiple_parser)
+    multiple = multiple_parser.add_argument_group("multiple file options")
+    args_tsv(multiple, "clean")
+    args_multiple(multiple, "gff", "in", ".gff3", "")
+    args_multiple(multiple, "gff", "out", ".gff3", "_clean")
 
 
 def _workers_count(
@@ -658,7 +796,7 @@ def cli_entrypoint() -> None:
     """Command line interface for the tigre package."""
     # Global parser to add debug, log, and quiet flags to all subcommands
     global_args = argparse.ArgumentParser(add_help=False)
-    add_global_args(global_args)
+    args_log(global_args)
 
     main = argparse.ArgumentParser(
         description="<PLACE HOLDER BANNER>",
@@ -670,13 +808,7 @@ def cli_entrypoint() -> None:
 
     subs = main.add_subparsers(dest="command", required=True)
 
-    clean = subs.add_parser(
-        "clean",
-        help="Clean command for tigre, to clean the GFF3 files.",
-        description="This command will clean the GFF3 files in the specified folder.",
-        parents=[global_args],
-    )
-    clean_args(clean)
+    clean_parser(subs, global_args)
 
     extract_single = subs.add_parser(
         "extract-single",

@@ -9,6 +9,7 @@ https://github.com/brenodupin/gdt/blob/master/src/gdt/gff3_utils.py
 """
 
 import re
+import sys
 from functools import partial
 from pathlib import Path
 from typing import Any, Callable, Optional, Union
@@ -28,8 +29,7 @@ GFF3_COLUMNS: tuple[str, ...] = (
     "phase",
     "attributes",
 )
-QS_GENE = "type == 'gene'"
-QS_GENE_TRNA_RRNA = "type in ('gene', 'tRNA', 'rRNA')"
+QS_GENE_REGION = "type in ('gene', 'region')"
 QS_GENE_TRNA_RRNA_REGION = "type in ('gene', 'tRNA', 'rRNA', 'region')"
 
 _RE_ID = re.compile(r"ID=([^;]+)")
@@ -279,52 +279,48 @@ class PathBuilder:
         return self._str
 
 
-def _check_column(
+def check_tsv(
     log: log_setup.GDTLogger,
     df: pd.DataFrame,
-    col: str,
-    df_txt: str = "TSV",
-) -> None:
-    """Check if a specific column exists in the DataFrame."""
-    log.trace(f"check_column called | col: {col} | df_txt: {df_txt}")
-    if col not in df.columns:
-        log.error(f"Column '{col}' not found in DataFrame")
-        log.error(f"Available columns: {df.columns}")
-        raise ValueError(
-            f"Column '{col}' not found in {df_txt}. Please check the file."
-        )
-
-
-def check_file_in_tsv(
-    log: log_setup.GDTLogger,
-    df: pd.DataFrame,
-    gff_builder: PathBuilder,
+    file_in_builder: PathBuilder,
+    file_out_builder: PathBuilder,
     an_column: str = "AN",
     file_text: str = "GFF3",
+    overwrite: bool = False,
 ) -> None:
-    """Check if GFF3 files exist for each accession number in the DataFrame.
+    """Check if input GFF3 files exist and output files do not (unless overwrite is enabled)."""
+    log.trace(f"check_tsv called | in: {file_in_builder} | out: {file_out_builder}")
 
-    Args:
-        log (GDTLogger): Logger instance for logging messages.
-        df (pd.DataFrame): DataFrame containing accession numbers.
-        base_path (Path): Base path where GFF3 files are expected to be found.
-        gff_builder (GFFBuilder): Function to build GFF file paths.
-        an_column (str): Column name containing accession numbers. Default is "AN".
-        file_text (str): Name of the file type being checked (e.g., "GFF3"). Default is "GFF3".
+    if an_column not in df.columns:
+        log.error(f"Column '{an_column}' not found in TSV")
+        log.error(f"Available columns: {df.columns}")
+        sys.exit(1)
 
-    """
-    log.trace(f"check_file_in_tsv called | {gff_builder}")
-    _check_column(log, df, an_column, "TSV")
+    missing_inputs = []
+    existing_outputs = []
 
-    no_files = [
-        (an, an_path)
-        for an in df[an_column]
-        if not (an_path := gff_builder.build(an)).is_file()
-    ]
+    for an in df[an_column]:
+        in_file = file_in_builder.build(an)
+        out_file = file_out_builder.build(an)
 
-    if no_files:
-        for an, path in no_files:
-            log.error(f"{file_text} file not found for {an}, expected {path}")
-        raise FileNotFoundError(
-            f"Missing {len(no_files)} {file_text} files. Please check the log for details."
+        if not in_file.is_file():
+            missing_inputs.append((an, in_file))
+
+        if out_file.is_file():
+            existing_outputs.append((an, out_file))
+
+    if missing_inputs:
+        for an, path in missing_inputs:
+            log.trace(f"{file_text} input file not found for {an}, expected {path}")
+        log.error(
+            f"Missing {len(missing_inputs)} {file_text} input files. Please check the log for details."
         )
+        sys.exit(1)
+
+    if existing_outputs and not overwrite:
+        for an, path in existing_outputs:
+            log.trace(f"{file_text} output file already exists for {an}.")
+        log.error(
+            f"{len(existing_outputs)} output {file_text} files already exist. Use --overwrite to overwrite them."
+        )
+        sys.exit(1)
