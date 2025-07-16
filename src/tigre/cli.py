@@ -18,6 +18,13 @@ if TYPE_CHECKING:
     import gdt  # type: ignore[import-not-found]
     import pandas as pd
 
+MAX_CPU: int = os.cpu_count() or 1
+
+
+def _workers_count(workers: int) -> int:
+    """Return the number of workers to use."""
+    return min(workers, MAX_CPU) if workers > 0 else MAX_CPU
+
 
 def handle_single_result(
     log: log_setup.GDTLogger,
@@ -31,8 +38,10 @@ def handle_single_result(
         log.log(record[0], record[1])
 
     if not success:
-        log.error(f"{error_msg}: {an}")
+        log.error(f"An error occurred while processing {an}. {error_msg}")
         sys.exit(1)
+
+    log.info("Processing completed successfully.")
 
 
 def ensure_exists(
@@ -40,21 +49,21 @@ def ensure_exists(
     path: Path,
     desc: str = "file",
 ) -> None:
+    """Ensure that the specified path exists."""
     if not path.is_file():
-        log.error(f"{desc.upper()} not found: {path}")
+        log.error(f"{desc} not found: {path}")
         sys.exit(1)
 
 
-def ensure_not_exists_or_overwrite(
+def ensure_overwrite(
     log: log_setup.GDTLogger,
     path: Path,
     desc: str = "file",
     overwrite: bool = False,
 ) -> None:
+    """Ensure that the specified path can be overwritten."""
     if path.is_file() and not overwrite:
-        log.error(
-            f"{desc.upper()} already exists: {path}. Use --overwrite to replace it."
-        )
+        log.error(f"{desc} already exists: {path}. Use --overwrite to replace it.")
         sys.exit(1)
 
 
@@ -90,12 +99,12 @@ def args_single(
     parser: argparse._ArgumentGroup,
     file: str = "gff",
     io: str = "in",
-    req: bool = True,
+    required: bool = True,
 ) -> None:
     """Add common arguments for single file processing."""
     parser.add_argument(
         f"--{file}-{io}",
-        required=req,
+        required=required,
         type=str,
         help=f"{file.upper()} {io}put file",
     )
@@ -105,7 +114,7 @@ def args_tsv(
     parser: argparse._ArgumentGroup,
     action: str,
 ) -> None:
-
+    """Add arguments for TSV file processing."""
     parser.add_argument(
         "--tsv",
         required=True,
@@ -116,17 +125,45 @@ def args_tsv(
     parser.add_argument(
         "--an-column",
         required=False,
-        default="AN",
         type=str,
+        default="AN",
         help="Column name for Accession Number inside the TSV. Default: 'AN'",
     )
     parser.add_argument(
         "--workers",
         required=False,
-        default=0,
         type=int,
+        default=0,
         help="Number of workers to use in parallel processing. "
-        f"Default: 0 (use all available cores: {os.cpu_count()})",
+        f"Default: 0 (use all available cores: {MAX_CPU})",
+    )
+
+
+def args_log(parser: argparse.ArgumentParser) -> None:
+    """Add logging arguments to the parser."""
+    group = parser.add_argument_group("log options")
+    group.add_argument(
+        "--debug",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Enable TRACE level in file, and DEBUG on console. "
+        "Default: DEBUG level on file and INFO on console.",
+    )
+    group.add_argument(
+        "--log",
+        required=False,
+        type=str,
+        default=None,
+        help="Path to the log file. "
+        "If not provided, a default log file will be created.",
+    )
+    group.add_argument(
+        "--quiet",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Suppress console output. Default: console output enabled.",
     )
 
 
@@ -144,18 +181,22 @@ def _gdt_clean(
             f"Gene ID {row.gene_id} not found in GDT dictionary. Using default format."
         )
         label = row.gene_id
-    return f"name={label};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
+    return (
+        f"name={label};source={row.seqid}|{row.type}|{row.start}|{row.end}|"
+        f"{row.strand}|{row.gene_id};"
+    )
 
 
 def _gdt(
     log: log_setup.GDTLogger,
     gdt_path: Union[str, Path],
 ) -> Callable[["pd.Series", log_setup.TempLogger], str]:
+    """Load GDT dictionary and return a cleaning function."""
     try:
         import gdt
     except ImportError:
         raise SystemExit(
-            "GDT package not found. Please install gdt package to use the --gdict option."
+            "GDT package not found. Please install it to use the --gdict option."
         )
 
     log.debug(f"GDT package version: {gdt.__version__}")
@@ -172,148 +213,393 @@ def _gdt(
     return gdt_clean
 
 
-def extract_single_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(
-        "--gff-in",
-        required=True,
-        type=str,
-        help="GFF3 input file",
-    )
-    parser.add_argument(
-        "--gff-out",
-        required=True,
-        type=str,
-        help="GFF3 output file",
-    )
-    parser.add_argument(
+###############################################
+########## extract command functions ##########
+def extract_group(parser: argparse.ArgumentParser) -> None:
+    """Add common arguments for extract command."""
+    group = parser.add_argument_group("extract options")
+    group.add_argument(
         "--add-region",
         required=False,
-        default=False,
         action="store_true",
-        help="If true, adds the region line to the output GFF3 file. Default: False",
+        default=False,
+        help="Add the region line to the output GFF3 file. Default: False",
+    )
+    group.add_argument(
+        "--overwrite",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Overwrite existing output files. Default: False (do not overwrite).",
     )
 
 
-def extract_single_command(
+def extract_parser(
+    sub: "argparse._SubParsersAction[argparse.ArgumentParser]",
+    global_args: argparse.ArgumentParser,
+) -> None:
+    """Create extract command parser and add it to the subparsers."""
+    extract = sub.add_parser(
+        "extract",
+        help="`extract` command for tigre, to extract intergenic regions "
+        "from GFF3 file(s).",
+        parents=[global_args],
+    )
+    extract_group(extract)
+
+    extract_sub = extract.add_subparsers(metavar="mode", dest="mode", required=True)
+
+    single_parser = extract_sub.add_parser(
+        "single",
+        help="Process a single GFF file",
+        parents=[global_args],
+    )
+    extract_group(single_parser)
+    single = single_parser.add_argument_group("single file options")
+    args_single(single, "gff", "in")
+    args_single(single, "gff", "out")
+
+    multiple_parser = extract_sub.add_parser(
+        "multiple",
+        help="Process multiple GFF files from TSV",
+        parents=[global_args],
+    )
+    extract_group(multiple_parser)
+    multiple = multiple_parser.add_argument_group("multiple file options")
+    args_tsv(multiple, "extract")
+    args_multiple(multiple, "gff", "in", ".gff3", "_clean")
+    args_multiple(multiple, "gff", "out", ".gff3", "_intergenic")
+
+
+def extract_command(
     args: argparse.Namespace,
     log: log_setup.GDTLogger,
 ) -> None:
-    args.gff_in = Path(args.gff_in).resolve()
-    args.gff_out = Path(args.gff_out).resolve()
+    """Execute the extract command based on the provided arguments."""
+    if args.mode == "single":
+        args.gff_in = Path(args.gff_in).resolve()
+        args.gff_out = Path(args.gff_out).resolve()
 
-    if not args.gff_in.is_file():
-        log.error(f"GFF3 input file not found: {args.gff_in}")
-        return
-
-    success, an, records = igr.extract_intergenic_regions(
-        log.spawn_buffer(),
-        args.gff_in,
-        args.gff_out,
-        args.add_region,
-    )
-
-    for record in records:
-        log.log(record[0], record[1])
-
-    if not success:
-        log.error(f"Error extracting intergenic regions single: {an}")
-        return
-
-
-def extract_multiple_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(
-        "--tsv",
-        required=True,
-        type=str,
-        help="TSV file with indexed GFF3 files to standardize.",
-    )
-    parser.add_argument(
-        "--an-column",
-        required=False,
-        default="AN",
-        type=str,
-        help="Column name for NCBI Accession Number inside the TSV. Default: AN",
-    )
-    parser.add_argument(
-        "--gff-in-ext",
-        required=False,
-        default=".gff3",
-        type=str,
-        help="File Extension for Input GFF files. Default: '.gff3'",
-    )
-    parser.add_argument(
-        "--gff-in-suffix",
-        required=False,
-        default="_clean",
-        type=str,
-        help="Suffix to be added when building Input GFF Paths from the TSV file. "
-        "Example: '_clean' will create GFF paths like '<AN>_clean.gff3' if "
-        "--gff-ext is '.gff3'. Default: '_clean'",
-    )
-    parser.add_argument(
-        "--gff-out-ext",
-        required=False,
-        default=".gff3",
-        type=str,
-        help="File Extension for Output GFF files. Default: '.gff3'",
-    )
-    parser.add_argument(
-        "--gff-out-suffix",
-        required=False,
-        default="_intergenic",
-        type=str,
-        help="Suffix to be added when building Output GFF Paths from the TSV file. "
-        "Example: '_intergenic' will create GFF paths like '<AN>_intergenic.gff3' if "
-        "--gff-ext is '.gff3'. Default: '_intergenic'",
-    )
-    parser.add_argument(
-        "--workers",
-        required=False,
-        default=0,
-        type=int,
-        help="Number of workers to use. "
-        f"Default: 0 (use all available cores: {os.cpu_count()})",
-    )
-    parser.add_argument(
-        "--add-region",
-        required=False,
-        default=False,
-        action="store_true",
-        help="If true, adds the region line to the output GFF3 file. Default: False",
-    )
-
-
-def extract_multiple_command(
-    args: argparse.Namespace,
-    log: log_setup.GDTLogger,
-) -> None:
-    """Extract intergenic regions from multiple GFF3 files, indexed via a TSV file."""
-    args.tsv = Path(args.tsv).resolve()
-    if not args.tsv.is_file():
-        log.error(f"TSV file not found: {args.tsv}")
-        raise FileNotFoundError(
-            f"TSV file not found: {args.tsv}. Please provide a valid TSV file."
+        ensure_exists(
+            log,
+            args.gff_in,
+            "GFF3 input",
+        )
+        ensure_overwrite(
+            log,
+            args.gff_out,
+            "GFF3 output",
+            args.overwrite,
         )
 
-    igr.extract_multiple(
-        log,
-        args.tsv,
-        args.an_column,
-        _workers_count(args.workers, threading=False),
-        args.gff_in_ext,
-        args.gff_in_suffix,
-        args.gff_out_ext,
-        args.gff_out_suffix,
-        args.add_region,
+        result = igr.extract_intergenic_regions(
+            log.spawn_buffer(),
+            args.gff_in,
+            args.gff_out,
+            args.add_region,
+        )
+        handle_single_result(log, result, "Error extracting intergenic regions single")
+
+    elif args.mode == "multiple":
+        args.tsv = Path(args.tsv).resolve()
+        ensure_exists(
+            log,
+            args.tsv,
+            "TSV file",
+        )
+
+        igr.extract_multiple(
+            log,
+            args.tsv,
+            args.an_column,
+            min(args.workers, MAX_CPU),
+            args.gff_in_ext,
+            args.gff_in_suffix,
+            args.gff_out_ext,
+            args.gff_out_suffix,
+            args.add_region,
+        )
+
+
+###############################################
+
+
+################################################
+########## getfasta command functions ##########
+def getfasta_group(parser: argparse.ArgumentParser) -> None:
+    """Add common arguments for getfasta command."""
+    method = parser.add_argument_group(
+        "getfasta mutually exclusive options (choose one)"
     )
+    method.add_argument(
+        "--bedtools",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Use `bedtools getfasta` to extract sequences from the GFF3 files. "
+        "Requires `bedtools` installed and in your PATH.",
+    )
+    method.add_argument(
+        "--biopython",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Use Biopython to extract sequences from the GFF3 files. "
+        "No external dependencies required.",
+    )
+
+    group = parser.add_argument_group("getfasta options")
+    group.add_argument(
+        "--bedtools-path",
+        required=False,
+        type=str,
+        default="bedtools",
+        help="Path to the `bedtools` executable. Default: 'bedtools'. "
+        "Used only with `--bedtools`.",
+    )
+    group.add_argument(
+        "--name-args",
+        required=False,
+        type=str,
+        default="-name+",
+        help="Arguments to pass to `bedtools getfasta`. Default: '-name+' "
+        "(uses feature name as sequence ID). Used only with `--bedtools`.",
+    )
+    group.add_argument(
+        "--bedtools-compatible",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Adjust FASTA headers to use 0-based indexing (bedtools-compatible). "
+        "Affects only headers, not sequences. Used only with `--biopython`.",
+    )
+    group.add_argument(
+        "--overwrite",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Overwrite existing output files. Default: False (do not overwrite).",
+    )
+
+
+def getfasta_parser(
+    sub: "argparse._SubParsersAction[argparse.ArgumentParser]",
+    global_args: argparse.ArgumentParser,
+) -> None:
+    """Create getfasta command parser and add it to the subparsers."""
+    getfasta = sub.add_parser(
+        "getfasta",
+        help="`getfasta` command for tigre, to get fasta from intergenic regions.",
+        parents=[global_args],
+    )
+    getfasta_group(getfasta)
+
+    getfasta_sub = getfasta.add_subparsers(metavar="mode", dest="mode", required=True)
+
+    single_parser = getfasta_sub.add_parser(
+        "single",
+        help="Process a single GFF file",
+        parents=[global_args],
+    )
+    getfasta_group(single_parser)
+    single = single_parser.add_argument_group("single file options")
+    args_single(single, "gff", "in")
+    args_single(single, "fasta", "in")
+    args_single(single, "fasta", "out")
+
+    multiple_parser = getfasta_sub.add_parser(
+        "multiple",
+        help="Process multiple GFF files from TSV",
+        parents=[global_args],
+    )
+    getfasta_group(multiple_parser)
+    multiple = multiple_parser.add_argument_group("multiple file options")
+    args_tsv(multiple, "extract")
+    args_multiple(multiple, "gff", "in", ".gff3", "_intergenic")
+    args_multiple(multiple, "fasta", "in", ".fasta", "")
+    args_multiple(multiple, "fasta", "out", ".fasta", "_intergenic")
+
+
+def getfasta_bedtools_command(
+    args: argparse.Namespace,
+    log: log_setup.GDTLogger,
+) -> None:
+    """Execute the bedtools getfasta command based on the provided arguments."""
+    args.bedtools_path = Path(args.bedtools_path).resolve()
+    bedtools_version = bedtools_wrapper.get_bedtools_version(args.bedtools_path)
+    log.debug(f"bedtools version: {bedtools_version}")
+
+    if bedtools_version is None:
+        log.error("bedtools not found or not executable. Please install bedtools.")
+        sys.exit(1)
+
+    if args.mode == "single":
+        args.gff_in = Path(args.gff_in).resolve()
+        args.fasta_in = Path(args.fasta_in).resolve()
+        args.fasta_out = Path(args.fasta_out).resolve()
+        ensure_exists(log, args.gff_in, "GFF3 input")
+        ensure_exists(log, args.fasta_in, "Fasta input")
+        ensure_overwrite(log, args.fasta_out, "Fasta output", args.overwrite)
+
+        result = bedtools_wrapper.bedtools_getfasta(
+            log.spawn_buffer(),
+            args.gff_in,
+            args.fasta_in,
+            args.fasta_out,
+            args.bedtools_path,
+            args.name_args,
+        )
+
+        handle_single_result(log, result, "Error extracting sequences single")
+
+    elif args.mode == "multiple":
+        args.tsv = Path(args.tsv).resolve()
+        ensure_exists(log, args.tsv, "TSV file")
+
+        bedtools_wrapper.bedtools_multiple(
+            log,
+            args.tsv,
+            args.gff_in_ext,
+            args.gff_in_suffix,
+            args.fasta_in_ext,
+            args.fasta_in_suffix,
+            args.fasta_out_ext,
+            args.fasta_out_suffix,
+            args.an_column,
+            _workers_count(args.workers),
+            args.bedtools_path,
+            args.name_args,
+        )
+
+
+def getfasta_biopython_command(
+    args: argparse.Namespace,
+    log: log_setup.GDTLogger,
+) -> None:
+    """Execute the Biopython getfasta command based on the provided arguments."""
+    if not BIOPYTHON_AVAILABLE:
+        log.error(
+            "Biopython is not available. Please install it with: "
+            "pip install biopython or pip install tigre[bio]"
+        )
+        sys.exit(1)
+
+    if args.mode == "single":
+        args.gff_in = Path(args.gff_in).resolve()
+        args.fasta_in = Path(args.fasta_in).resolve()
+        args.fasta_out = Path(args.fasta_out).resolve()
+        ensure_exists(log, args.gff_in, "GFF3 input")
+        ensure_exists(log, args.fasta_in, "Fasta input")
+        ensure_overwrite(log, args.fasta_out, "Fasta output", args.overwrite)
+
+        result = biopython_wrapper.biopython_getfasta(
+            log.spawn_buffer(),
+            args.gff_in,
+            args.fasta_in,
+            args.fasta_out,
+            args.bedtools_compatible,
+        )
+
+        handle_single_result(log, result, "Error extracting sequences single")
+
+    elif args.mode == "multiple":
+        biopython_wrapper.biopython_multiple(
+            log,
+            Path(args.tsv).resolve(),
+            args.gff_in_ext,
+            args.gff_in_suffix,
+            args.fasta_in_ext,
+            args.fasta_in_suffix,
+            args.fasta_out_ext,
+            args.fasta_out_suffix,
+            args.an_column,
+            _workers_count(args.workers),
+            args.bedtools_compatible,
+            args.overwrite,
+        )
+
+
+################################################
+
+
+#############################################
+########## Clean command functions ##########
+def clean_group(parser: argparse.ArgumentParser) -> None:
+    """Add common arguments for clean command."""
+    group = parser.add_argument_group("clean options")
+    group.add_argument(
+        "--gdict",
+        required=False,
+        type=str,
+        dest="gdt",
+        default=None,
+        help="If provided, will use GDT to standardize gene names.",
+    )
+    group.add_argument(
+        "--query-string",
+        required=False,
+        type=str,
+        default=gff3_utils.QS_GENE_TRNA_RRNA_REGION,
+        help="Query string passes to pandas to filter the GFF3 file."
+        f" Default: '{gff3_utils.QS_GENE_TRNA_RRNA_REGION}'. ",
+    )
+    group.add_argument(
+        "--keep-orfs",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Keep ORF sequences in output. Default: False (do not keep ORFs).",
+    )
+    group.add_argument(
+        "--overwrite",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Overwrite existing output files. Default: False (do not overwrite).",
+    )
+
+
+def clean_parser(
+    sub: "argparse._SubParsersAction[argparse.ArgumentParser]",
+    global_args: argparse.ArgumentParser,
+) -> None:
+    """Create clean command parser and add it to the subparsers."""
+    clean = sub.add_parser(
+        "clean",
+        help="`clean` command for tigre, to clean the GFF3 files.",
+        parents=[global_args],
+    )
+    clean_group(clean)
+
+    clean_sub = clean.add_subparsers(metavar="mode", dest="mode", required=True)
+
+    single_parser = clean_sub.add_parser(
+        "single",
+        help="Process a single GFF file",
+        parents=[global_args],
+    )
+    clean_group(single_parser)
+    single = single_parser.add_argument_group("single file options")
+    args_single(single, "gff", "in")
+    args_single(single, "gff", "out")
+
+    multiple_parser = clean_sub.add_parser(
+        "multiple",
+        help="Process multiple GFF files from TSV",
+        parents=[global_args],
+    )
+    clean_group(multiple_parser)
+    multiple = multiple_parser.add_argument_group("multiple file options")
+    args_tsv(multiple, "clean")
+    args_multiple(multiple, "gff", "in", ".gff3", "")
+    args_multiple(multiple, "gff", "out", ".gff3", "_clean")
 
 
 def clean_command(
     args: argparse.Namespace,
     log: log_setup.GDTLogger,
 ) -> None:
-    """Clean command for tigre, to clean the GFF3 files."""
-
+    """Execute the clean command based on the provided arguments."""
     clean_func = _gdt(log, args.gdt) if args.gdt else clean.clean_attr
 
     if args.mode == "single":
@@ -325,7 +611,7 @@ def clean_command(
             args.gff_in,
             "GFF3 input",
         )
-        ensure_not_exists_or_overwrite(
+        ensure_overwrite(
             log,
             args.gff_out,
             "GFF3 output",
@@ -358,7 +644,7 @@ def clean_command(
             args.gff_out_ext,
             args.gff_out_suffix,
             args.an_column,
-            _workers_count(args.workers, threading=False),
+            _workers_count(args.workers),
             clean_func,
             args.query_string,
             args.keep_orfs,
@@ -366,433 +652,10 @@ def clean_command(
         )
 
 
-def getfasta_multiple_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(
-        "--tsv",
-        required=True,
-        type=str,
-        help="TSV file with indexed GFF3 files to standardize.",
-    )
-    extraction_group = parser.add_mutually_exclusive_group()
-    extraction_group.add_argument(
-        "--bedtools",
-        required=False,
-        default=False,
-        action="store_true",
-        help="If true, will use bedtools to extract sequences from the GFF3 files.",
-    )
-    extraction_group.add_argument(
-        "--biopython",
-        required=False,
-        default=False,
-        action="store_true",
-        help="If true, will use Biopython to extract sequences from the GFF3 files.",
-    )
-    parser.add_argument(
-        "--an-column",
-        required=False,
-        default="AN",
-        type=str,
-        help="Column name for NCBI Accession Number inside the TSV. Default: AN",
-    )
-    parser.add_argument(
-        "--gff-ext",
-        required=False,
-        default=".gff3",
-        type=str,
-        help="File Extension for GFF files. Default: '.gff3'",
-    )
-    parser.add_argument(
-        "--gff-suffix",
-        required=False,
-        default="_intergenic",
-        type=str,
-        help="Suffix to be added when building GFF Paths from the TSV file. "
-        "Example: '_intergenic' will create GFF paths like '<AN>_intergenic.gff3' if "
-        "--gff-ext is '.gff3'. Default: '_intergenic'",
-    )
-    parser.add_argument(
-        "--fasta-in-ext",
-        required=False,
-        default=".fasta",
-        type=str,
-        help="File Extension for Input Fasta files. Default: '.fasta'",
-    )
-    parser.add_argument(
-        "--fasta-in-suffix",
-        required=False,
-        default="",
-        type=str,
-        help="Suffix to be added when building Input Fasta Paths from the TSV file. "
-        "Example: '_merged' will create Fasta paths like '<AN>_merged.fasta' if "
-        "`--fasta-in-ext '.fasta'`. Default: ''",
-    )
-    parser.add_argument(
-        "--fasta-out-ext",
-        required=False,
-        default=".fasta",
-        type=str,
-        help="File Extension for Output Fasta files. Default: '.fasta'",
-    )
-    parser.add_argument(
-        "--fasta-out-suffix",
-        required=False,
-        default="_intergenic",
-        type=str,
-        help="Suffix to be added when building Output Fasta Paths from the TSV file. "
-        "Example: '_merged' will create Fasta paths like '<AN>_merged.fasta' if "
-        "`--fasta-in-ext '.fasta'`. Default: '_intergenic'",
-    )
-    parser.add_argument(
-        "--workers",
-        required=False,
-        default=0,
-        type=int,
-        help="Number of workers to use. "
-        f"Default: 0 (use all available cores: {os.cpu_count()})",
-    )
-    parser.add_argument(
-        "--bedtools-path",
-        required=False,
-        default="bedtools",
-        type=str,
-        help="Path to the bedtools executable. Default: 'bedtools'. "
-        "If bedtools is installed in your PATH, you can leave this as default. "
-        "Use with --bedtools.",
-    )
-    parser.add_argument(
-        "--name-args",
-        required=False,
-        default="-name+",
-        type=str,
-        help="Arguments to pass to bedtools getfasta. Default: '-name+' "
-        "(uses feature name as sequence ID in output FASTA). "
-        "Use with --bedtools.",
-    )
-    parser.add_argument(
-        "--bedtools-compatible",
-        required=False,
-        default=False,
-        action="store_true",
-        help="If true, adjust FASTA sequence labels to use 0-based indexing (bedtools compatible). "
-        "By default, labels are adjusted to match GFF3 1-based indexing. "
-        "Only affects sequence labels, not the actual sequences. Use with --biopython.",
-    )
+#############################################
 
 
-def getfasta_multiple_command(
-    args: argparse.Namespace, log: log_setup.GDTLogger
-) -> None:
-    tsv_path = Path(args.tsv).resolve()
-
-    if not tsv_path.is_file():
-        log.error(f"TSV file not found: {tsv_path}")
-        return
-
-    if bool(args.bedtools) == bool(args.biopython):
-        log.error("You must specify only one of --bedtools or --biopython.")
-        return
-
-    if args.bedtools:
-        bedtools_version = bedtools_wrapper.get_bedtools_version(args.bedtools_path)
-        log.debug(f"bedtools version: {bedtools_version}")
-
-        if bedtools_version == None:
-            log.error("bedtools not found or not executable. Please install bedtools.")
-            return
-
-        bedtools_wrapper.bedtools_multiple(
-            log,
-            tsv_path,
-            args.gff_ext,
-            args.gff_suffix,
-            args.fasta_in_ext,
-            args.fasta_in_suffix,
-            args.fasta_out_ext,
-            args.fasta_out_suffix,
-            args.an_column,
-            _workers_count(args.workers, threading=False),
-            args.bedtools_path,
-            args.name_args,
-        )
-
-    elif args.biopython:
-        if not BIOPYTHON_AVAILABLE:
-            log.error(
-                "Biopython is not available. Please install it with: pip install biopython or pip install tigre[bio]"
-            )
-            return
-
-        biopython_wrapper.biopython_multiple(
-            log,
-            tsv_path,
-            args.gff_ext,
-            args.gff_suffix,
-            args.fasta_in_ext,
-            args.fasta_in_suffix,
-            args.fasta_out_ext,
-            args.fasta_out_suffix,
-            args.an_column,
-            _workers_count(args.workers, threading=False),
-            args.bedtools_compatible,
-        )
-
-
-def getfasta_single_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(
-        "--gff-in",
-        required=True,
-        type=str,
-        help="GFF3 input file",
-    )
-    parser.add_argument(
-        "--fasta-in",
-        required=True,
-        type=str,
-        help="Fasta input file",
-    )
-    parser.add_argument(
-        "--fasta-out",
-        required=True,
-        type=str,
-        help="Fasta output file",
-    )
-    extraction_group = parser.add_mutually_exclusive_group()
-    extraction_group.add_argument(
-        "--bedtools",
-        required=False,
-        default=False,
-        action="store_true",
-        help="If true, will use bedtools to extract sequences from the GFF3 file.",
-    )
-    extraction_group.add_argument(
-        "--biopython",
-        required=False,
-        default=False,
-        action="store_true",
-        help="If true, will use Biopython to extract sequences from the GFF3 file.",
-    )
-    parser.add_argument(
-        "--bedtools-path",
-        required=False,
-        default="bedtools",
-        type=str,
-        help="Path to the bedtools executable. Default: 'bedtools'. "
-        "If bedtools is installed in your PATH, you can leave this as default. "
-        "Use with --bedtools.",
-    )
-    parser.add_argument(
-        "--name-args",
-        required=False,
-        default="-name+",
-        type=str,
-        help="Arguments to pass to bedtools getfasta. Default: '-name+' "
-        "(uses feature name as sequence ID in output FASTA). "
-        "Use with --bedtools.",
-    )
-    parser.add_argument(
-        "--bedtools-compatible",
-        required=False,
-        default=False,
-        action="store_true",
-        help="If true, adjust FASTA sequence labels to use 0-based indexing (bedtools compatible). "
-        "By default, labels are adjusted to match GFF3 1-based indexing. "
-        "Only affects sequence labels, not the actual sequences. Use with --biopython.",
-    )
-
-
-def getfasta_single_command(
-    args: argparse.Namespace,
-    log: log_setup.GDTLogger,
-) -> None:
-    args.gff_in = Path(args.gff_in).resolve()
-    args.fasta_in = Path(args.fasta_in).resolve()
-    args.fasta_out = Path(args.fasta_out).resolve()
-
-    if not args.gff_in.is_file():
-        log.error(f"GFF3 input file not found: {args.gff_in}")
-        return
-
-    if not args.fasta_in.is_file():
-        log.error(f"Fasta input file not found: {args.fasta_in}")
-        return
-
-    if bool(args.bedtools) == bool(args.biopython):
-        log.error("You must specify only one of --bedtools or --biopython.")
-        return
-
-    if args.bedtools:
-        bedtools_version = bedtools_wrapper.get_bedtools_version(args.bedtools_path)
-        log.debug(f"bedtools version: {bedtools_version}")
-
-        if bedtools_version == None:
-            log.error("bedtools not found or not executable. Please install bedtools.")
-            return
-
-        success, an, records = bedtools_wrapper.bedtools_getfasta(
-            log.spawn_buffer(),
-            args.gff_in,
-            args.fasta_in,
-            args.fasta_out,
-            args.bedtools_path,
-            args.name_args,
-        )
-
-    elif args.biopython:
-        if not BIOPYTHON_AVAILABLE:
-            log.error(
-                "Biopython is not available. Please install it with: pip install biopython or pip install tigre[bio]"
-            )
-            return
-
-        success, an, records = biopython_wrapper.biopython_getfasta(
-            log.spawn_buffer(),
-            args.gff_in,
-            args.fasta_in,
-            args.fasta_out,
-            args.bedtools_compatible,
-        )
-
-    for record in records:
-        log.log(record[0], record[1])
-
-    if not success:
-        log.error(f"Error extracting sequences with bedtools: {an}")
-        return
-
-
-def main_args(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(
-        "--version",
-        action="version",
-        version=f"tigre {__version__}",
-        help="Show the version of the tigre package.",
-    )
-
-
-def add_test(
-    subparser: "argparse._SubParsersAction[argparse.ArgumentParser]",
-    global_args: argparse.ArgumentParser,
-) -> None:
-    test = subparser.add_parser(
-        "test",
-        help="Test command for tigre, to check if the CLI is working.",
-        description="Just a simple test command to check if the CLI is working,"
-        "if the logging is working, and if the version is correct.",
-        parents=[global_args],
-    )
-    test.set_defaults(func=lambda args: print("Test command executed successfully!"))
-
-
-def args_log(parser: argparse.ArgumentParser) -> None:
-    group = parser.add_argument_group("log options")
-    group.add_argument(
-        "--debug",
-        required=False,
-        default=False,
-        action="store_true",
-        help="Enable TRACE level in file, and DEBUG on console. "
-        "Default: DEBUG level on file and INFO on console.",
-    )
-    group.add_argument(
-        "--log",
-        required=False,
-        default=None,
-        type=str,
-        help="Path to the log file. "
-        "If not provided, a default log file will be created.",
-    )
-    group.add_argument(
-        "--quiet",
-        required=False,
-        default=False,
-        action="store_true",
-        help="Suppress console output. Default: console output enabled.",
-    )
-
-
-def add_clean_group(parser: argparse.ArgumentParser) -> None:
-    group = parser.add_argument_group("clean options")
-    group.add_argument(
-        "--gdict",
-        required=False,
-        type=str,
-        dest="gdt",
-        help="Gene dictionary file",
-    )
-    group.add_argument(
-        "--query-string",
-        required=False,
-        type=str,
-        help="Query string for filtering",
-    )
-    group.add_argument(
-        "--keep-orfs",
-        required=False,
-        action="store_true",
-        help="Keep ORF sequences in output",
-    )
-    group.add_argument(
-        "--overwrite",
-        required=False,
-        action="store_true",
-        help="Overwrite existing output files. Default: False (do not overwrite).",
-    )
-
-
-def clean_parser(
-    sub: "argparse._SubParsersAction[argparse.ArgumentParser]",
-    global_args: argparse.ArgumentParser,
-) -> None:
-    """Create clean command parser and add it to the subparsers."""
-    clean = sub.add_parser(
-        "clean",
-        help="Clean command for tigre, to clean the GFF3 files.",
-        parents=[global_args],
-    )
-    add_clean_group(clean)
-
-    clean_sub = clean.add_subparsers(metavar="mode", dest="mode", required=True)
-
-    single_parser = clean_sub.add_parser(
-        "single",
-        help="Process a single GFF file",
-        parents=[global_args],
-    )
-    add_clean_group(single_parser)
-    single = single_parser.add_argument_group("single file options")
-    args_single(single, "gff", "in")
-    args_single(single, "gff", "out")
-
-    multiple_parser = clean_sub.add_parser(
-        "multiple",
-        help="Process multiple GFF files from TSV",
-        parents=[global_args],
-    )
-    add_clean_group(multiple_parser)
-    multiple = multiple_parser.add_argument_group("multiple file options")
-    args_tsv(multiple, "clean")
-    args_multiple(multiple, "gff", "in", ".gff3", "")
-    args_multiple(multiple, "gff", "out", ".gff3", "_clean")
-
-
-def _workers_count(
-    user_workers: int,
-    *,
-    threading: bool = False,
-    process_multiplier: int = 1,
-    thread_multiplier: int = 4,
-) -> int:
-    cpu_count = os.cpu_count() or 1
-
-    max_limit = (
-        cpu_count * thread_multiplier if threading else cpu_count * process_multiplier
-    )
-
-    return max_limit if user_workers <= 0 else min(user_workers, max_limit)
-
-
-def cli_entrypoint() -> None:
+def cli_entrypoint() -> int:
     """Command line interface for the tigre package."""
     # Global parser to add debug, log, and quiet flags to all subcommands
     global_args = argparse.ArgumentParser(add_help=False)
@@ -804,45 +667,18 @@ def cli_entrypoint() -> None:
         parents=[global_args],
         epilog=f"Source ~ \033[32mhttps://github.com/brenodupin/tigre{C_RESET}",
     )
-    main_args(main)
+    main.add_argument(
+        "--version",
+        action="version",
+        version=f"tigre {__version__}",
+        help="Show the version of the tigre package.",
+    )
 
     subs = main.add_subparsers(dest="command", required=True)
 
     clean_parser(subs, global_args)
-
-    extract_single = subs.add_parser(
-        "extract-single",
-        help="Extract intergenic regions from a (clean) GFF3 file.",
-        description="This command will extract intergenic regions from the GFF3 file and optionally extract sequences from a FASTA file.",
-        parents=[global_args],
-    )
-    extract_single_args(extract_single)
-
-    extract_multiple = subs.add_parser(
-        "extract-multiple",
-        help="Extract intergenic regions from multiple (clean) GFF3 files, indexed via a TSV file.",
-        description="This command will execute `extract-single` for each GFF3 file listed in the TSV file.",
-        parents=[global_args],
-    )
-    extract_multiple_args(extract_multiple)
-
-    getfasta_multiple = subs.add_parser(
-        "getfasta-multiple",
-        help="Extract sequences from multiple GFF3 files, indexed via a TSV file.",
-        description="This command will extract sequences from the GFF3 files listed in the TSV file, using either bedtools or Biopython.",
-        parents=[global_args],
-    )
-    getfasta_multiple_args(getfasta_multiple)
-
-    getfasta_single = subs.add_parser(
-        "getfasta-single",
-        help="Extract sequences from a GFF3 file.",
-        description="This command will extract sequences from a GFF3 file, using either bedtools or Biopython.",
-        parents=[global_args],
-    )
-    getfasta_single_args(getfasta_single)
-
-    add_test(subs, global_args)
+    extract_parser(subs, global_args)
+    getfasta_parser(subs, global_args)
 
     args = main.parse_args()
 
@@ -852,31 +688,31 @@ def cli_entrypoint() -> None:
     log.trace(f"cli  path: {Path(__file__).resolve()}")
     log.trace(f"args: {args}")
 
-    if args.command == "test":
-        log.debug("Executing test command")
-        args.func(args)
-
-    elif args.command == "clean":
+    if args.command == "clean":
         log.debug("Executing clean command")
         clean_command(args, log)
 
-    elif args.command == "extract-single":
+    elif args.command == "extract":
         log.debug("Executing extract command")
-        extract_single_command(args, log)
+        extract_command(args, log)
 
-    elif args.command == "extract-multiple":
-        log.debug("Executing extract multiple command")
-        extract_multiple_command(args, log)
+    elif args.command == "getfasta":
+        log.debug("Executing getfasta command")
+        if not (args.biopython ^ args.bedtools):  # xnor
+            main.error(
+                "You must specify only one of --bedtools or --biopython, "
+                "not both or none."
+            )
 
-    elif args.command == "getfasta-multiple":
-        log.debug("Executing getfasta multiple command")
-        getfasta_multiple_command(args, log)
+        if args.biopython:
+            getfasta_biopython_command(args, log)
 
-    elif args.command == "getfasta-single":
-        log.debug("Executing getfasta single command")
-        getfasta_single_command(args, log)
+        elif args.bedtools:
+            getfasta_bedtools_command(args, log)
 
     else:
         log.error(f"Unknown command: {args.command}")
         main.print_help()
-        exit(1)
+        sys.exit(1)
+
+    return 0

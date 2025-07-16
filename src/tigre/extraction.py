@@ -364,10 +364,12 @@ def multiple_execution(
         tsv_path.parent,
         out_suffix,
     )
-    gff3_utils.check_file_in_tsv(
+    gff3_utils.check_tsv(
         log,
         tsv,
         gff_in_builder,
+        gff_out_builder,
+        True,
         an_column,
     )
 
@@ -380,11 +382,15 @@ def multiple_execution(
             tsv_path.parent,
             out_suffix,
         )
-        gff3_utils.check_file_in_tsv(
+        gff3_utils.check_tsv(
             log,
             tsv,
             fasta_in_builder,
+            fasta_out_builder,
+            True,
             an_column,
+            "FASTA",
+            "FASTA",
         )
 
     log.info(f"Processing {len(tsv)} ANs with {workers} workers")

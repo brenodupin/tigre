@@ -19,6 +19,7 @@ def biopython_getfasta(
     fasta_out: Path,
     bedtools_compatible: bool = False,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
+    seqid = "Not obtained yet"
     try:
         log.trace(f"biopython_getfasta: {gff_in = } | {fasta_in = } | {fasta_out = }")
         log.debug(
@@ -87,6 +88,7 @@ def biopython_multiple(
     an_column: str = "AN",
     workers: int = 0,
     bedtools_compatible: bool = False,
+    overwrite: bool = False,
 ) -> None:
     """Wrapper function to execute bedtools getfasta."""
     tsv = pd.read_csv(tsv_path, sep="\t")
@@ -100,12 +102,19 @@ def biopython_multiple(
     fasta_out_builder = gff3_utils.PathBuilder(fasta_out_ext).use_folder_builder(
         tsv_path.parent, fasta_out_suffix
     )
-    gff3_utils.check_file_in_tsv(
+    gff3_utils.check_tsv(
+        log, tsv, gff_in_builder, fasta_out_builder, overwrite, "AN", "GFF3", "FASTA"
+    )
+
+    gff3_utils.check_tsv(
         log,
         tsv,
-        gff_in_builder,
+        fasta_in_builder,
+        fasta_out_builder,
+        overwrite,
         an_column,
-        "GFF3",
+        "FASTA",
+        "FASTA",
     )
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")

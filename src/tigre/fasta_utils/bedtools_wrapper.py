@@ -73,6 +73,7 @@ def bedtools_multiple(
     workers: int = 0,
     bedtools_path: str = "bedtools",
     name_args: str = "-name+",
+    overwrite: bool = False,
 ) -> None:
     """Wrapper function to execute bedtools getfasta."""
     tsv = pd.read_csv(tsv_path, sep="\t")
@@ -86,12 +87,28 @@ def bedtools_multiple(
     fasta_out_builder = gff3_utils.PathBuilder(fasta_out_ext).use_folder_builder(
         tsv_path.parent, fasta_out_suffix
     )
-    gff3_utils.check_file_in_tsv(
+    gff3_utils.check_tsv(
+        log, tsv, gff_in_builder, fasta_out_builder, overwrite, "AN", "GFF3", "FASTA"
+    )
+
+    gff3_utils.check_tsv(
         log,
         tsv,
-        gff_in_builder,
+        fasta_in_builder,
+        fasta_out_builder,
+        overwrite,
         an_column,
-        "GFF3",
+        "FASTA",
+        "FASTA",
+    )
+
+    raise ValueError(
+        "hard stop to check some things:"
+        f"builders: {gff_in_builder = } | {fasta_in_builder = } | {fasta_out_builder = }"
+        f"args: {tsv_path = } | {gff_in_ext = } | {gff_in_suffix = }\n"
+        f"{fasta_in_ext = } | {fasta_in_suffix = } | {fasta_out_ext = }\n"
+        f"{fasta_out_suffix = } | {an_column = } | {workers = }\n"
+        f"{bedtools_path = } | {name_args = } | {overwrite = }"
     )
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")

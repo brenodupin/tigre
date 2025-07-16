@@ -306,6 +306,7 @@ def extract_multiple(
     gff_out_ext: str = ".gff3",
     gff_out_suffix: str = "_intergenic",
     add_region: bool = False,
+    overwrite: bool = False,
 ) -> None:
     tsv = pd.read_csv(tsv_path, sep="\t")
 
@@ -316,12 +317,8 @@ def extract_multiple(
         tsv_path.parent, gff_out_suffix
     )
 
-    gff3_utils.check_file_in_tsv(
-        log,
-        tsv,
-        gff_in_builder,
-        an_column,
-        "GFF3",
+    gff3_utils.check_tsv(
+        log, tsv, gff_in_builder, gff_out_builder, overwrite, an_column
     )
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")

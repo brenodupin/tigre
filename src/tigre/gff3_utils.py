@@ -284,9 +284,10 @@ def check_tsv(
     df: pd.DataFrame,
     file_in_builder: PathBuilder,
     file_out_builder: PathBuilder,
-    an_column: str = "AN",
-    file_text: str = "GFF3",
     overwrite: bool = False,
+    an_column: str = "AN",
+    file_in_text: str = "GFF3",
+    file_out_text: str = "GFF3",
 ) -> None:
     """Check if input GFF3 files exist and output files do not (unless overwrite is enabled)."""
     log.trace(f"check_tsv called | in: {file_in_builder} | out: {file_out_builder}")
@@ -311,16 +312,16 @@ def check_tsv(
 
     if missing_inputs:
         for an, path in missing_inputs:
-            log.trace(f"{file_text} input file not found for {an}, expected {path}")
+            log.trace(f"{file_in_text} input file not found for {an}, expected {path}")
         log.error(
-            f"Missing {len(missing_inputs)} {file_text} input files. Please check the log for details."
+            f"Missing {len(missing_inputs)} {file_in_text} input files. Please check the log for details."
         )
         sys.exit(1)
 
     if existing_outputs and not overwrite:
         for an, path in existing_outputs:
-            log.trace(f"{file_text} output file already exists for {an}.")
+            log.trace(f"{file_out_text} output file already exists for {an}.")
         log.error(
-            f"{len(existing_outputs)} output {file_text} files already exist. Use --overwrite to overwrite them."
+            f"{len(existing_outputs)} output {file_out_text} files already exist. Use --overwrite to overwrite them."
         )
         sys.exit(1)

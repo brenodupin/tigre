@@ -249,13 +249,7 @@ def clean_multiple(
         gff_out_suffix,
     )
     gff3_utils.check_tsv(
-        log,
-        tsv,
-        gff_in_builder,
-        gff_out_builder,
-        an_column,
-        "GFF3",
-        overwrite,
+        log, tsv, gff_in_builder, gff_out_builder, overwrite, an_column
     )
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
