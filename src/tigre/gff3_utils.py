@@ -326,3 +326,50 @@ def check_tsv(
             f"{len(existing_outputs)} output {file_out_text} files already exist. Use --overwrite to overwrite them."
         )
         sys.exit(1)
+
+def check_tsv_files(
+    log: log_setup.GDTLogger,
+    df: pd.DataFrame,
+    file_builder: PathBuilder,
+    an_column: str = "AN",
+    should_exist: bool = True,
+) -> None:
+    """
+    Check files based on the DataFrame and the provided PathBuilder.
+
+    Args:
+        log: Logger instance
+        df: DataFrame containing the data
+        file_builder: PathBuilder instance for constructing file paths
+        check_for_existence: If True, check that files exist (input check).
+                           If False, check that files don't exist (output check).
+        an_column: Column name containing the identifiers
+    """
+    log.trace(
+        f"check_tsv_files called | builder: {file_builder} | an_column: {an_column} | should_exist: {should_exist}"
+    )
+
+    problem_files = []
+    check_type = "Missing" if should_exist else "Existing"
+
+    for an in df[an_column]:
+        file_path = file_builder.build(an)
+
+        # XOR logic: problem occurs when existence doesn't match expectation
+        if file_path.is_file() != should_exist:
+            problem_files.append((an, file_path))
+
+    if problem_files:
+        for an, path in problem_files:
+            log.trace(f"{check_type} file not found for {an}, expected {path}")
+
+        if should_exist:
+            log.error(
+                f"{check_type} {len(problem_files)} files. Please check the log for details."
+            )
+        else:
+            log.error(
+                f"{check_type} {len(problem_files)} files. Use --overwrite to overwrite them."
+            )
+
+        sys.exit(1)
