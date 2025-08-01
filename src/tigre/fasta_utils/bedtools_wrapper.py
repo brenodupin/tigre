@@ -63,6 +63,7 @@ def bedtools_getfasta(
 def bedtools_multiple(
     log: log_setup.GDTLogger,
     tsv_path: Path,
+    workers: int,
     gff_in_ext: str = ".gff3",
     gff_in_suffix: str = "_intergenic",
     fasta_in_ext: str = ".fasta",
@@ -70,7 +71,6 @@ def bedtools_multiple(
     fasta_out_ext: str = ".fasta",
     fasta_out_suffix: str = "_intergenic",
     an_column: str = "AN",
-    workers: int = 0,
     bedtools_path: str = "bedtools",
     name_args: str = "-name+",
     overwrite: bool = False,

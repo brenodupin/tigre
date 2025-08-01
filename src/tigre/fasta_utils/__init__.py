@@ -39,6 +39,7 @@ except ImportError:
     def biopython_multiple(
         log: log_setup.GDTLogger,
         tsv_path: Path,
+        workers: int,
         gff_in_ext: str = ".gff3",
         gff_in_suffix: str = "_intergenic",
         fasta_in_ext: str = ".fasta",
@@ -46,7 +47,6 @@ except ImportError:
         fasta_out_ext: str = ".fasta",
         fasta_out_suffix: str = "_intergenic",
         an_column: str = "AN",
-        workers: int = 0,
         bedtools_compatible: bool = False,
     ) -> None:
         raise ImportError(

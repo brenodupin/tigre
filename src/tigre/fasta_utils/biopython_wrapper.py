@@ -79,6 +79,7 @@ def biopython_getfasta(
 def biopython_multiple(
     log: log_setup.GDTLogger,
     tsv_path: Path,
+    workers: int,
     gff_in_ext: str = ".gff3",
     gff_in_suffix: str = "_intergenic",
     fasta_in_ext: str = ".fasta",
@@ -86,7 +87,6 @@ def biopython_multiple(
     fasta_out_ext: str = ".fasta",
     fasta_out_suffix: str = "_intergenic",
     an_column: str = "AN",
-    workers: int = 0,
     bedtools_compatible: bool = False,
     overwrite: bool = False,
 ) -> None:

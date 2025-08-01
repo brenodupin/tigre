@@ -226,12 +226,12 @@ def clean_an(
 def clean_multiple(
     log: log_setup.GDTLogger,
     tsv_path: Path,
+    workers: int,
     gff_in_ext: str = ".gff3",
     gff_in_suffix: str = "",
     gff_out_ext: str = ".gff3",
     gff_out_suffix: str = "_clean",
     an_column: str = "AN",
-    workers: int = 0,
     clean_func: Callable[[pd.Series, log_setup.TempLogger], str] = clean_attr,
     query_string: str = gff3_utils.QS_GENE_TRNA_RRNA_REGION,
     keep_orfs: bool = False,

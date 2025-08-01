@@ -461,6 +461,7 @@ def getfasta_bedtools_command(
         bedtools_wrapper.bedtools_multiple(
             log,
             args.tsv,
+            _workers_count(args.workers),
             args.gff_in_ext,
             args.gff_in_suffix,
             args.fasta_in_ext,
@@ -468,7 +469,6 @@ def getfasta_bedtools_command(
             args.fasta_out_ext,
             args.fasta_out_suffix,
             args.an_column,
-            _workers_count(args.workers),
             args.bedtools_path,
             args.name_args,
         )
@@ -508,6 +508,7 @@ def getfasta_biopython_command(
         biopython_wrapper.biopython_multiple(
             log,
             Path(args.tsv).resolve(),
+            _workers_count(args.workers),
             args.gff_in_ext,
             args.gff_in_suffix,
             args.fasta_in_ext,
@@ -515,7 +516,6 @@ def getfasta_biopython_command(
             args.fasta_out_ext,
             args.fasta_out_suffix,
             args.an_column,
-            _workers_count(args.workers),
             args.bedtools_compatible,
             args.overwrite,
         )
@@ -641,12 +641,12 @@ def clean_command(
         clean.clean_multiple(
             log,
             args.tsv,
+            _workers_count(args.workers, threading=True),
             args.gff_in_ext,
             args.gff_in_suffix,
             args.gff_out_ext,
             args.gff_out_suffix,
             args.an_column,
-            _workers_count(args.workers, threading=True),
             clean_func,
             args.query_string,
             args.keep_orfs,
