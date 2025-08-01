@@ -13,7 +13,7 @@ import glob
 import logging
 import os
 from pathlib import Path
-from typing import Any, Optional, Union, cast
+from typing import Any, cast
 
 TRACE = 5
 
@@ -80,7 +80,7 @@ class GDTLogger(logging.Logger):
         super().__init__(name, level)
         self._trace_enabled = self.level <= TRACE
 
-    def setLevel(self, level: Union[int, str]) -> None:  # noqa: N802
+    def setLevel(self, level: int | str) -> None:  # noqa: N802
         """Override setLevel to update cached trace status."""
         super().setLevel(level)
         self._trace_enabled = self.level <= TRACE
@@ -138,14 +138,14 @@ def _cleanup_logs(log_dir: Path, max_files: int = 10) -> None:
 def create_dev_logger(
     console_level: str = "INFO",
     file_level: str = "DEBUG",
-    log_file: Optional[Path] = None,
+    log_file: Path | None = None,
 ) -> GDTLogger:
     """Set up the logger for the GDT package.
 
     Args:
         console_level (str): Logging level for console output.
         file_level (str): Logging level for file output.
-        log_file (Optional[Path]): Path to the log file. If None, a default
+        log_file (Path | None): Path to the log file. If None, a default
                                    log file will be created at the project root,
 
     Returns:
@@ -205,16 +205,16 @@ def create_simple_logger(
     console_level: str = "INFO",
     save_to_file: bool = True,
     file_level: str = "DEBUG",
-    log_file: Union[Path, str, None] = None,
+    log_file: Path | str | None = None,
 ) -> GDTLogger:
     """Create a simple logger with optional console and file output.
 
     Args:
         print_to_console (bool): Whether to print logs to console. Defaults to True.
-        console_level (Optional[str]): Log level for console output.
+        console_level (str): Log level for console output.
         save_to_file (bool): Whether to save logs to a file.
-        file_level (Optional[str]): Log level for file output.
-        log_file (Optional[Path]): Path to the log file.
+        file_level (str): Log level for file output.
+        log_file (Path | str | None): Path to the log file.
 
     Returns:
         GDTLogger: Configured logger instance.
@@ -269,7 +269,7 @@ def create_simple_logger(
 
 def setup_logger(
     debug: bool,
-    log_file: Union[Path, str, None],
+    log_file: Path | str | None,
     quiet: bool,
 ) -> GDTLogger:
     """Set up logger based on command line arguments."""

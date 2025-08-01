@@ -4,7 +4,6 @@
 import concurrent.futures as cf
 import re
 from pathlib import Path
-from typing import Union
 
 import pandas as pd
 
@@ -137,7 +136,7 @@ def _solve_boundaries(
     seqid: str,
     source: str,
     circular: bool,
-) -> list[dict[str, Union[str, int]]]:
+) -> list[dict[str, str | int]]:
     # Legend:
     # [---] feature (gene, trna, rrna)
     # [== igr ==] intergenic region
@@ -171,7 +170,7 @@ def _solve_boundaries(
             }
         ]
 
-    regions: list[dict[str, Union[str, int]]] = []
+    regions: list[dict[str, str | int]] = []
     # ...||[== igr ==][---...
     # if the first start is greater than 1, we have an intergenic region
     # before the first feature, so we create an intergenic region from 1 to

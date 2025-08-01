@@ -12,7 +12,7 @@ import re
 import sys
 from functools import partial
 from pathlib import Path
-from typing import Any, Callable, Optional, Union
+from typing import Any, Callable
 
 import pandas as pd
 
@@ -37,25 +37,26 @@ _RE_region_taxon = re.compile(r"taxon:([^;,]+)")
 
 
 def load_gff3(
-    filename: Union[str, Path],
+    filename: str | Path,
     sep: str = "\t",
     comment: str = "#",
-    header: Optional[int] = None,
+    header: int | None = None,
     names: tuple[str, ...] = GFF3_COLUMNS,
     usecols: tuple[str, ...] = ("type", "start", "end", "attributes"),
-    query_string: Optional[str] = None,
+    query_string: str | None = None,
     **kwargs: Any,
 ) -> pd.DataFrame:
     """Load a GFF3 file into a pandas DataFrame, optionally filtering by a query string.
 
     Args:
-        filename (Union[str, Path]): Path to the GFF3 file.
+        filename (str | Path): Path to the GFF3 file.
         sep (str): Separator used in the file.
         comment (str): Comment character in the file.
-        header (int or None): Row number to use as the column names, None if no header.
+        header (int | None): Row number to use as the column names, None if no header.
         names (tuple[str, ...]): Tuple of column names to use.
         usecols (list[str]): List of columns to read from the file.
-        query_string (str or None): Query string to filter the DataFrame.
+        query_string (str | None): Query string to filter the DataFrame.
+                                   Defaults to None, which means no filtering.
         **kwargs: Additional keyword arguments passed to `pd.read_csv`.
 
     Returns:
@@ -140,7 +141,7 @@ class PathBuilder:
 
     def __init__(self, ext: str = ".gff3") -> None:
         """Initialize the builder with no build method set."""
-        self._build_method: Optional[Callable[[str], Path]] = None
+        self._build_method: Callable[[str], Path] | None = None
         self.ext: str = ext
         self._str: str = f"PathBuilder('{ext}', build=None)"
 
@@ -167,7 +168,7 @@ class PathBuilder:
 
     def use_std_builder(
         self,
-        base: Union[str, Path],
+        base: str | Path,
         suffix: str = "",
     ) -> "PathBuilder":
         """Set the standard filesystem-based build method.
@@ -177,7 +178,7 @@ class PathBuilder:
         "<accession_number><suffix><self.ext>".
 
         Args:
-            base (Union[str, Path]): Base directory where files are stored.
+            base (str | Path]): Base directory where files are stored.
             suffix (str): Suffix to append to the filename. Defaults to "".
 
         Returns:
@@ -200,7 +201,7 @@ class PathBuilder:
 
     def use_folder_builder(
         self,
-        base: Union[str, Path],
+        base: str | Path,
         suffix: str = "",
     ) -> "PathBuilder":
         """Set the folder-based build method.
@@ -210,7 +211,7 @@ class PathBuilder:
         "<accession_number><suffix><self.ext>".
 
         Args:
-            base (Union[str, Path]): Base directory where files are stored.
+            base (str | Path): Base directory where files are stored.
             suffix (str): Suffix to append to the filename. Defaults to "".
 
         Returns:
@@ -235,7 +236,7 @@ class PathBuilder:
     def use_custom_builder(
         self,
         builder_func: Callable[[str], Path],
-        help_text: Optional[str] = None,
+        help_text: str | None = None,
     ) -> "PathBuilder":
         """Set a custom build function as a drop-in replacement.
 
@@ -246,7 +247,7 @@ class PathBuilder:
         Args:
             builder_func (Callable[[str], Path]): A function that takes an
                 accession number (str) and returns a Path object.
-            help_text (Optional[str]): Optional help text to describe the
+            help_text (str | None): Optional help text to describe the
                 custom builder function. This is used by the __repr__ method
                 to provide more context about the builder. If not provided,
                 it defaults to the function's name.

@@ -7,7 +7,7 @@ import os
 import sys
 from functools import partial
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Union
+from typing import TYPE_CHECKING, Callable
 
 from . import __version__, clean, gff3_utils, igr, log_setup
 from .fasta_utils import BIOPYTHON_AVAILABLE, bedtools_wrapper, biopython_wrapper
@@ -190,7 +190,7 @@ def _gdt_clean(
 
 def _gdt(
     log: log_setup.GDTLogger,
-    gdt_path: Union[str, Path],
+    gdt_path: str | Path,
 ) -> Callable[["pd.Series", log_setup.TempLogger], str]:
     """Load GDT dictionary and return a cleaning function."""
     try:
