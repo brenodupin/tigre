@@ -21,9 +21,10 @@ if TYPE_CHECKING:
 MAX_CPU: int = os.cpu_count() or 1
 
 
-def _workers_count(workers: int) -> int:
+def _workers_count(workers: int, threading: bool = False) -> int:
     """Return the number of workers to use."""
-    return min(workers, MAX_CPU) if workers > 0 else MAX_CPU
+    cpus = MAX_CPU * 3 if threading else MAX_CPU
+    return min(workers, cpus) if workers > 0 else cpus
 
 
 def handle_single_result(
@@ -645,7 +646,7 @@ def clean_command(
             args.gff_out_ext,
             args.gff_out_suffix,
             args.an_column,
-            _workers_count(args.workers),
+            _workers_count(args.workers, threading=True),
             clean_func,
             args.query_string,
             args.keep_orfs,
