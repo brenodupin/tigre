@@ -311,13 +311,14 @@ def extract_command(
         igr.extract_multiple(
             log,
             args.tsv,
+            _workers_count(args.workers, threading=True),
             args.an_column,
-            min(args.workers, MAX_CPU),
             args.gff_in_ext,
             args.gff_in_suffix,
             args.gff_out_ext,
             args.gff_out_suffix,
             args.add_region,
+            args.overwrite,
         )
 
 

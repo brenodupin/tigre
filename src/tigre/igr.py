@@ -41,6 +41,9 @@ def extract_intergenic_regions(
         log (log_setup.GDTLogger): Logger instance for logging.
         gff_in (Path): Input GFF3 file path.
         gff_out (Path): Output GFF3 file path.
+        add_region (bool): Whether to add a region line to the output file.
+                           Defaults is False.
+
 
     """
     try:
@@ -69,7 +72,8 @@ def extract_intergenic_regions(
         circular = "is_circular=true" in region.at["attributes"].lower()
 
         log.debug(
-            f"AN: {seqid} | Source: {source} | Size: {region_size} | Circular: {circular}"
+            f"AN: {seqid} | Source: {source} | Size: {region_size} | "
+            f"Circular: {circular}"
         )
 
         df = _split_attributes(log, df)
@@ -299,8 +303,8 @@ def _split_attributes(
 def extract_multiple(
     log: log_setup.GDTLogger,
     tsv_path: Path,
+    workers: int,
     an_column: str = "AN",
-    workers: int = 0,
     gff_in_ext: str = ".gff3",
     gff_in_suffix: str = "_clean",
     gff_out_ext: str = ".gff3",
@@ -308,6 +312,23 @@ def extract_multiple(
     add_region: bool = False,
     overwrite: bool = False,
 ) -> None:
+    """Extract intergenic regions from multiple GFF3 files listed in a TSV file.
+
+    Args:
+        log (log_setup.GDTLogger): Logger instance for logging.
+        tsv_path (Path): Path to the TSV file containing ANs.
+        workers (int): Number of worker threads/processes to use.
+        an_column (str): Column name in the TSV file that contains the ANs.
+                         Defaults to "AN".
+        gff_in_ext (str): Extension for input GFF3 files. Defaults to ".gff3".
+        gff_in_suffix (str): Suffix for input GFF3 files. Defaults to "_clean".
+        gff_out_ext (str): Extension for output GFF3 files. Defaults to ".gff3".
+        gff_out_suffix (str): Suffix for output GFF3 files. Defaults to "_intergenic".
+        add_region (bool): Whether to add a region line to the output file.
+                           Defaults is False.
+        overwrite (bool): Whether to overwrite existing output files. Defaults is False.
+
+    """
     tsv = pd.read_csv(tsv_path, sep="\t")
 
     gff_in_builder = gff3_utils.PathBuilder(gff_in_ext).use_folder_builder(
@@ -322,7 +343,7 @@ def extract_multiple(
     )
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
-    with cf.ProcessPoolExecutor(max_workers=workers) as executor:
+    with cf.ThreadPoolExecutor(max_workers=workers) as executor:
         tasks = [
             executor.submit(
                 extract_intergenic_regions,
@@ -333,7 +354,7 @@ def extract_multiple(
             )
             for an in tsv[an_column]
         ]
-
+        log.info(f"Created {len(tasks)} tasks, starting log collection...")
         for future in cf.as_completed(tasks):
             success, an, records = future.result()
             if not success:
