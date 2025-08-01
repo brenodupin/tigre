@@ -184,9 +184,9 @@ def _solve_boundaries(
                 "strand": "+",
                 "phase": ".",
                 "attributes": "name_up="
-                f"{df.iat[-1, NAME_LEFT_IDX] if circular else 'region_start'};"
+                f"{df.iat[-1, NAME_RIGHT_IDX] if circular else 'region_start'};"
                 "source_up="
-                f"{df.iat[-1, SOURCE_LEFT_IDX] if circular else 'region_start'};"
+                f"{df.iat[-1, SOURCE_RIGHT_IDX] if circular else 'region_start'};"
                 f"name_dw={df.iat[0, NAME_LEFT_IDX]};"
                 f"source_dw={df.iat[0, SOURCE_LEFT_IDX]};",
             }
