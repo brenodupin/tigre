@@ -4,14 +4,14 @@
 import concurrent.futures as cf
 import subprocess
 from pathlib import Path
-from typing import Optional, Union
+from typing import Optional
 
 import pandas as pd
 
 from .. import gff3_utils, log_setup
 
 
-def get_bedtools_version(bedtools_path: Union[Path, str] = "bedtools") -> Optional[str]:
+def get_bedtools_version(bedtools_path: Path | str = "bedtools") -> Optional[str]:
     """Check if bedtools is available in the system."""
     try:
         result = subprocess.run(
