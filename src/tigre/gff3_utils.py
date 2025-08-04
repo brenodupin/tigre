@@ -355,13 +355,12 @@ def check_tsv_files(
     for an in df[an_column]:
         file_path = file_builder.build(an)
 
-        # XOR logic: problem occurs when existence doesn't match expectation
         if file_path.is_file() != should_exist:
             problem_files.append((an, file_path))
 
     if problem_files:
         for an, path in problem_files:
-            log.trace(f"{check_type} file not found for {an}, expected {path}")
+            log.trace(f"{check_type} file for {an}, path: {path}")
 
         if should_exist:
             log.error(
