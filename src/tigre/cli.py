@@ -427,7 +427,6 @@ def getfasta_bedtools_command(
     log: log_setup.GDTLogger,
 ) -> None:
     """Execute the bedtools getfasta command based on the provided arguments."""
-    args.bedtools_path = Path(args.bedtools_path).resolve()
     bedtools_version = bedtools_wrapper.get_bedtools_version(args.bedtools_path)
     log.debug(f"bedtools version: {bedtools_version}")
 
@@ -471,6 +470,7 @@ def getfasta_bedtools_command(
             args.an_column,
             args.bedtools_path,
             args.name_args,
+            args.overwrite,
         )
 
 

@@ -280,62 +280,15 @@ class PathBuilder:
         return self._str
 
 
-def check_tsv(
-    log: log_setup.GDTLogger,
-    df: pd.DataFrame,
-    file_in_builder: PathBuilder,
-    file_out_builder: PathBuilder,
-    overwrite: bool = False,
-    an_column: str = "AN",
-    file_in_text: str = "GFF3",
-    file_out_text: str = "GFF3",
-) -> None:
-    """Check if input GFF3 files exist and output files do not (unless overwrite is enabled)."""
-    log.trace(f"check_tsv called | in: {file_in_builder} | out: {file_out_builder}")
-
-    if an_column not in df.columns:
-        log.error(f"Column '{an_column}' not found in TSV")
-        log.error(f"Available columns: {df.columns}")
-        sys.exit(1)
-
-    missing_inputs = []
-    existing_outputs = []
-
-    for an in df[an_column]:
-        in_file = file_in_builder.build(an)
-        out_file = file_out_builder.build(an)
-
-        if not in_file.is_file():
-            missing_inputs.append((an, in_file))
-
-        if out_file.is_file():
-            existing_outputs.append((an, out_file))
-
-    if missing_inputs:
-        for an, path in missing_inputs:
-            log.trace(f"{file_in_text} input file not found for {an}, expected {path}")
-        log.error(
-            f"Missing {len(missing_inputs)} {file_in_text} input files. Please check the log for details."
-        )
-        sys.exit(1)
-
-    if existing_outputs and not overwrite:
-        for an, path in existing_outputs:
-            log.trace(f"{file_out_text} output file already exists for {an}.")
-        log.error(
-            f"{len(existing_outputs)} output {file_out_text} files already exist. Use --overwrite to overwrite them."
-        )
-        sys.exit(1)
-
-def check_tsv_files(
+def check_files(
     log: log_setup.GDTLogger,
     df: pd.DataFrame,
     file_builder: PathBuilder,
     an_column: str = "AN",
+    *,
     should_exist: bool = True,
 ) -> None:
-    """
-    Check files based on the DataFrame and the provided PathBuilder.
+    """Check files based on the DataFrame and the provided PathBuilder.
 
     Args:
         log: Logger instance
@@ -344,9 +297,10 @@ def check_tsv_files(
         check_for_existence: If True, check that files exist (input check).
                            If False, check that files don't exist (output check).
         an_column: Column name containing the identifiers
+
     """
     log.trace(
-        f"check_tsv_files called | builder: {file_builder} | an_column: {an_column} | should_exist: {should_exist}"
+        f"check_files called | builder: {file_builder} | an_column: {an_column} | should_exist: {should_exist}"
     )
 
     problem_files = []
@@ -364,11 +318,11 @@ def check_tsv_files(
 
         if should_exist:
             log.error(
-                f"{check_type} {len(problem_files)} files. Please check the log for details."
+                f"{check_type} {len(problem_files)} file(s). Please check the log for details."
             )
         else:
             log.error(
-                f"{check_type} {len(problem_files)} files. Use --overwrite to overwrite them."
+                f"{check_type} {len(problem_files)} file(s). Use --overwrite to overwrite them."
             )
 
         sys.exit(1)

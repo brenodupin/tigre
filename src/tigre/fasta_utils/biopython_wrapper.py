@@ -102,20 +102,15 @@ def biopython_multiple(
     fasta_out_builder = gff3_utils.PathBuilder(fasta_out_ext).use_folder_builder(
         tsv_path.parent, fasta_out_suffix
     )
-    gff3_utils.check_tsv(
-        log, tsv, gff_in_builder, fasta_out_builder, overwrite, "AN", "GFF3", "FASTA"
-    )
 
-    gff3_utils.check_tsv(
-        log,
-        tsv,
-        fasta_in_builder,
-        fasta_out_builder,
-        overwrite,
-        an_column,
-        "FASTA",
-        "FASTA",
-    )
+    gff3_utils.check_files(log, tsv, gff_in_builder, an_column, should_exist=True)
+
+    gff3_utils.check_files(log, tsv, fasta_in_builder, an_column, should_exist=True)
+
+    if not overwrite:
+        gff3_utils.check_files(
+            log, tsv, fasta_out_builder, an_column, should_exist=False
+        )
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
     with cf.ProcessPoolExecutor(max_workers=workers) as executor:
