@@ -4,6 +4,7 @@
 import concurrent.futures as cf
 from pathlib import Path
 from typing import Callable
+import traceback
 
 import pandas as pd
 
@@ -171,7 +172,7 @@ def overlap_solver(
             row.type = "overlapping_feature_set"
             # row.strand = '+'
             row.attributes = overlaps_chooser(log, overlaps, an)
-            log.debug(f"Result: {row.attributes}")
+            log.trace(f"Result: {row.attributes}")
 
         # append the row to the df_clean,
         # be it modified (and therefor overlap_region) or not
@@ -211,7 +212,7 @@ def clean_an(
 
     """
     try:
-        log.info(f"[{gff_in.name}] -- Start --")
+        log.debug(f"[{gff_in.name}] -- Start --")
 
         log.trace(f" Loading GFF3 file: {gff_in}")
         df = gff3_utils.load_gff3(
@@ -248,12 +249,18 @@ def clean_an(
             file_handler.write(header)
             df.to_csv(file_handler, sep="\t", header=False, index=False)
 
-        log.info(f"[{an}] -- End --")
+        log.debug(f"[{an}] -- End --")
         return True, an, log.get_records()
 
     except Exception as e:
-        log.error(f"[{an}] Error: {e}")
-        log.info(f"[{an}] -- End --")
+        if "an" not in locals():
+            error_msg = traceback.format_exc()
+            log.error(f"Error in {gff_in}:\n{error_msg}")
+            return False, "Not defined", log.get_records()
+        
+        error_msg = traceback.format_exc()
+        log.error(f"[{an}] Error in {gff_in}:\n{error_msg}")
+        log.debug(f"[{an}] -- End --")
         return False, an, log.get_records()
 
 
@@ -305,7 +312,7 @@ def clean_multiple(
         gff3_utils.check_files(log, tsv, gff_out_builder, an_column, should_exist=False)
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
-    with cf.ProcessPoolExecutor(max_workers=workers) as executor:
+    with cf.ThreadPoolExecutor(max_workers=workers) as executor:
         tasks = [
             executor.submit(
                 clean_an,
