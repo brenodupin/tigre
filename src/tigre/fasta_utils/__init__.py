@@ -23,7 +23,6 @@ try:
 except ImportError:
     BIOPYTHON_AVAILABLE = False
 
-    # stub function if biopython is not available
     def biopython_getfasta(
         log: "log_setup.TempLogger",
         gff_in: "Path",
@@ -31,6 +30,7 @@ except ImportError:
         fasta_out: "Path",
         bedtools_compatible: bool = False,
     ) -> tuple[bool, str, list[tuple[int, str]]]:
+        """Stub for biopython_getfasta when Biopython is not available."""
         raise ImportError(
             "Biopython is required for `biopython_getfasta`. "
             "Install it with: pip install biopython or pip install tigre[bio]"
@@ -49,6 +49,7 @@ except ImportError:
         an_column: str = "AN",
         bedtools_compatible: bool = False,
     ) -> None:
+        """Stub for biopython_multiple when Biopython is not available."""
         raise ImportError(
             "Biopython is required for `biopython_multiple`. "
             "Install it with: pip install biopython or pip install tigre[bio]"

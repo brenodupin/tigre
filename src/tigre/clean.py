@@ -11,12 +11,17 @@ from . import gff3_utils, log_setup
 
 species_url = "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id="
 
+HEADER_BASE: str = (
+    "##gff-version 3\n" "#!gff-spec-version 1.26\n" "#!processor TIGRE clean.py\n"
+)
+
 
 def multiple_regions_solver(
     log: log_setup.TempLogger,
     df: pd.DataFrame,
     an: str,
 ) -> pd.DataFrame:
+    """Handle multiple regions in the GFF3 file."""
     log.warning("Multiple regions found:")
     for row in df[df["type"] == "region"].itertuples():
         log.warning(f" s: {row.start} e: {row.end} | {row.attributes}")
@@ -25,7 +30,8 @@ def multiple_regions_solver(
     if region_mask.sum() > 1:
         df = df[~region_mask | (df.index == 0)].reset_index(drop=True)
     log.warning(
-        f" Chosen s: {df.at[0, 'start']} e: {df.at[0, 'end']} | {df.at[0, 'attributes']}"
+        f" Chosen s: {df.at[0, 'start']} e: {df.at[0, 'end']} | "
+        f"{df.at[0, 'attributes']}"
     )
     return df
 
@@ -35,6 +41,7 @@ def bigger_than_region_solver(
     df: pd.DataFrame,
     an: str,
 ) -> pd.DataFrame:
+    """Handle genes with 'end' bigger than the region."""
     region_end = df.at[0, "end"]
     log.warning(f"Genes with 'end' bigger than region: {region_end}")
     for row in df[df["end"] > region_end].itertuples():
@@ -70,26 +77,34 @@ def overlaps_chooser(
     overlaps_in: list[pd.Series | pd.DataFrame],
     an: str,
 ) -> str:
+    """Choose the best overlap from a list of overlaps."""
     overlaps = pd.DataFrame(overlaps_in).sort_values("start", ignore_index=True)
 
     left = overlaps[overlaps.start == overlaps.start.min()]
     if left.shape[0] > 1:
         log.trace(
-            f" More than one element with the lowest start: {overlaps.start.min()}"
+            f" More than one feature with the lowest start: {overlaps.start.min()}"
         )
         left = left[left.end == left.end.max()]
         if left.shape[0] > 1 and left.end.max() == overlaps.end.max():
             log.trace(
-                f" Genes with same start and end, choosing the first one: {left.iat[0, 8]}"
+                " Features with coinciding coordinates, choosing the first: "
+                f"{left.iat[0, 8]}"
             )
-            return f"{name_replace(left.iat[0, 8], is_left=True)}{name_replace(left.iat[0, 8])}"
+
+            return (
+                f"{name_replace(left.iat[0, 8], is_left=True)}"
+                f"{name_replace(left.iat[0, 8])}"
+            )
 
     right = overlaps[overlaps.end == overlaps.end.max()]
     if right.shape[0] > 1:
-        log.trace(f" More than one element with the highest end: {overlaps.end.max()}")
+        log.trace(f" More than one feature with the highest end: {overlaps.end.max()}")
         right = right[right.start == right.start.min()]
+
     return (
-        f"{name_replace(left.iat[0, 8], is_left=True)}{name_replace(right.iat[0, 8])}"
+        f"{name_replace(left.iat[0, 8], is_left=True)}"
+        f"{name_replace(right.iat[0, 8])}"
     )
 
 
@@ -97,6 +112,7 @@ def name_replace(
     string: str,
     is_left: bool = False,
 ) -> str:
+    """Replace 'name' and 'source' in the string with left or right."""
     if is_left:
         return string.replace("name=", "name_left=").replace("source=", "source_left=")
     return string.replace("name=", "name_right=").replace("source=", "source_right=")
@@ -107,10 +123,10 @@ def create_header(
     attributes: str,
     end: int,
 ) -> str:
-    header = f"##gff-version 3\n#!gff-spec-version 1.26\n#!processor [PLACE_H0LDER_NAME]\n##sequence-region {an} 1 {end}\n"
+    """Create a GFF3 header with the given attributes."""
     taxon_match = gff3_utils._RE_region_taxon.search(attributes)
-    header += f"##species {species_url + taxon_match.group(1) if taxon_match else 'taxon_id_not_found'}\n"
-    return header
+    species = species_url + taxon_match.group(1) if taxon_match else "taxon_not_found"
+    return HEADER_BASE + f"##sequence-region {an} 1 {end}\n##species {species}\n"
 
 
 def overlap_solver(
@@ -118,9 +134,10 @@ def overlap_solver(
     df: pd.DataFrame,
     an: str,
 ) -> pd.DataFrame:
-    df_clean = df.iloc[0:1].copy()  # copia region, index 0
+    """Solve overlaps in the GFF3 file."""
+    df_clean = df.iloc[0:1].copy()  # copy the first row (region)
 
-    next_index = 1  # itera sobre as linhas do dataframe, começando da segunda
+    next_index = 1  # iterate from the second row
     for index, row in df.loc[1:].iterrows():
         if index is not next_index:
             continue
@@ -143,7 +160,8 @@ def overlap_solver(
         if overlaps:
             overlaps.insert(0, row.copy())  # insert current row at index 0
             log.debug(
-                f"overlap found, region: {row.start} - {end_region} | length: {end_region - row.start + 1}"
+                f"overlap found, region: {row.start} - {end_region} | "
+                f"length: {end_region - row.start + 1}"
             )
             for r in overlaps:
                 log.trace(f" {r.start} | {r.end} | {r.type} | {r.attributes}")
@@ -155,7 +173,8 @@ def overlap_solver(
             row.attributes = overlaps_chooser(log, overlaps, an)
             log.debug(f"Result: {row.attributes}")
 
-        # append the row to the df_clean, be it modified (and therefor overlap_region) or not
+        # append the row to the df_clean,
+        # be it modified (and therefor overlap_region) or not
         df_clean = pd.concat([df_clean, row.to_frame().T], ignore_index=True)
 
     return df_clean
@@ -165,7 +184,11 @@ def clean_attr(
     row: pd.Series,
     log: log_setup.TempLogger,
 ) -> str:
-    return f"name={row.gene_id};source={row.seqid}|{row.type}|{row.start}|{row.end}|{row.strand}|{row.gene_id};"
+    """Clean attributes in a GFF3 row."""
+    return (
+        f"name={row.gene_id};source={row.seqid}|{row.type}|{row.start}|{row.end}|"
+        f"{row.strand}|{row.gene_id};"
+    )
 
 
 def clean_an(
@@ -176,6 +199,17 @@ def clean_an(
     query_string: str,
     keep_orfs: bool,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
+    """Clean a GFF3 file by removing unnecessary features and attributes.
+
+    Args:
+        log: Logger instance
+        gff_in: Path to the input GFF3 file
+        gff_out: Path to the output GFF3 file
+        clean_func: Function to clean attributes in each row
+        query_string: Query string to filter the GFF3 file
+        keep_orfs: Whether to keep ORFs in the GFF3 file
+
+    """
     try:
         log.info(f"[{gff_in.name}] -- Start --")
 
@@ -237,7 +271,23 @@ def clean_multiple(
     keep_orfs: bool = False,
     overwrite: bool = False,
 ) -> None:
-    """Orchestrates the execution of the ans."""
+    """Orchestrates the execution of `clean_an` across multiple GFF3 files.
+
+    Args:
+        log: Logger instance
+        tsv_path: Path to the TSV file containing ANs
+        workers: Number of worker processes to use
+        gff_in_ext: Extension for input GFF3 files
+        gff_in_suffix: Suffix for input GFF3 files
+        gff_out_ext: Extension for output GFF3 files
+        gff_out_suffix: Suffix for output GFF3 files
+        an_column: Column name in the TSV file that contains ANs
+        clean_func: Function to clean attributes in each row
+        query_string: Query string to filter the GFF3 file
+        keep_orfs: Whether to keep ORFs in the GFF3 file
+        overwrite: Whether to overwrite existing output files
+
+    """
     tsv = pd.read_csv(tsv_path, sep="\t")
 
     gff_in_builder = gff3_utils.PathBuilder(gff_in_ext).use_folder_builder(

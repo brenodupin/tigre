@@ -297,10 +297,13 @@ def check_files(
         check_for_existence: If True, check that files exist (input check).
                            If False, check that files don't exist (output check).
         an_column: Column name containing the identifiers
+        should_exist: If True, checks if files exist; if False,
+                      checks if they do not exist.
 
     """
     log.trace(
-        f"check_files called | builder: {file_builder} | an_column: {an_column} | should_exist: {should_exist}"
+        f"check_files called | builder: {file_builder} | an_column: {an_column} | "
+        f"should_exist: {should_exist}"
     )
 
     problem_files = []
@@ -318,11 +321,13 @@ def check_files(
 
         if should_exist:
             log.error(
-                f"{check_type} {len(problem_files)} file(s). Please check the log for details."
+                f"{check_type} {len(problem_files)} file(s). Please check the log for "
+                "details."
             )
         else:
             log.error(
-                f"{check_type} {len(problem_files)} file(s). Use --overwrite to overwrite them."
+                f"{check_type} {len(problem_files)} file(s). Use `--overwrite` to "
+                "overwrite them."
             )
 
         sys.exit(1)

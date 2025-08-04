@@ -33,14 +33,19 @@ def bedtools_getfasta(
     """Extract sequences from a FASTA file using bedtools.
 
     Args:
-        gff_in (Path): Path to the GFF3 file containing the regions of interest.
-        fasta_in (Path): Path to the input FASTA file.
-        fasta_out (Path): Path to the output FASTA file where sequences will be saved.
-        bedtools_path (str): Path to the bedtools executable. Defaults to "bedtools".
+        log: Logger instance
+        gff_in: Path to the GFF3 input file
+        fasta_in: Path to the input FASTA file
+        fasta_out: Path to the output FASTA file
+        bedtools_path: Path to the bedtools executable
+        name_args: Additional arguments for bedtools getfasta, e.g., "-name+"
 
     """
     try:
-        command = f"{bedtools_path} getfasta {name_args} -fi {fasta_in} -fo {fasta_out} -bed {gff_in}"
+        command = (
+            f"{bedtools_path} getfasta {name_args} -fi {fasta_in} -fo {fasta_out} "
+            f"-bed {gff_in}"
+        )
         log.debug(f"Running command: {command}")
         output = subprocess.run(
             command.split(), stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True
@@ -75,7 +80,7 @@ def bedtools_multiple(
     name_args: str = "-name+",
     overwrite: bool = False,
 ) -> None:
-    """Wrapper function to execute bedtools getfasta."""
+    """Wrap `bedtools getfasta` extraction."""
     tsv = pd.read_csv(tsv_path, sep="\t")
 
     gff_in_builder = gff3_utils.PathBuilder(gff_in_ext).use_folder_builder(
@@ -99,15 +104,15 @@ def bedtools_multiple(
 
     log.trace(
         "hard stop to check some things:"
-        f"builders: {gff_in_builder = } | {fasta_in_builder = } | {fasta_out_builder = }"
+        f"builder: {gff_in_builder = } | {fasta_in_builder = } | {fasta_out_builder = }"
         f"args: {tsv_path = } | {gff_in_ext = } | {gff_in_suffix = }\n"
         f"{fasta_in_ext = } | {fasta_in_suffix = } | {fasta_out_ext = }\n"
         f"{fasta_out_suffix = } | {an_column = } | {workers = }\n"
         f"{bedtools_path = } | {name_args = } | {overwrite = }"
     )
     raise NotImplementedError(
-        "bedtools still does not support circular sequences, we've submitted a PR to add this feature, "
-        "but it is not yet merged. "
+        "bedtools still does not support circular sequences, we've submitted a PR to "
+        "add this feature, but it is not yet merged. "
         "Please use the biopython process for now."
     )
 

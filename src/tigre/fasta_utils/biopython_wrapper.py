@@ -19,11 +19,13 @@ def biopython_getfasta(
     fasta_out: Path,
     bedtools_compatible: bool = False,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
+    """Extract sequences from a FASTA file using Biopython."""
     seqid = "Not obtained yet"
     try:
         log.trace(f"biopython_getfasta: {gff_in = } | {fasta_in = } | {fasta_out = }")
         log.debug(
-            f"biopython_getfasta: gff_in: {gff_in.name} | fasta_in: {fasta_in.name} | fasta_out: {fasta_out.name}"
+            f"biopython_getfasta: gff_in: {gff_in.name} | fasta_in: {fasta_in.name} | "
+            f"fasta_out: {fasta_out.name}"
         )
 
         idx_fix = 0 if bedtools_compatible else 1
@@ -90,7 +92,7 @@ def biopython_multiple(
     bedtools_compatible: bool = False,
     overwrite: bool = False,
 ) -> None:
-    """Wrapper function to execute bedtools getfasta."""
+    """Extract sequences from GFF3 files using Biopython."""
     tsv = pd.read_csv(tsv_path, sep="\t")
 
     gff_in_builder = gff3_utils.PathBuilder(gff_in_ext).use_folder_builder(
