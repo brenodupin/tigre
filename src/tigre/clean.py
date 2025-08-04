@@ -2,9 +2,8 @@
 """Module to solve overlaps in GFF3 files."""
 
 import concurrent.futures as cf
-from pathlib import Path
-from typing import Callable
 import traceback
+from pathlib import Path
 
 import pandas as pd
 
@@ -196,7 +195,6 @@ def clean_an(
     log: log_setup.TempLogger,
     gff_in: Path,
     gff_out: Path,
-    clean_func: Callable[[pd.Series, log_setup.TempLogger], str],
     query_string: str,
     keep_orfs: bool,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
@@ -229,8 +227,7 @@ def clean_an(
         if (df["type"] == "region").sum() > 1:
             df = multiple_regions_solver(log, df, an)
 
-        log.trace(f" Cleaning function: {clean_func}.")
-        df.loc[1:, "attributes"] = df.loc[1:].apply(clean_func, axis=1, log=log)
+        df.loc[1:, "attributes"] = df.loc[1:].apply(clean_attr, axis=1, log=log)
 
         if df["end"].idxmax() != 0:
             df = bigger_than_region_solver(log, df, an)
@@ -252,12 +249,12 @@ def clean_an(
         log.debug(f"[{an}] -- End --")
         return True, an, log.get_records()
 
-    except Exception as e:
+    except Exception:
         if "an" not in locals():
             error_msg = traceback.format_exc()
             log.error(f"Error in {gff_in}:\n{error_msg}")
             return False, "Not defined", log.get_records()
-        
+
         error_msg = traceback.format_exc()
         log.error(f"[{an}] Error in {gff_in}:\n{error_msg}")
         log.debug(f"[{an}] -- End --")
@@ -273,7 +270,6 @@ def clean_multiple(
     gff_out_ext: str = ".gff3",
     gff_out_suffix: str = "_clean",
     an_column: str = "AN",
-    clean_func: Callable[[pd.Series, log_setup.TempLogger], str] = clean_attr,
     query_string: str = gff3_utils.QS_GENE_TRNA_RRNA_REGION,
     keep_orfs: bool = False,
     overwrite: bool = False,
@@ -312,19 +308,19 @@ def clean_multiple(
         gff3_utils.check_files(log, tsv, gff_out_builder, an_column, should_exist=False)
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
-    with cf.ThreadPoolExecutor(max_workers=workers) as executor:
+    with cf.ProcessPoolExecutor(max_workers=workers) as executor:
         tasks = [
             executor.submit(
                 clean_an,
                 log.spawn_buffer(),
                 gff_in_builder.build(an),
                 gff_out_builder.build(an),
-                clean_func,
                 query_string,
                 keep_orfs,
             )
             for an in tsv[an_column]
         ]
+        log.trace("Tasks submitted, waiting for completion...")
 
         for future in cf.as_completed(tasks):
             success, an, records = future.result()

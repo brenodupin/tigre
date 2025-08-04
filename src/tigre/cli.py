@@ -5,18 +5,16 @@
 import argparse
 import os
 import sys
-from functools import partial
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable
+from typing import TYPE_CHECKING
 
-from . import __version__, clean, gff3_utils, igr, log_setup
+from . import __version__, clean, clean_gdt, gff3_utils, igr, log_setup
 from .fasta_utils import BIOPYTHON_AVAILABLE, bedtools_wrapper, biopython_wrapper
 
 C_RESET = "\033[0m"
 
 if TYPE_CHECKING:
-    import gdt  # type: ignore[import-not-found]
-    import pandas as pd
+    pass
 
 MAX_CPU: int = os.cpu_count() or 1
 
@@ -166,52 +164,6 @@ def args_log(parser: argparse.ArgumentParser) -> None:
         default=False,
         help="Suppress console output. Default: console output enabled.",
     )
-
-
-# pre-compile functions for GDT cleaning
-def _gdt_clean(
-    gdt: "gdt.GeneDictionary",
-    row: "pd.Series",
-    log: log_setup.TempLogger,
-) -> str:
-    """Clean attributes using GDT."""
-    try:
-        label = gdt[row.gene_id].label
-    except KeyError:
-        log.error(
-            f"Gene ID {row.gene_id} not found in GDT dictionary. Using default format."
-        )
-        label = row.gene_id
-    return (
-        f"name={label};source={row.seqid}|{row.type}|{row.start}|{row.end}|"
-        f"{row.strand}|{row.gene_id};"
-    )
-
-
-def _gdt(
-    log: log_setup.GDTLogger,
-    gdt_path: str | Path,
-) -> Callable[["pd.Series", log_setup.TempLogger], str]:
-    """Load GDT dictionary and return a cleaning function."""
-    try:
-        import gdt
-    except ImportError:
-        raise SystemExit(
-            "GDT package not found. Please install it to use the --gdict option."
-        )
-
-    log.debug(f"GDT package version: {gdt.__version__}")
-    gdt_path = Path(gdt_path).resolve()
-    if not gdt_path.is_file():
-        log.error(f"GDT .gdict file not found: {gdt_path}")
-        sys.exit(1)
-
-    gdict = gdt.read_gdict(gdt_path, lazy_info=False)
-    log.info(f"GDT dictionary loaded from {gdt_path}")
-    gdt.log_info(log, gdict)
-    gdt_clean = partial(_gdt_clean, gdict)
-    log.debug("GDT support deployed successfully.")
-    return gdt_clean
 
 
 ###############################################
@@ -602,8 +554,6 @@ def clean_command(
     log: log_setup.GDTLogger,
 ) -> None:
     """Execute the clean command based on the provided arguments."""
-    clean_func = _gdt(log, args.gdt) if args.gdt else clean.clean_attr
-
     if args.mode == "single":
         args.gff_in = Path(args.gff_in).resolve()
         args.gff_out = Path(args.gff_out).resolve()
@@ -620,14 +570,21 @@ def clean_command(
             args.overwrite,
         )
 
-        result = clean.clean_an(
-            log.spawn_buffer(),
-            args.gff_in,
-            args.gff_out,
-            clean_func,
-            args.query_string,
-            args.keep_orfs,
-        )
+        if args.gdt:
+            result = clean_gdt.solve_gdt_call(log, args, 0)
+            if result is None:
+                log.error("GDT processing failed.")
+                sys.exit(1)
+
+        else:
+            result = clean.clean_an(
+                log.spawn_buffer(),
+                args.gff_in,
+                args.gff_out,
+                args.query_string,
+                args.keep_orfs,
+            )
+
         handle_single_result(log, result, "Error cleaning GFF3 single")
 
     elif args.mode == "multiple":
@@ -638,16 +595,21 @@ def clean_command(
             "TSV file",
         )
 
+        if args.gdt:
+            clean_gdt.solve_gdt_call(
+                log, args, _workers_count(args.workers, threading=True)
+            )
+            return
+
         clean.clean_multiple(
             log,
             args.tsv,
-            _workers_count(args.workers, threading=True),
+            _workers_count(args.workers),
             args.gff_in_ext,
             args.gff_in_suffix,
             args.gff_out_ext,
             args.gff_out_suffix,
             args.an_column,
-            clean_func,
             args.query_string,
             args.keep_orfs,
             args.overwrite,
