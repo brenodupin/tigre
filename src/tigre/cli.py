@@ -13,7 +13,6 @@ from . import (
     __version__,
     clean,
     clean_gdt,
-    clean_gdt_server,
     gff3_utils,
     igr,
     log_setup,
@@ -556,6 +555,22 @@ def clean_parser(
     args_tsv(multiple, "clean")
     args_multiple(multiple, "gff", "in", ".gff3", "")
     args_multiple(multiple, "gff", "out", ".gff3", "_clean")
+    multiple.add_argument(
+        "--server",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Force the use of the GDT server to process the GFF3 files. "
+        "Default: False (it will check if it needs or not to use the server).",
+    )
+    multiple.add_argument(
+        "--no-server",
+        required=False,
+        action="store_true",
+        default=False,
+        help="It wont use GDT server to process the GFF3 files. "
+        "Default: False (it will check if it needs or not to use the server).",
+    )
 
 
 def clean_command(
@@ -605,9 +620,7 @@ def clean_command(
         )
 
         if args.gdt:
-            clean_gdt_server.solve_gdt_call_server(
-                log, args, _workers_count(args.workers)
-            )
+            clean_gdt.solve_gdt_call(log, args, _workers_count(args.workers))
             return
 
         clean.clean_multiple(
@@ -664,6 +677,9 @@ def cli_entrypoint() -> int:
 
     if args.command == "clean":
         log.debug("Executing clean command")
+        if args.server and args.no_server:
+            main.error("You cannot specify both --server and --no-server together.")
+
         clean_command(args, log)
 
     elif args.command == "extract":

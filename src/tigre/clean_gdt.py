@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 import pandas as pd
 
-from . import clean, gff3_utils, log_setup
+from . import clean, clean_gdt_server, gff3_utils, log_setup
 
 if TYPE_CHECKING:
     import argparse
@@ -222,19 +222,43 @@ def solve_gdt_call(
         )
 
     elif args.mode == "multiple":
-        clean_multiple_gdt(
-            log,
-            args.tsv,
-            workers,
-            gdict,
-            args.gff_in_ext,
-            args.gff_in_suffix,
-            args.gff_out_ext,
-            args.gff_out_suffix,
-            args.an_column,
-            args.query_string,
-            args.keep_orfs,
-            args.overwrite,
-        )
+        server_mode = False
+
+        if len(gdict) > 200000:
+            server_mode = True
+
+        if (not args.no_server) and (args.server or server_mode):
+            log.info("Running in server mode.")
+            clean_gdt_server.clean_multiple_gdt_server(
+                log,
+                args.tsv,
+                workers,
+                gdict,
+                args.gff_in_ext,
+                args.gff_in_suffix,
+                args.gff_out_ext,
+                args.gff_out_suffix,
+                args.an_column,
+                args.query_string,
+                args.keep_orfs,
+                args.overwrite,
+            )
+
+        else:
+            log.info("Running in normal mode.")
+            clean_multiple_gdt(
+                log,
+                args.tsv,
+                workers,
+                gdict,
+                args.gff_in_ext,
+                args.gff_in_suffix,
+                args.gff_out_ext,
+                args.gff_out_suffix,
+                args.an_column,
+                args.query_string,
+                args.keep_orfs,
+                args.overwrite,
+            )
 
     return None
