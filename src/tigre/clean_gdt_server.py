@@ -2,13 +2,12 @@
 """Module to solve overlaps in GFF3 files."""
 
 import concurrent.futures as cf
+import multiprocessing as mp
 import sys
 import traceback
 from pathlib import Path
-from typing import TYPE_CHECKING, cast
-
-import multiprocessing as mp
 from queue import Empty
+from typing import TYPE_CHECKING, TypeAlias, cast
 
 import pandas as pd
 
@@ -19,25 +18,27 @@ if TYPE_CHECKING:
 
     import gdt  # type: ignore[import-not-found]
 
+_ReqQueue: TypeAlias = "mp.Queue[tuple[list[str], mp.connection.Connection]]"
+
 
 def format_attributes(
     df: "pd.DataFrame",
-    an_index: int,
-    request_queue: "mp.Queue[tuple[int, list[str]]]",
-    response_queue: "mp.Queue[list[str]]",
+    queue: _ReqQueue,
     log: log_setup.TempLogger,
 ) -> "pd.DataFrame":
     """Format attributes in the DataFrame using GDT."""
     gene_ids_to_query = df.loc[1:, "gene_id"].dropna().tolist()
 
     try:
-        # Send batch request
-        request_queue.put((an_index, gene_ids_to_query))
-        labels_list = response_queue.get()
+        # Create pipe for response and send request
+        worker_conn, server_conn = mp.Pipe()
+        queue.put((gene_ids_to_query, server_conn))
+        labels_list = worker_conn.recv()  # Get response through pipe
+        worker_conn.close()  # Close our end of the pipe
 
         # Check if we got a valid response with matching length
         if len(labels_list) != len(gene_ids_to_query):
-            log.error(f"Invalid response from dictionary server. Using default format.")
+            log.error("Invalid response from dictionary server. Using default format.")
             log.trace(
                 f"Expected {len(gene_ids_to_query)} labels, got {len(labels_list)}."
             )
@@ -47,6 +48,14 @@ def format_attributes(
     except Exception as e:
         log.error(f"Error querying gene IDs: {e}. Using default format.")
         labels_list = gene_ids_to_query  # fallback to gene_ids
+
+    # Log missing gene_ids and replace "not_found" with original gene_id
+    for i, (gene_id, label) in enumerate(zip(gene_ids_to_query, labels_list)):
+        if label == "not_found":
+            log.error(
+                f"Gene ID {gene_id} not found in GDT dictionary. Using default format."
+            )
+            labels_list[i] = gene_id  # replace "not_found" with original gene_id
 
     # Build attributes string using labels_list directly
     df.loc[1:, "attributes"] = (
@@ -71,22 +80,21 @@ def format_attributes(
 
 
 def clean_an_gdt_server(
-    an_index: int,
     log: log_setup.TempLogger,
     gff_in: Path,
     gff_out: Path,
-    request_queue: "mp.Queue[tuple[int, list[str]]]",
-    response_queue: "mp.Queue[list[str]]",
+    req_queue: _ReqQueue,
     query_string: str,
     keep_orfs: bool,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Clean a GFF3 file by removing unnecessary features and attributes with a gdict.
 
     Args:
+        an_index: Index of the AN being processed
         log: Logger instance
         gff_in: Path to the input GFF3 file
         gff_out: Path to the output GFF3 file
-        gdict: GDT GeneDict instance
+        req_queue: Request queue for the dictionary server
         query_string: Query string to filter the GFF3 file
         keep_orfs: Whether to keep ORFs in the GFF3 file
 
@@ -109,7 +117,7 @@ def clean_an_gdt_server(
         if (df["type"] == "region").sum() > 1:
             df = clean.multiple_regions_solver(log, df, an)
 
-        df = format_attributes(df, an_index, request_queue, response_queue, log)
+        df = format_attributes(df, req_queue, log)
 
         if df["end"].idxmax() != 0:
             df = clean.bigger_than_region_solver(log, df, an)
@@ -193,24 +201,17 @@ def clean_multiple_gdt(
     # create server for dictionary
     try:
         log.info("Starting dictionary server...")
-        server_process, request_queue, response_queues = create_dict_server(
-            gdict=gdict,
-            num_queues=len(tsv),
-        )
-        log.info(
-            f"Creating tasks for processing {tsv.shape[0]} ANs with {workers} workers..."
-        )
+        server_process, req_queue = create_dict_server(gdict)
+        log.info(f"Submitiing tasks for {tsv.shape[0]} ANs with {workers} workers...")
         with cf.ProcessPoolExecutor(max_workers=workers) as executor:
             tasks = []
-            for i, an in enumerate(tsv[an_column]):
+            for an in tsv[an_column]:
                 task = executor.submit(
                     clean_an_gdt_server,
-                    i,
                     log.spawn_buffer(),
                     gff_in_builder.build(an),
                     gff_out_builder.build(an),
-                    request_queue,
-                    response_queues[i],
+                    req_queue,
                     query_string,
                     keep_orfs,
                 )
@@ -229,7 +230,7 @@ def clean_multiple_gdt(
             log.info("All processed.")
     finally:
         # Stop the dictionary server gracefully
-        stop_dict_server(server_process, request_queue)
+        stop_dict_server(server_process, req_queue)
         log.info("Dictionary server stopped.")
 
 
@@ -279,50 +280,32 @@ def solve_gdt_call_server(
     return None
 
 
-def run_dictionary_server(
-    gdict: "gdt.GeneDict",
-    request_queue: "mp.Queue[tuple[int, list[str]]]",  # Changed: now expects list[str]
-    response_queues: "dict[int, mp.Queue[list[str]]]",  # Changed: now sends list[str] in order
-) -> None:
-    """
-    Dictionary server function that runs in a separate process.
-
-    Args:
-        gdict: The dictionary to serve
-        request_queue: Queue to receive (worker_id, gene_id_list) requests
-        response_queues: Dict of worker_id -> Queue for sending ordered responses
-    """
+def run_dictionary_server(gdict: "gdt.GeneDict", req_queue: _ReqQueue) -> None:
+    """Run the dictionary server using a shared queue for communication."""
     query_count = 0
-    an_count = 0
 
     while True:
         try:
-            # Get request: (worker_id, list_of_gene_ids)
-            an_index, gene_id_list = request_queue.get(timeout=1.0)
+            # Get request: (gene_ids_list, response_pipe)
+            gene_ids, worker_conn = req_queue.get(timeout=1.0)
 
-            # Check for shutdown signal
-            if an_index == -1 and gene_id_list == ["shutdown"]:
-                print(
-                    f"Dictionary server shutting down after {query_count} batch queries, from {an_count} ANs."
-                )
+            if gene_ids == ["shutdown"]:
+                worker_conn.close()
                 break
 
-            # NEW: Process gene_ids in order and return ordered results
-            result_list = []
-            for gene_id in gene_id_list:
+            # Process batch lookup
+            results = []
+            for gene_id in gene_ids:
                 result = gdict.get(gene_id, "not_found")
-                if result != "not_found":
-                    result_list.append(result.label)
-                else:
-                    result_list.append("not_found")
+                results.append(result.label if result != "not_found" else "not_found")
                 query_count += 1
-            an_count += 1
 
-            # Send ordered response back to specific AN's queue
-            if an_index in response_queues:
-                response_queues[an_index].put(result_list)
-            else:
-                print(f"Warning: Unknown an_index {an_index}")
+            # Send response back through pipe and close it
+            try:
+                worker_conn.send(results)
+                worker_conn.close()
+            except Exception as e:
+                print(f"Error sending response: {e}")
 
         except Empty:
             # Timeout - continue loop to check for shutdown
@@ -331,58 +314,38 @@ def run_dictionary_server(
             print(f"Dictionary server error: {e}")
             continue
 
+    print(f"Dictionary server shutting down after {query_count} queries")
 
-def create_dict_server(
-    gdict: "gdt.GeneDict",
-    num_queues: int,
-) -> tuple[
-    mp.Process,
-    "mp.Queue[tuple[int, list[str]]]",
-    dict[int, "mp.Queue[list[str]]"],
-]:
-    """
-    Create and start a dictionary server process.
 
-    Args:
-        gdict: GDT GeneDict instance to serve
-        num_queues: Number of response queues to create
-
-    Returns:
-        Tuple containing:
-        - server_process: The dictionary server process
-        - request_queue: Queue for sending (queue_id, gene_id) requests
-        - response_queues: Dict mapping queue_id to response queues
-    """
-    # Use Manager for queues that need to be shared across ProcessPoolExecutor
+def create_dict_server(gdict: "gdt.GeneDict") -> tuple[mp.Process, _ReqQueue]:
+    """Create dictionary server with a shared queue."""
+    # Single shared queue for all requests
     manager = mp.Manager()
-    request_queue = cast("mp.Queue[tuple[int, list[str]]]", manager.Queue())
-    response_queues = cast(
-        dict[int, "mp.Queue[list[str]]"],
-        {i: manager.Queue() for i in range(num_queues)},
-    )
+    request_queue = cast(_ReqQueue, manager.Queue())
 
-    # Start server process
     server_process = mp.Process(
-        target=run_dictionary_server, args=(gdict, request_queue, response_queues)
+        target=run_dictionary_server, args=(gdict, request_queue)
     )
     server_process.start()
 
-    return server_process, request_queue, response_queues
+    return server_process, request_queue
 
 
-def stop_dict_server(
-    server_process: mp.Process, request_queue: "mp.Queue[tuple[int, list[str]]]"
-) -> None:
-    """
-    Stop the dictionary server gracefully.
+def stop_dict_server(server_process: mp.Process, req_queue: _ReqQueue) -> None:
+    """Stop the dictionary server gracefully.
 
     Args:
         server_process: The server process to stop
-        request_queue: Request queue to send shutdown signal
+        req_queue: Request queue to send shutdown signal
+
     """
     if server_process and server_process.is_alive():
-        # Send shutdown signal
-        request_queue.put((-1, ["shutdown"]))
+        try:
+            # Send shutdown signal
+            req_queue.put((["shutdown"], mp.Pipe()[1]))
+        except Exception as e:
+            print(f"Error during shutdown signal: {e}")
+
         server_process.join(timeout=5)
 
         if server_process.is_alive():

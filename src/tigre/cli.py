@@ -605,8 +605,8 @@ def clean_command(
         )
 
         if args.gdt:
-            clean_gdt.solve_gdt_call(
-                log, args, _workers_count(args.workers, threading=True)
+            clean_gdt_server.solve_gdt_call_server(
+                log, args, _workers_count(args.workers)
             )
             return
 
