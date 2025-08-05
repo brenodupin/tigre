@@ -5,10 +5,19 @@
 import argparse
 import os
 import sys
+from datetime import datetime
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from . import __version__, clean, clean_gdt, gff3_utils, igr, log_setup
+from . import (
+    __version__,
+    clean,
+    clean_gdt,
+    clean_gdt_server,
+    gff3_utils,
+    igr,
+    log_setup,
+)
 from .fasta_utils import BIOPYTHON_AVAILABLE, bedtools_wrapper, biopython_wrapper
 
 C_RESET = "\033[0m"
@@ -648,6 +657,7 @@ def cli_entrypoint() -> int:
 
     log = log_setup.setup_logger(args.debug, args.log, args.quiet)
     log.trace("CLI execution started")
+    start_time = datetime.now()
     log.trace(f"call path: {Path().resolve()}")
     log.trace(f"cli  path: {Path(__file__).resolve()}")
     log.trace(f"args: {args}")
@@ -679,4 +689,24 @@ def cli_entrypoint() -> int:
         main.print_help()
         sys.exit(1)
 
+    total_time = datetime.now() - start_time
+    log.info(f"Execution completed in {_time_formatted(total_time.total_seconds())}")
+    log.trace("CLI execution finished")
     return 0
+
+
+def _time_formatted(total_seconds: float) -> str:
+    """Format total seconds into a human-readable string."""
+    hours = int(total_seconds // 3600)
+    minutes = int((total_seconds % 3600) // 60)
+    seconds = total_seconds % 60
+
+    parts = []
+    if hours > 0:
+        parts.append(f"{hours}h")
+    if minutes > 0:
+        parts.append(f"{minutes}m")
+    if seconds > 0 or not parts:  # Always show seconds if nothing else
+        parts.append(f"{seconds:.2f}s")
+
+    return " ".join(parts)
