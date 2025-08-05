@@ -3,7 +3,6 @@
 
 import concurrent.futures as cf
 import multiprocessing as mp
-import sys
 import traceback
 from pathlib import Path
 from queue import Empty
@@ -14,7 +13,6 @@ import pandas as pd
 from . import clean, gff3_utils, log_setup
 
 if TYPE_CHECKING:
-    import argparse
 
     import gdt  # type: ignore[import-not-found]
 
@@ -151,7 +149,7 @@ def clean_an_gdt_server(
         return False, an, log.get_records()
 
 
-def clean_multiple_gdt(
+def clean_multiple_gdt_server(
     log: log_setup.GDTLogger,
     tsv_path: Path,
     workers: int,
@@ -201,7 +199,7 @@ def clean_multiple_gdt(
     # create server for dictionary
     try:
         log.info("Starting dictionary server...")
-        server_process, req_queue = create_dict_server(gdict)
+        server_process, req_queue = create_dict_server(gdict, log.spawn_buffer())
         log.info(f"Submitiing tasks for {tsv.shape[0]} ANs with {workers} workers...")
         with cf.ProcessPoolExecutor(max_workers=workers) as executor:
             tasks = []
@@ -229,60 +227,15 @@ def clean_multiple_gdt(
 
             log.info("All processed.")
     finally:
-        # Stop the dictionary server gracefully
-        stop_dict_server(server_process, req_queue)
-        log.info("Dictionary server stopped.")
+        stop_dict_server(server_process, req_queue, log)
 
 
-def solve_gdt_call_server(
-    log: log_setup.GDTLogger, args: "argparse.Namespace", workers: int
-) -> tuple[bool, str, list[log_setup._RawMsg]] | None:
-    """Handle `clean` command with an GDT gdict.
-
-    Args:
-        log: Logger instance
-        args: Parsed command line arguments
-        workers: Number of worker processes to use
-
-    """
-    try:
-        import gdt
-    except ImportError:
-        raise SystemExit(
-            "GDT package not found. Please install it to use the --gdict option."
-        )
-
-    log.debug(f"GDT package version: {gdt.__version__}")
-    gdt_path: Path = Path(args.gdt).resolve()
-    if not gdt_path.is_file():
-        log.error(f"GDT .gdict file not found: {gdt_path}")
-        sys.exit(1)
-
-    gdict = gdt.read_gdict(gdt_path, lazy_info=False)
-    log.info(f"GDT dictionary loaded from {gdt_path}")
-    gdt.log_info(log, gdict)
-
-    clean_multiple_gdt(
-        log,
-        args.tsv,
-        workers,
-        gdict,
-        args.gff_in_ext,
-        args.gff_in_suffix,
-        args.gff_out_ext,
-        args.gff_out_suffix,
-        args.an_column,
-        args.query_string,
-        args.keep_orfs,
-        args.overwrite,
-    )
-
-    return None
-
-
-def run_dictionary_server(gdict: "gdt.GeneDict", req_queue: _ReqQueue) -> None:
+def run_dictionary_server(
+    gdict: "gdt.GeneDict", req_queue: _ReqQueue, log: log_setup.TempLogger
+) -> None:
     """Run the dictionary server using a shared queue for communication."""
     query_count = 0
+    batch_count = 0
 
     while True:
         try:
@@ -290,7 +243,17 @@ def run_dictionary_server(gdict: "gdt.GeneDict", req_queue: _ReqQueue) -> None:
             gene_ids, worker_conn = req_queue.get(timeout=1.0)
 
             if gene_ids == ["shutdown"]:
-                worker_conn.close()
+                # Send log records back through the shutdown pipe
+                try:
+                    log.info(
+                        f"Dictionary server resolved {query_count} queries in "
+                        f"{batch_count} batches."
+                    )
+                    worker_conn.send(log.get_records())
+                except Exception as e:
+                    print(f"Error sending log records: {e}")
+                finally:
+                    worker_conn.close()
                 break
 
             # Process batch lookup
@@ -299,58 +262,67 @@ def run_dictionary_server(gdict: "gdt.GeneDict", req_queue: _ReqQueue) -> None:
                 result = gdict.get(gene_id, "not_found")
                 results.append(result.label if result != "not_found" else "not_found")
                 query_count += 1
+            batch_count += 1
 
-            # Send response back through pipe and close it
+            # log.trace(f"Queue got: {gene_ids}")
+            # log.trace(f"Pipe sent: {results}")
+
             try:
                 worker_conn.send(results)
                 worker_conn.close()
             except Exception as e:
-                print(f"Error sending response: {e}")
+                log.error(f"Error sending response to {worker_conn}: {e}")
 
         except Empty:
             # Timeout - continue loop to check for shutdown
             continue
         except Exception as e:
-            print(f"Dictionary server error: {e}")
+            log.error(f"Dictionary server error: {e}")
             continue
 
-    print(f"Dictionary server shutting down after {query_count} queries")
 
-
-def create_dict_server(gdict: "gdt.GeneDict") -> tuple[mp.Process, _ReqQueue]:
+def create_dict_server(
+    gdict: "gdt.GeneDict", server_log: log_setup.TempLogger
+) -> tuple[mp.Process, _ReqQueue]:
     """Create dictionary server with a shared queue."""
     # Single shared queue for all requests
     manager = mp.Manager()
     request_queue = cast(_ReqQueue, manager.Queue())
 
     server_process = mp.Process(
-        target=run_dictionary_server, args=(gdict, request_queue)
+        target=run_dictionary_server, args=(gdict, request_queue, server_log)
     )
     server_process.start()
 
     return server_process, request_queue
 
 
-def stop_dict_server(server_process: mp.Process, req_queue: _ReqQueue) -> None:
-    """Stop the dictionary server gracefully.
-
-    Args:
-        server_process: The server process to stop
-        req_queue: Request queue to send shutdown signal
-
-    """
+def stop_dict_server(
+    server_process: mp.Process, req_queue: _ReqQueue, log: "log_setup.GDTLogger"
+) -> None:
+    """Stop the dictionary server gracefully and collect its logs."""
     if server_process and server_process.is_alive():
         try:
-            # Send shutdown signal
-            req_queue.put((["shutdown"], mp.Pipe()[1]))
+            # Create pipe for shutdown signal and log collection
+            worker_conn, server_conn = mp.Pipe()
+            req_queue.put((["shutdown"], server_conn))
+
+            # Receive log records through the shutdown pipe
+            records = worker_conn.recv()
+            worker_conn.close()
+
+            # Process the log records
+            for record in records:
+                log.log(record[0], record[1])
+
         except Exception as e:
-            print(f"Error during shutdown signal: {e}")
+            log.error(f"Error during shutdown or log collection: {e}")
 
         server_process.join(timeout=5)
 
         if server_process.is_alive():
-            print("Server didn't shutdown gracefully, terminating...")
+            log.warning("Server didn't shutdown gracefully, terminating...")
             server_process.terminate()
             server_process.join()
 
-        print("Dictionary server stopped")
+    log.info("Dictionary server stopped")
