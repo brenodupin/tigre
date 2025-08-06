@@ -58,7 +58,7 @@ def ensure_exists(
 ) -> None:
     """Ensure that the specified path exists."""
     if not path.is_file():
-        log.error(f"{desc} not found: {path}")
+        log.error(f"{desc} not found, expected at {path}")
         sys.exit(1)
 
 
@@ -70,7 +70,7 @@ def ensure_overwrite(
 ) -> None:
     """Ensure that the specified path can be overwritten."""
     if path.is_file() and not overwrite:
-        log.error(f"{desc} already exists: {path}. Use --overwrite to replace it.")
+        log.error(f"{desc} already exists at {path}. Use --overwrite to replace it.")
         sys.exit(1)
 
 
@@ -682,11 +682,17 @@ def cli_entrypoint() -> int:
         help="Show the version of the tigre package.",
     )
 
-    subs = main.add_subparsers(dest="command", required=True)
+    subs = main.add_subparsers(dest="cmd", required=True)
 
     clean_parser(subs, global_args)
     extract_parser(subs, global_args)
     getfasta_parser(subs, global_args)
+
+    subs.add_parser(
+        "test",
+        help="Test command to check CLI startup and logging.",
+        parents=[global_args],
+    )
 
     args = main.parse_args()
 
@@ -697,26 +703,31 @@ def cli_entrypoint() -> int:
         )
 
     log = log_setup.setup_logger(
-        args.debug, args.log, args.quiet, args.no_log_file, args.command
+        args.debug,
+        args.log,
+        args.quiet,
+        args.no_log_file,
+        args.cmd,
     )
-    log.trace("CLI execution started")
-    log.trace(f"call path: {Path().resolve()}")
-    log.trace(f"cli  path: {Path(__file__).resolve()}")
-    log.trace(f"args: {args}")
+    log.info(f"TIGRE v{__version__} - Tool for InterGenic Region Extraction")
+    log.info(
+        f"Command: {args.cmd} | Mode: {args.mode if hasattr(args, 'mode') else 'N/A'}"
+    )
+    log.trace(f"Full args: {args}")
+    log.debug(f"Working directory: {Path().resolve()}")
+    log.trace(f"CLI script location: {Path(__file__).resolve()}")
+    log.trace(f"Python version: {sys.version.split()[0]}")
 
-    if args.command == "clean":
-        log.debug("Executing clean command")
+    if args.cmd == "clean":
         if args.server and args.no_server:
             main.error("You cannot specify both --server and --no-server together.")
 
         clean_command(args, log)
 
-    elif args.command == "extract":
-        log.debug("Executing extract command")
+    elif args.cmd == "extract":
         extract_command(args, log)
 
-    elif args.command == "getfasta":
-        log.debug("Executing getfasta command")
+    elif args.cmd == "getfasta":
         if not (args.biopython ^ args.bedtools):  # xnor
             main.error(
                 "You must specify only one of --bedtools or --biopython, "
@@ -729,14 +740,8 @@ def cli_entrypoint() -> int:
         elif args.bedtools:
             getfasta_bedtools_command(args, log)
 
-    else:
-        log.error(f"Unknown command: {args.command}")
-        main.print_help()
-        sys.exit(1)
-
     total_time = datetime.now() - start_time
     log.info(f"Execution completed in {_time_formatted(total_time.total_seconds())}")
-    log.trace("CLI execution finished")
     return 0
 
 

@@ -116,14 +116,14 @@ _logging_levels: dict[str, int] = {
 }
 
 
-def create_simple_logger(
+def _create_logger(
     print_to_console: bool = True,
     console_level: str = "INFO",
     save_to_file: bool = True,
     file_level: str = "DEBUG",
     log_file: Path | str | None = None,
 ) -> GDTLogger:
-    """Create a simple logger with optional console and file output.
+    """Create a logger with optional console and file output.
 
     Args:
         print_to_console (bool): Whether to print logs to console. Defaults to True.
@@ -154,18 +154,12 @@ def create_simple_logger(
         levels.append(console_level_int)
 
     if save_to_file:
-        if log_file is None:
-            print(
-                "No log file specified, even though save_to_file is True. "
-                "Log will be saved in the current directory in 'tigre_default.log'."
-            )
-            log_file = "tigre_default.log"
-
-        log_file_path = Path(log_file).resolve()
-        log_file_path.touch(exist_ok=True)
+        assert log_file is not None, "log_file must be provided if save_to_file is True"
+        log_file = Path(log_file).resolve()
+        log_file.touch(exist_ok=True)
 
         file_level_int = _logging_levels.get(file_level, logging.DEBUG)
-        file_handler = logging.FileHandler(log_file_path)
+        file_handler = logging.FileHandler(log_file)
         file_handler.setLevel(file_level_int)
         file_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
         file_handler.setFormatter(file_formatter)
@@ -174,11 +168,9 @@ def create_simple_logger(
 
     log.setLevel(min(levels) if levels else _logging_levels["DISABLE"])
     log.propagate = False
-    log.debug("Simple log setup complete.")
+    log.debug("Logger initialized.")
     log.debug(f"Console logging level {console_level if print_to_console else 'None'}")
-    log.debug(
-        f"File logging level {file_level} at {log_file_path if log_file else 'None'}"
-    )
+    log.debug(f"File logging level {file_level} at {log_file}")
 
     return log
 
@@ -188,18 +180,24 @@ def setup_logger(
     log_file: Path | str | None,
     quiet: bool,
     no_log_file: bool,
-    command: str,
+    cmd: str,
 ) -> GDTLogger:
     """Set up logger based on command line arguments."""
     console_level = "DISABLE" if quiet else ("DEBUG" if debug else "INFO")
     file_level = "DISABLE" if no_log_file else ("TRACE" if debug else "DEBUG")
 
-    if log_file is None:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        log_file = Path(f"tigre_{command}_{timestamp}.log")
+    if log_file:  # `--log` provided, ensure it's a Path
+        log_file = Path(log_file).resolve()
 
-    log_file = Path(log_file).resolve()
-    log = create_simple_logger(
+    # default behavior, both `--log` and `--no-log-file` not provided
+    elif not no_log_file:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        log_file = Path(f"tigre_{cmd}_{timestamp}.log").resolve()
+
+    else:  # `--no-log-file` provided
+        log_file = None
+
+    log = _create_logger(
         print_to_console=not quiet,
         console_level=console_level,
         save_to_file=not no_log_file,
@@ -207,5 +205,4 @@ def setup_logger(
         log_file=log_file,
     )
 
-    log.trace("Logger setup complete.")
     return log
