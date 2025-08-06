@@ -153,7 +153,6 @@ def write_gff3(
     add_region: bool = False,
 ) -> None:
     """Write a DataFrame to a GFF3 file with optional region line."""
-
     log.trace(f"Writing intergenic regions to {gff_out}.")
     with open(gff_out, "w") as f:
         f.write("\n".join(header) + "\n")

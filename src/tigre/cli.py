@@ -595,10 +595,14 @@ def clean_command(
         )
 
         if args.gdt:
-            result = clean_gdt.solve_gdt_call(log, args, 0)
-            if result is None:
-                log.error("GDT processing failed.")
-                sys.exit(1)
+            result = clean_gdt.clean_an_gdt(
+                log.spawn_buffer(),
+                args.gff_in,
+                args.gff_out,
+                clean_gdt.load_gdt(log, args.gdict),
+                args.query_string,
+                args.keep_orfs,
+            )
 
         else:
             result = clean.clean_an(
@@ -620,28 +624,30 @@ def clean_command(
         )
 
         if args.gdt:
-            # solve_gdt_call will check if needs ProcessPoolExecutor or ThreadPoolExecutor
-            clean_gdt.solve_gdt_call(
+            # solve_gdt_call will decide between ProcessPoolExecutor or
+            # ThreadPoolExecutor, depending on input shape and size.
+            # This can be overruled by `--server` or `--no-server`
+            clean_gdt.clean_gdt_multiple(
                 log,
                 args,
                 _workers_count(args.workers),
                 _workers_count(args.workers, threading=True),
             )
-            return
 
-        clean.clean_multiple(
-            log,
-            args.tsv,
-            _workers_count(args.workers),
-            args.gff_in_ext,
-            args.gff_in_suffix,
-            args.gff_out_ext,
-            args.gff_out_suffix,
-            args.an_column,
-            args.query_string,
-            args.keep_orfs,
-            args.overwrite,
-        )
+        else:
+            clean.clean_multiple(
+                log,
+                args.tsv,
+                _workers_count(args.workers),
+                args.gff_in_ext,
+                args.gff_in_suffix,
+                args.gff_out_ext,
+                args.gff_out_suffix,
+                args.an_column,
+                args.query_string,
+                args.keep_orfs,
+                args.overwrite,
+            )
 
 
 #############################################

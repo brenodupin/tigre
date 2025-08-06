@@ -195,20 +195,68 @@ def clean_multiple_gdt(
         log.info("All processed.")
 
 
-def solve_gdt_call(
+def clean_gdt_multiple(
     log: log_setup.GDTLogger,
     args: "argparse.Namespace",
     workers_process: int,
     workers_threading: int,
-) -> tuple[bool, str, list[log_setup._RawMsg]] | None:
+) -> None:
     """Handle `clean` command with an GDT gdict.
 
     Args:
         log: Logger instance
         args: Parsed command line arguments
-        workers: Number of worker processes to use
+        workers_process: Number of worker processes to use
+        workers_threading: Number of worker threads to use
 
     """
+    gdict = load_gdt(log, args.gdict)
+
+    server_mode = False
+
+    if len(gdict) > 200000:
+        server_mode = True
+
+    if (not args.no_server) and (args.server or server_mode):
+        log.info("Running in server mode.")
+        clean_gdt_server.clean_multiple_gdt_server(
+            log,
+            args.tsv,
+            workers_process,
+            gdict,
+            args.gff_in_ext,
+            args.gff_in_suffix,
+            args.gff_out_ext,
+            args.gff_out_suffix,
+            args.an_column,
+            args.query_string,
+            args.keep_orfs,
+            args.overwrite,
+        )
+
+    else:
+        log.info("Running in normal mode.")
+        clean_multiple_gdt(
+            log,
+            args.tsv,
+            workers_threading,
+            gdict,
+            args.gff_in_ext,
+            args.gff_in_suffix,
+            args.gff_out_ext,
+            args.gff_out_suffix,
+            args.an_column,
+            args.query_string,
+            args.keep_orfs,
+            args.overwrite,
+        )
+
+
+def load_gdt(
+    log: log_setup.GDTLogger,
+    gdict_path: Path,
+) -> "gdt.GeneDict":
+    """Load GDT Library and read the gdict file."""
     try:
         import gdt
     except ImportError:
@@ -217,7 +265,7 @@ def solve_gdt_call(
         )
 
     log.debug(f"GDT package version: {gdt.__version__}")
-    gdt_path: Path = Path(args.gdt).resolve()
+    gdt_path: Path = Path(gdict_path).resolve()
     if not gdt_path.is_file():
         log.error(f"GDT .gdict file not found: {gdt_path}")
         sys.exit(1)
@@ -225,55 +273,4 @@ def solve_gdt_call(
     gdict = gdt.read_gdict(gdt_path, lazy_info=False)
     log.info(f"GDT dictionary loaded from {gdt_path}")
     gdt.log_info(log, gdict)
-
-    if args.mode == "single":
-        return clean_an_gdt(
-            log.spawn_buffer(),
-            args.gff_in,
-            args.gff_out,
-            gdict,
-            args.query_string,
-            args.keep_orfs,
-        )
-
-    elif args.mode == "multiple":
-        server_mode = False
-
-        if len(gdict) > 200000:
-            server_mode = True
-
-        if (not args.no_server) and (args.server or server_mode):
-            log.info("Running in server mode.")
-            clean_gdt_server.clean_multiple_gdt_server(
-                log,
-                args.tsv,
-                workers_process,
-                gdict,
-                args.gff_in_ext,
-                args.gff_in_suffix,
-                args.gff_out_ext,
-                args.gff_out_suffix,
-                args.an_column,
-                args.query_string,
-                args.keep_orfs,
-                args.overwrite,
-            )
-
-        else:
-            log.info("Running in normal mode.")
-            clean_multiple_gdt(
-                log,
-                args.tsv,
-                workers_threading,
-                gdict,
-                args.gff_in_ext,
-                args.gff_in_suffix,
-                args.gff_out_ext,
-                args.gff_out_suffix,
-                args.an_column,
-                args.query_string,
-                args.keep_orfs,
-                args.overwrite,
-            )
-
-    return None
+    return gdict
