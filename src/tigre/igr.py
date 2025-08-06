@@ -95,10 +95,21 @@ def extract_intergenic_regions(
         )
 
         if df_ig.empty and not boundary:
-            log.error(
-                f"No intergenic regions found. Did {gff_in} contain any features?"
+            log.warning(
+                f"No intergenic regions found. Did {gff_in.name} contain any features?"
             )
-            return False, seqid, log.get_records()
+            write_gff3(
+                log,
+                pd.DataFrame(),
+                gff_out,
+                seqid,
+                source,
+                region_size,
+                header,
+                region,
+                add_region,
+            )
+            return True, seqid, log.get_records()
 
         if boundary:
             df_ig = (
@@ -112,21 +123,47 @@ def extract_intergenic_regions(
             f"ID={i};{attr}" for i, attr in enumerate(df_ig["attributes"], start)
         ]
 
-        log.trace(f"Writing intergenic regions to {gff_out}.")
-        with open(gff_out, "w") as f:
-            f.write("\n".join(header) + "\n")
-            if add_region:
-                log.trace("Adding region line to output.")
-                f.write(
-                    f"{seqid}\t{source}\tregion\t1\t{region_size}\t.\t+\t.\t"
-                    f"{region.attributes}\n"
-                )
-            df_ig.to_csv(f, sep="\t", index=False, header=False)
+        write_gff3(
+            log,
+            df_ig,
+            gff_out,
+            seqid,
+            source,
+            region_size,
+            header,
+            region,
+            add_region,
+        )
 
         return True, seqid, log.get_records()
     except Exception as e:
         log.error(f"Error extracting intergenic regions: {e}")
         return False, "", log.get_records()
+
+
+def write_gff3(
+    log: log_setup.TempLogger,
+    df: pd.DataFrame,
+    gff_out: Path,
+    seqid: str,
+    source: str,
+    region_size: int,
+    header: list[str],
+    region: pd.Series,
+    add_region: bool = False,
+) -> None:
+    """Write a DataFrame to a GFF3 file with optional region line."""
+
+    log.trace(f"Writing intergenic regions to {gff_out}.")
+    with open(gff_out, "w") as f:
+        f.write("\n".join(header) + "\n")
+        if add_region:
+            log.trace("Adding region line to output.")
+            f.write(
+                f"{seqid}\t{source}\tregion\t1\t{region_size}\t.\t+\t.\t"
+                f"{region.attributes}\n"
+            )
+        df.to_csv(f, sep="\t", index=False, header=False)
 
 
 def _solve_boundaries(

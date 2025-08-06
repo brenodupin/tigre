@@ -38,6 +38,11 @@ def biopython_getfasta(
             dtype={"start": "int64", "end": "int64"},
         )
 
+        if df.empty:
+            log.warning(f"Empty GFF3 file: {gff_in.name}, creating empty FASTA.")
+            SeqIO.write([], fasta_out, "fasta")
+            return True, seqid, log.get_records()
+
         seqid = df.iat[0, 0]
         df["start"] = df["start"] - 1
         has_ig_merged = df.iat[-1, 1] == "intergenic_region_merged"
