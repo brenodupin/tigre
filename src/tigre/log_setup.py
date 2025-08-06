@@ -8,10 +8,8 @@ Source
 https://github.com/brenodupin/gdt/blob/master/src/gdt/log_setup.py
 """
 
-import datetime
-import glob
 import logging
-import os
+from datetime import datetime
 from pathlib import Path
 from typing import Any, cast
 
@@ -118,88 +116,6 @@ _logging_levels: dict[str, int] = {
 }
 
 
-def _cleanup_logs(log_dir: Path, max_files: int = 10) -> None:
-    """Remove old log files, keeping only the most recent ones.
-
-    Args:
-        log_dir (Path): Directory where log files are stored.
-        max_files (int): Maximum number of log files to keep. Defaults to 10.
-
-    """
-    log_files = sorted(glob.glob(str(log_dir / "tigre_*.log")))
-    for old_file in log_files[: -(max_files - 1)]:
-        try:
-            os.remove(old_file)
-        except Exception as e:
-            print(f"Error removing old log file {old_file}: {e}")
-            raise
-
-
-def create_dev_logger(
-    console_level: str = "INFO",
-    file_level: str = "DEBUG",
-    log_file: Path | None = None,
-) -> GDTLogger:
-    """Set up the logger for the GDT package.
-
-    Args:
-        console_level (str): Logging level for console output.
-        file_level (str): Logging level for file output.
-        log_file (Path | None): Path to the log file. If None, a default
-                                   log file will be created at the project root,
-
-    Returns:
-        GDTLogger: Configured logger instance.
-
-    """
-    console_level_int = _logging_levels.get(console_level, logging.INFO)
-    file_level_int = _logging_levels.get(file_level, logging.DEBUG)
-
-    if log_file:
-        log_file_path = Path(log_file).resolve()
-        log_file_path.touch(exist_ok=True)
-
-    else:
-        project_root = Path(__file__).parent.parent.parent
-        log_dir = project_root / "logs"
-
-        log_dir.mkdir(exist_ok=True)
-
-        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H_%M_%S")
-        log_file_path = log_dir / f"tigre_{timestamp}.log"
-        _cleanup_logs(log_dir)
-
-    # Create and configure logger
-    log = cast(GDTLogger, logging.getLogger("gdt"))
-    log.setLevel(min(console_level_int, file_level_int))
-
-    # Remove any existing handlers (in case logger was already configured)
-    for handler in log.handlers[:]:
-        log.removeHandler(handler)
-
-    # Create console handler
-    # (StreamHandler defaults to sys.stderr, can be changed to sys.stdout)
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(console_level_int)
-    console_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-    console_handler.setFormatter(console_formatter)
-    log.addHandler(console_handler)
-
-    # Create file handler
-    file_handler = logging.FileHandler(log_file_path)
-    file_handler.setLevel(file_level_int)
-    file_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-    file_handler.setFormatter(file_formatter)
-    log.addHandler(file_handler)
-
-    log.propagate = False
-
-    log.debug("Dev log setup complete")
-    log.debug(f"Console logging level {console_level}")
-    log.debug(f"File logging level {file_level} at {log_file_path}")
-    return log
-
-
 def create_simple_logger(
     print_to_console: bool = True,
     console_level: str = "INFO",
@@ -220,7 +136,7 @@ def create_simple_logger(
         GDTLogger: Configured logger instance.
 
     """
-    log = cast(GDTLogger, logging.getLogger("gdt"))
+    log = cast(GDTLogger, logging.getLogger("tigre"))
     levels = []
     # Remove any existing handlers
     for handler in log.handlers[:]:
@@ -241,9 +157,9 @@ def create_simple_logger(
         if log_file is None:
             print(
                 "No log file specified, even though save_to_file is True. "
-                "Log will be save in the current directory in 'gdt_default.log'."
+                "Log will be saved in the current directory in 'tigre_default.log'."
             )
-            log_file = "gdt_default.log"
+            log_file = "tigre_default.log"
 
         log_file_path = Path(log_file).resolve()
         log_file_path.touch(exist_ok=True)
@@ -271,22 +187,25 @@ def setup_logger(
     debug: bool,
     log_file: Path | str | None,
     quiet: bool,
+    no_log_file: bool,
+    command: str,
 ) -> GDTLogger:
     """Set up logger based on command line arguments."""
     console_level = "DISABLE" if quiet else ("DEBUG" if debug else "INFO")
-    file_level = "TRACE" if debug else "DEBUG"
+    file_level = "DISABLE" if no_log_file else ("TRACE" if debug else "DEBUG")
 
-    # Create logger based on log file preference
-    if log_file:
-        log_file = Path(log_file).resolve()
-        log = create_simple_logger(
-            print_to_console=not quiet,
-            console_level=console_level,
-            file_level=file_level,
-            log_file=log_file,
-        )
-    else:
-        log = create_dev_logger(console_level=console_level, file_level=file_level)
+    if log_file is None:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        log_file = Path(f"tigre_{command}_{timestamp}.log")
+
+    log_file = Path(log_file).resolve()
+    log = create_simple_logger(
+        print_to_console=not quiet,
+        console_level=console_level,
+        save_to_file=not no_log_file,
+        file_level=file_level,
+        log_file=log_file,
+    )
 
     log.trace("Logger setup complete.")
     return log

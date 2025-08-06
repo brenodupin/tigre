@@ -166,6 +166,14 @@ def args_log(parser: argparse.ArgumentParser) -> None:
         "If not provided, a default log file will be created.",
     )
     group.add_argument(
+        "--no-log-file",
+        required=False,
+        action="store_true",
+        default=False,
+        help="No file logging will be done. ",
+    )
+
+    group.add_argument(
         "--quiet",
         required=False,
         action="store_true",
@@ -656,6 +664,8 @@ def clean_command(
 def cli_entrypoint() -> int:
     """Command line interface for the tigre package."""
     # Global parser to add debug, log, and quiet flags to all subcommands
+    start_time = datetime.now()
+
     global_args = argparse.ArgumentParser(add_help=False)
     args_log(global_args)
 
@@ -680,9 +690,16 @@ def cli_entrypoint() -> int:
 
     args = main.parse_args()
 
-    log = log_setup.setup_logger(args.debug, args.log, args.quiet)
+    if args.log and args.no_log_file:
+        main.error(
+            "You cannot specify both --log and --no-log-file together. "
+            "Please choose one or neither."
+        )
+
+    log = log_setup.setup_logger(
+        args.debug, args.log, args.quiet, args.no_log_file, args.command
+    )
     log.trace("CLI execution started")
-    start_time = datetime.now()
     log.trace(f"call path: {Path().resolve()}")
     log.trace(f"cli  path: {Path(__file__).resolve()}")
     log.trace(f"args: {args}")
