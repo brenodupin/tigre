@@ -374,13 +374,25 @@ def extract_multiple(
         tsv_path.parent, gff_out_suffix
     )
 
-    gff3_utils.check_files(log, tsv, gff_in_builder, an_column, should_exist=True)
+    gff3_utils.check_files(
+        log,
+        tsv,
+        gff_in_builder,
+        an_column,
+        should_exist=True,
+    )
 
     if not overwrite:
-        gff3_utils.check_files(log, tsv, gff_out_builder, an_column, should_exist=False)
+        gff3_utils.check_files(
+            log,
+            tsv,
+            gff_out_builder,
+            an_column,
+            should_exist=False,
+        )
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
-    with cf.ThreadPoolExecutor(max_workers=workers) as executor:
+    with cf.ProcessPoolExecutor(max_workers=workers) as executor:
         tasks = [
             executor.submit(
                 extract_intergenic_regions,

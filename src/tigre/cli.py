@@ -272,7 +272,7 @@ def extract_command(
         igr.extract_multiple(
             log,
             args.tsv,
-            _workers_count(args.workers, threading=True),
+            _workers_count(args.workers),
             args.an_column,
             args.gff_in_ext,
             args.gff_in_suffix,
@@ -620,7 +620,13 @@ def clean_command(
         )
 
         if args.gdt:
-            clean_gdt.solve_gdt_call(log, args, _workers_count(args.workers))
+            # solve_gdt_call will check if needs ProcessPoolExecutor or ThreadPoolExecutor
+            clean_gdt.solve_gdt_call(
+                log,
+                args,
+                _workers_count(args.workers),
+                _workers_count(args.workers, threading=True),
+            )
             return
 
         clean.clean_multiple(

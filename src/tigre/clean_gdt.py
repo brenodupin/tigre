@@ -151,10 +151,22 @@ def clean_multiple_gdt(
         gff_out_suffix,
     )
 
-    gff3_utils.check_files(log, tsv, gff_in_builder, an_column, should_exist=True)
+    gff3_utils.check_files(
+        log,
+        tsv,
+        gff_in_builder,
+        an_column,
+        should_exist=True,
+    )
 
     if not overwrite:
-        gff3_utils.check_files(log, tsv, gff_out_builder, an_column, should_exist=False)
+        gff3_utils.check_files(
+            log,
+            tsv,
+            gff_out_builder,
+            an_column,
+            should_exist=False,
+        )
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
     with cf.ThreadPoolExecutor(max_workers=workers) as executor:
@@ -184,7 +196,10 @@ def clean_multiple_gdt(
 
 
 def solve_gdt_call(
-    log: log_setup.GDTLogger, args: "argparse.Namespace", workers: int
+    log: log_setup.GDTLogger,
+    args: "argparse.Namespace",
+    workers_process: int,
+    workers_threading: int,
 ) -> tuple[bool, str, list[log_setup._RawMsg]] | None:
     """Handle `clean` command with an GDT gdict.
 
@@ -232,7 +247,7 @@ def solve_gdt_call(
             clean_gdt_server.clean_multiple_gdt_server(
                 log,
                 args.tsv,
-                workers,
+                workers_process,
                 gdict,
                 args.gff_in_ext,
                 args.gff_in_suffix,
@@ -249,7 +264,7 @@ def solve_gdt_call(
             clean_multiple_gdt(
                 log,
                 args.tsv,
-                workers,
+                workers_threading,
                 gdict,
                 args.gff_in_ext,
                 args.gff_in_suffix,
