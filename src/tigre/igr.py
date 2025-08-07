@@ -65,6 +65,21 @@ def extract_intergenic_regions(
         region = df.iloc[0]
         df = df.iloc[1:].reset_index(drop=True)
 
+        if df.empty:
+            log.warning(f"No features found in {gff_in}.")
+            write_gff3(
+                log,
+                pd.DataFrame(),
+                gff_out,
+                region.seqid,
+                region.source,
+                region.end,
+                header,
+                region,
+                add_region,
+            )
+            return True, region.seqid, log.get_records()
+
         region_size = region.iat[END_IDX]
         seqid = region.at["seqid"]
         source = region.at["source"]
