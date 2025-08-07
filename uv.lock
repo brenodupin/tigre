@@ -45,6 +45,18 @@ wheels = [
 ]
 
 [[package]]
+name = "gdt"
+version = "1.0.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pandas" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f4/26/a49cb76f14e0b7529a76204c699aaa275b2f022c7106d1aa6d5d0795bfaf/gdt-1.0.1.tar.gz", hash = "sha256:a98f9771dec0d2397cd0b530278765e40420197637e6f5c9bff69d89a99e394d", size = 26989, upload-time = "2025-06-29T01:09:44.77Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/39/62/34ca4b7c86967e9782750796c0da3038d8b2bd202501db29e5ea0b5ec362/gdt-1.0.1-py3-none-any.whl", hash = "sha256:b248db233d0051abea51a4b08ed48d354a66903d323e6fe04a44d33e97471d50", size = 24173, upload-time = "2025-06-29T01:09:43.637Z" },
+]
+
+[[package]]
 name = "numpy"
 version = "2.2.6"
 source = { registry = "https://pypi.org/simple" }
@@ -260,18 +272,24 @@ dependencies = [
 [package.optional-dependencies]
 all = [
     { name = "biopython" },
+    { name = "gdt" },
 ]
 bio = [
     { name = "biopython" },
+]
+gdt = [
+    { name = "gdt" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "biopython", marker = "extra == 'all'", specifier = ">=1.80" },
     { name = "biopython", marker = "extra == 'bio'", specifier = ">=1.80" },
+    { name = "gdt", marker = "extra == 'all'", specifier = ">=1.0.1" },
+    { name = "gdt", marker = "extra == 'gdt'", specifier = ">=1.0.1" },
     { name = "pandas", specifier = ">=1.5.3,<3.0.0" },
 ]
-provides-extras = ["all", "bio"]
+provides-extras = ["all", "bio", "gdt"]
 
 [[package]]
 name = "tzdata"

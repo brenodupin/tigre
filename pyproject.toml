@@ -21,7 +21,8 @@ dependencies = [
 
 [project.optional-dependencies]
 bio = ["biopython>=1.80"]
-all = ["tigre[bio]"]
+gdt = ["gdt>=1.0.1"]
+all = ["tigre[bio,gdt]"]
 
 [project.urls]
 Homepage = "https://github.com/brenodupin/tigre"
