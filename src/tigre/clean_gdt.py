@@ -210,7 +210,7 @@ def clean_gdt_multiple(
         workers_threading: Number of worker threads to use
 
     """
-    gdict = load_gdt(log, args.gdict)
+    gdict = load_gdt(log, args.gdt)
 
     server_mode = False
 
