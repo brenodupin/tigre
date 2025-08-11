@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
     import gdt  # type: ignore[import-not-found]
 
-_ReqQueue: TypeAlias = "mp.Queue[tuple[list[str], mp.connection.Connection]]"
+_ReqQueue: TypeAlias = "mp.queues.Queue[tuple[list[str], mp.connection.Connection]]"
 
 
 def format_attributes(
@@ -25,30 +25,38 @@ def format_attributes(
     log: log_setup.TempLogger,
 ) -> "pd.DataFrame":
     """Format attributes in the DataFrame using GDT."""
-    gene_ids_to_query = df.loc[1:, "gene_id"].dropna().tolist()
+    gene_query = df.loc[1:, "gene_id"].tolist()
+    labels_list: list[str] = gene_query  # default format
 
+    worker_conn: mp.connection.Connection | None = None
     try:
         worker_conn, server_conn = mp.Pipe()
         queue.put(
-            (gene_ids_to_query, server_conn)
+            (gene_query, server_conn)
         )  # Create pipe for response and send request
-        labels_list = worker_conn.recv()
+        received_labels = worker_conn.recv()
         worker_conn.close()
 
-        # Check if we got a valid response with matching length
-        if len(labels_list) != len(gene_ids_to_query):
+        if isinstance(received_labels, list) and len(received_labels) == len(
+            gene_query
+        ):
+            log.trace(f"Got {len(received_labels)} labels from dictionary server.")
+            labels_list = received_labels
+
+        else:
             log.error("Invalid response from dictionary server. Using default format.")
-            log.trace(
-                f"Expected {len(gene_ids_to_query)} labels, got {len(labels_list)}."
-            )
-            log.trace(f"Gene IDs: {gene_ids_to_query}, Labels: {labels_list}")
-            labels_list = gene_ids_to_query  # fallback to gene_ids
+            log.trace(f"Expected {len(gene_query)} labels, got {len(received_labels)}.")
+            log.trace(f"Gene IDs: {gene_query}, Labels: {labels_list}")
 
     except Exception as e:
         log.error(f"Error querying gene IDs: {e}. Using default format.")
-        labels_list = gene_ids_to_query  # fallback to gene_ids
+        if worker_conn:
+            try:
+                worker_conn.close()
+            except Exception:
+                pass  # Already closed or connection error
 
-    for i, (gene_id, label) in enumerate(zip(gene_ids_to_query, labels_list)):
+    for i, (gene_id, label) in enumerate(zip(gene_query, labels_list)):
         if label == "not_found":
             log.error(
                 f"Gene ID {gene_id} not found in GDT dictionary. Using default format."
