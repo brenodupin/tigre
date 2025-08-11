@@ -729,27 +729,42 @@ def cli_entrypoint() -> int:
     log.trace(f"CLI script location: {Path(__file__).resolve()}")
     log.trace(f"Python version: {sys.version.split()[0]}")
 
-    if args.cmd == "clean":
-        if args.server and args.no_server:
-            main.error("You cannot specify both --server and --no-server together.")
+    try:
+        if args.cmd == "clean":
+            if args.server and args.no_server:
+                main.error("You cannot specify both --server and --no-server together.")
 
-        clean_command(args, log)
+            clean_command(args, log)
 
-    elif args.cmd == "extract":
-        extract_command(args, log)
+        elif args.cmd == "extract":
+            extract_command(args, log)
 
-    elif args.cmd == "getfasta":
-        if not (args.biopython ^ args.bedtools):  # xnor
-            main.error(
-                "You must specify only one of --bedtools or --biopython, "
-                "not both or none."
-            )
+        elif args.cmd == "getfasta":
+            if not (args.biopython ^ args.bedtools):  # xnor
+                main.error(
+                    "You must specify only one of --bedtools or --biopython, "
+                    "not both or none."
+                )
 
-        if args.biopython:
-            getfasta_biopython_command(args, log)
+            if args.biopython:
+                getfasta_biopython_command(args, log)
 
         elif args.bedtools:
             getfasta_bedtools_command(args, log)
+
+    except KeyboardInterrupt:
+        log.warning("Process interrupted by user (Ctrl+C)")
+        return 130  # SIGINT
+
+    except SystemExit as e:
+        log.debug(f"SystemExit raised with code: {e.code}")
+        raise
+
+    except Exception as e:
+        log.error(f"Unexpected error occurred: {str(e)}")
+        log.debug("Full traceback:", exc_info=True)
+
+        return 1
 
     total_time = datetime.now() - start_time
     log.info(f"Execution completed in {_time_formatted(total_time.total_seconds())}")
