@@ -33,6 +33,7 @@ def extract_intergenic_regions(
     gff_in: Path,
     gff_out: Path,
     add_region: bool = False,
+    feature_type: str = "intergenic_region",
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Extract intergenic regions from a GFF3 file and save to a new file.
 
@@ -42,6 +43,10 @@ def extract_intergenic_regions(
         gff_out (Path): Output GFF3 file path.
         add_region (bool): Whether to add a region line to the output file.
                            Defaults is False.
+        feature_type (str): Type of the intergenic region to be used in the output.
+                            Defaults to "intergenic_region". If the feature spans the
+                            genome boundary in circular genomes, it will be appended
+                            with "_merged".
 
 
     """
@@ -87,7 +92,7 @@ def extract_intergenic_regions(
 
         log.debug(
             f"AN: {seqid} | Source: {source} | Size: {region_size} | "
-            f"Circular: {circular}"
+            f"Circular: {circular} | Feature type: {feature_type}"
         )
 
         df = _split_attributes(log, df)
@@ -99,6 +104,7 @@ def extract_intergenic_regions(
             seqid,
             source,
             circular,
+            feature_type,
         )
 
         # this will alter df! by adding +1 to end and -1 to start
@@ -107,6 +113,7 @@ def extract_intergenic_regions(
             df,
             seqid,
             source,
+            feature_type,
         )
 
         if df_ig.empty and not boundary:
@@ -133,7 +140,7 @@ def extract_intergenic_regions(
                 .reset_index(drop=True)
             )
 
-        start = 2 if "intergenic_region_merged" in df_ig["type"].values else 1
+        start = 2 if f"{feature_type}_merged" in df_ig["type"].values else 1
         df_ig["attributes"] = [
             f"ID={i};{attr}" for i, attr in enumerate(df_ig["attributes"], start)
         ]
@@ -187,6 +194,7 @@ def _solve_boundaries(
     seqid: str,
     source: str,
     circular: bool,
+    feature_type: str,
 ) -> list[dict[str, str | int]]:
     # Legend:
     # [---] feature (gene, trna, rrna)
@@ -208,7 +216,7 @@ def _solve_boundaries(
             {
                 "seqid": seqid,
                 "source": source,
-                "type": "intergenic_region_merged",
+                "type": f"{feature_type}_merged",
                 "start": last_end + 1,
                 "end": region_size + first_start - 1,
                 "score": ".",
@@ -231,7 +239,7 @@ def _solve_boundaries(
             {
                 "seqid": seqid,
                 "source": source,
-                "type": "intergenic_region",
+                "type": feature_type,
                 "start": 1,
                 "end": first_start - 1,
                 "score": ".",
@@ -254,7 +262,7 @@ def _solve_boundaries(
             {
                 "seqid": seqid,
                 "source": source,
-                "type": "intergenic_region",
+                "type": feature_type,
                 "start": last_end + 1,
                 "end": region_size,
                 "score": ".",
@@ -276,6 +284,7 @@ def _create_intergenic(
     df: pd.DataFrame,
     seqid: str,
     source: str,
+    feature_type: str,
 ) -> pd.DataFrame:
 
     # we change the original df, so as to not have to copy it
@@ -303,7 +312,7 @@ def _create_intergenic(
         {
             "seqid": seqid,
             "source": source,
-            "type": "intergenic_region",
+            "type": feature_type,
             "start": shifted["end"][valid_gaps].values.astype("int64"),
             "end": df["start"][valid_gaps].values,
             "score": ".",
@@ -361,6 +370,7 @@ def extract_multiple(
     gff_out_suffix: str = "_intergenic",
     add_region: bool = False,
     overwrite: bool = False,
+    feature_type: str = "intergenic_region",
 ) -> None:
     """Extract intergenic regions from multiple GFF3 files listed in a TSV file.
 
@@ -377,6 +387,10 @@ def extract_multiple(
         add_region (bool): Whether to add a region line to the output file.
                            Defaults is False.
         overwrite (bool): Whether to overwrite existing output files. Defaults is False.
+        feature_type (str): Type of the intergenic region to be used in the output.
+                            Defaults to "intergenic_region". If the feature spans the
+                            genome boundary in circular genomes, it will be appended
+                            with "_merged".
 
     """
     tsv = pd.read_csv(tsv_path, sep="\t")
@@ -414,6 +428,7 @@ def extract_multiple(
                 gff_in_builder.build(an),
                 gff_out_builder.build(an),
                 add_region,
+                feature_type,
             )
             for an in tsv[an_column]
         ]

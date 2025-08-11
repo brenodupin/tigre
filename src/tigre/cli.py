@@ -201,6 +201,15 @@ def extract_group(parser: argparse.ArgumentParser) -> None:
         default=False,
         help="Overwrite existing output files. Default: False (do not overwrite).",
     )
+    group.add_argument(
+        "--feature-type",
+        required=False,
+        type=str,
+        default="intergenic_region",
+        help="Feature type to use for intergenic regions in the output GFF3 file. "
+        "Default: 'intergenic_region'. (Any feature that spans the genome boundary "
+        "in circular genomes, will be appended with '_merged')",
+    )
 
 
 def extract_parser(
@@ -266,6 +275,7 @@ def extract_command(
             args.gff_in,
             args.gff_out,
             args.add_region,
+            args.feature_type,
         )
         handle_single_result(log, result, "Error extracting intergenic regions single")
 
@@ -288,6 +298,7 @@ def extract_command(
             args.gff_out_suffix,
             args.add_region,
             args.overwrite,
+            args.feature_type,
         )
 
 

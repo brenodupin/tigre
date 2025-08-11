@@ -45,7 +45,7 @@ def biopython_getfasta(
 
         seqid = df.iat[0, 0]
         df["start"] = df["start"] - 1
-        has_ig_merged = df.iat[-1, 1] == "intergenic_region_merged"
+        has_ig_merged = df.iat[-1, 1].endswith("_merged")
         df_fast = df.iloc[:-1] if has_ig_merged else df
         seq_len = len(fasta)
 
@@ -70,7 +70,7 @@ def biopython_getfasta(
             records.append(
                 SeqRecord(
                     seq=fasta[start:] + fasta[: end % seq_len],
-                    id=f"intergenic_region_merged::{seqid}:{start + idx_fix}-{end}",
+                    id=f"{df.iat[-1, 1]}::{seqid}:{start + idx_fix}-{end}",
                     description="",
                 )
             )
