@@ -150,12 +150,13 @@ def args_log(parser: argparse.ArgumentParser) -> None:
     """Add logging arguments to the parser."""
     group = parser.add_argument_group("log options")
     group.add_argument(
-        "--debug",
-        required=False,
-        action="store_true",
-        default=False,
-        help="Enable TRACE level in file, and DEBUG on console. "
-        "Default: DEBUG level on file and INFO on console.",
+        "-v",
+        "--verbose",
+        action="count",
+        default=0,
+        help="Increase verbosity. Use multiple times for more verbose output: "
+        "-v (TRACE file), -vv (DEBUG console + TRACE file), "
+        "-vvv (TRACE console + TRACE file). Default: INFO console + DEBUG file.",
     )
     group.add_argument(
         "--log",
@@ -714,7 +715,7 @@ def cli_entrypoint() -> int:
         )
 
     log = log_setup.setup_logger(
-        args.debug,
+        args.verbose,
         args.log,
         args.quiet,
         args.no_log_file,

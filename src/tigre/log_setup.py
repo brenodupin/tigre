@@ -176,15 +176,37 @@ def _create_logger(
 
 
 def setup_logger(
-    debug: bool,
+    verbose: int,
     log_file: Path | str | None,
     quiet: bool,
     no_log_file: bool,
     cmd: str,
 ) -> GDTLogger:
-    """Set up logger based on command line arguments."""
-    console_level = "DISABLE" if quiet else ("DEBUG" if debug else "INFO")
-    file_level = "DISABLE" if no_log_file else ("TRACE" if debug else "DEBUG")
+    """Set up logger based on command line arguments.
+
+    Verbosity levels:
+    0 (default): INFO console,  DEBUG file
+    1 (-v):      INFO console,  TRACE file
+    2 (-vv):     DEBUG console, TRACE file
+    3 (-vvv):    TRACE console, TRACE file
+    """
+    # Determine console level based on verbosity
+    if quiet:
+        console_level = "DISABLE"
+    elif verbose <= 1:
+        console_level = "INFO"
+    elif verbose == 2:
+        console_level = "DEBUG"
+    elif verbose >= 3:
+        console_level = "TRACE"
+
+    # Determine file level based on verbosity
+    if no_log_file:
+        file_level = "DISABLE"
+    elif verbose == 0:
+        file_level = "DEBUG"
+    elif verbose >= 1:
+        file_level = "TRACE"
 
     if log_file:  # `--log` provided, ensure it's a Path
         log_file = Path(log_file).resolve()
