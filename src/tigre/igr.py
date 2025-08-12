@@ -142,7 +142,8 @@ def extract_intergenic_regions(
 
         start = 2 if f"{feature_type}_merged" in df_ig["type"].values else 1
         df_ig["attributes"] = [
-            f"ID={i};{attr}" for i, attr in enumerate(df_ig["attributes"], start)
+            f"ID={seqid}_{feature_type}_{i};{attr}"
+            for i, attr in enumerate(df_ig["attributes"], start)
         ]
 
         write_gff3(
