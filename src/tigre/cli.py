@@ -19,7 +19,25 @@ from . import (
 )
 from .fasta_utils import BIOPYTHON_AVAILABLE, biopython_wrapper
 
-C_RESET = "\033[0m"
+C_RESET = "\x1b[0m"
+C_BLUE = "\x1b[36m"
+C_GREEN = "\x1b[92m"
+C_YELLOW = "\x1b[33m"
+C_BOLD = "\x1b[1m"
+C_BG_GRAY = "\x1b[100m"
+
+C_BANNER = f""" T   I   G   {C_GREEN}E   {C_YELLOW}R{C_RESET}   \\    /\\
+ {C_BLUE}|   |   |   |{C_RESET} x {C_BLUE}|{C_RESET}    )  ( ')
+ {C_BOLD}{C_BG_GRAY}T   I   G   {C_YELLOW}R   {C_GREEN}E{C_RESET}   (  /  )
+ o   n   e   e   x    \\(__)|
+ o   t   n   g   t     jgs
+ l   e   i   i   r
+     r   c   o   a
+ f           n   c
+ o               t
+ r               i
+                 o
+                 n"""
 
 if TYPE_CHECKING:
     pass
@@ -598,7 +616,7 @@ def cli_entrypoint() -> int:
     args_log(global_args)
 
     main = argparse.ArgumentParser(
-        description="<PLACE HOLDER BANNER>",
+        description=C_BANNER,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         parents=[global_args],
         epilog=f"Source ~ \033[32mhttps://github.com/brenodupin/tigre{C_RESET}",
