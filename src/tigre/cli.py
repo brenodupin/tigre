@@ -732,8 +732,9 @@ def cli_entrypoint() -> int:
 
     try:
         if args.cmd == "clean":
-            if args.server and args.no_server:
-                main.error("You cannot specify both --server and --no-server together.")
+            if args.gdt and args.mode == "multiple":
+                if args.server and args.no_server:
+                    main.error("You cannot specify both --server and --no-server together.")
 
             clean_command(args, log)
 
