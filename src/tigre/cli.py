@@ -7,7 +7,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeAlias
 
 from . import (
     __version__,
@@ -17,7 +17,7 @@ from . import (
     igr,
     log_setup,
 )
-from .fasta_utils import BIOPYTHON_AVAILABLE, bedtools_wrapper, biopython_wrapper
+from .fasta_utils import BIOPYTHON_AVAILABLE, biopython_wrapper
 
 C_RESET = "\033[0m"
 
@@ -25,6 +25,10 @@ if TYPE_CHECKING:
     pass
 
 MAX_CPU: int = os.cpu_count() or 1
+
+_Subparser: TypeAlias = "argparse._SubParsersAction[argparse.ArgumentParser]"
+_Parser: TypeAlias = "argparse.ArgumentParser"
+_Group: TypeAlias = "argparse._ArgumentGroup"
 
 
 def _workers_count(workers: int, threading: bool = False) -> int:
@@ -75,7 +79,7 @@ def ensure_overwrite(
 
 
 def args_multiple(
-    parser: argparse._ArgumentGroup,
+    parser: _Group,
     file: str = "gff",
     io: str = "in",
     ext: str = ".gff3",
@@ -103,7 +107,7 @@ def args_multiple(
 
 
 def args_single(
-    parser: argparse._ArgumentGroup,
+    parser: _Group,
     file: str = "gff",
     io: str = "in",
     required: bool = True,
@@ -146,7 +150,7 @@ def args_tsv(
     )
 
 
-def args_log(parser: argparse.ArgumentParser) -> None:
+def args_log(parser: _Parser) -> None:
     """Add logging arguments to the parser."""
     group = parser.add_argument_group("log options")
     group.add_argument(
@@ -185,7 +189,7 @@ def args_log(parser: argparse.ArgumentParser) -> None:
 
 ###############################################
 ########## extract command functions ##########
-def extract_group(parser: argparse.ArgumentParser) -> None:
+def extract_group(parser: _Parser) -> None:
     """Add common arguments for extract command."""
     group = parser.add_argument_group("extract options")
     group.add_argument(
@@ -214,8 +218,8 @@ def extract_group(parser: argparse.ArgumentParser) -> None:
 
 
 def extract_parser(
-    sub: "argparse._SubParsersAction[argparse.ArgumentParser]",
-    global_args: argparse.ArgumentParser,
+    sub: _Subparser,
+    global_args: _Parser,
 ) -> None:
     """Create extract command parser and add it to the subparsers."""
     extract = sub.add_parser(
@@ -308,7 +312,7 @@ def extract_command(
 
 ################################################
 ########## getfasta command functions ##########
-def getfasta_group(parser: argparse.ArgumentParser) -> None:
+def getfasta_group(parser: _Parser) -> None:
     """Add common arguments for getfasta command."""
     group = parser.add_argument_group("getfasta options")
     group.add_argument(
@@ -329,8 +333,8 @@ def getfasta_group(parser: argparse.ArgumentParser) -> None:
 
 
 def getfasta_parser(
-    sub: "argparse._SubParsersAction[argparse.ArgumentParser]",
-    global_args: argparse.ArgumentParser,
+    sub: _Subparser,
+    global_args: _Parser,
 ) -> None:
     """Create getfasta command parser and add it to the subparsers."""
     getfasta = sub.add_parser(
@@ -418,7 +422,7 @@ def getfasta_command(
 
 #############################################
 ########## Clean command functions ##########
-def clean_group(parser: argparse.ArgumentParser) -> None:
+def clean_group(parser: _Parser) -> None:
     """Add common arguments for clean command."""
     group = parser.add_argument_group("clean options")
     group.add_argument(
@@ -454,8 +458,8 @@ def clean_group(parser: argparse.ArgumentParser) -> None:
 
 
 def clean_parser(
-    sub: "argparse._SubParsersAction[argparse.ArgumentParser]",
-    global_args: argparse.ArgumentParser,
+    sub: _Subparser,
+    global_args: _Parser,
 ) -> None:
     """Create clean command parser and add it to the subparsers."""
     clean = sub.add_parser(
@@ -644,9 +648,8 @@ def cli_entrypoint() -> int:
 
     try:
         if args.cmd == "clean":
-            if args.gdt and args.mode == "multiple":
-                if args.server and args.no_server:
-                    main.error("You cannot specify both --server and --no-server together.")
+            if args.gdt and args.mode == "multiple" and args.server and args.no_server:
+                main.error("You cannot specify both --server and --no-server together.")
 
             clean_command(args, log)
 
