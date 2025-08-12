@@ -310,43 +310,7 @@ def extract_command(
 ########## getfasta command functions ##########
 def getfasta_group(parser: argparse.ArgumentParser) -> None:
     """Add common arguments for getfasta command."""
-    method = parser.add_argument_group(
-        "getfasta mutually exclusive options (choose one)"
-    )
-    method.add_argument(
-        "--bedtools",
-        required=False,
-        action="store_true",
-        default=False,
-        help="Use `bedtools getfasta` to extract sequences from the GFF3 files. "
-        "Requires `bedtools` installed and in your PATH.",
-    )
-    method.add_argument(
-        "--biopython",
-        required=False,
-        action="store_true",
-        default=False,
-        help="Use Biopython to extract sequences from the GFF3 files. "
-        "No external dependencies required.",
-    )
-
     group = parser.add_argument_group("getfasta options")
-    group.add_argument(
-        "--bedtools-path",
-        required=False,
-        type=str,
-        default="bedtools",
-        help="Path to the `bedtools` executable. Default: 'bedtools'. "
-        "Used only with `--bedtools`.",
-    )
-    group.add_argument(
-        "--name-args",
-        required=False,
-        type=str,
-        default="-name+",
-        help="Arguments to pass to `bedtools getfasta`. Default: '-name+' "
-        "(uses feature name as sequence ID). Used only with `--bedtools`.",
-    )
     group.add_argument(
         "--bedtools-compatible",
         required=False,
@@ -402,59 +366,7 @@ def getfasta_parser(
     args_multiple(multiple, "fasta", "out", ".fasta", "_intergenic")
 
 
-def getfasta_bedtools_command(
-    args: argparse.Namespace,
-    log: log_setup.GDTLogger,
-) -> None:
-    """Execute the bedtools getfasta command based on the provided arguments."""
-    bedtools_version = bedtools_wrapper.get_bedtools_version(args.bedtools_path)
-    log.debug(f"bedtools version: {bedtools_version}")
-
-    if bedtools_version is None:
-        log.error("bedtools not found or not executable. Please install bedtools.")
-        sys.exit(1)
-
-    if args.mode == "single":
-        args.gff_in = Path(args.gff_in).resolve()
-        args.fasta_in = Path(args.fasta_in).resolve()
-        args.fasta_out = Path(args.fasta_out).resolve()
-        ensure_exists(log, args.gff_in, "GFF3 input")
-        ensure_exists(log, args.fasta_in, "Fasta input")
-        ensure_overwrite(log, args.fasta_out, "Fasta output", args.overwrite)
-
-        result = bedtools_wrapper.bedtools_getfasta(
-            log.spawn_buffer(),
-            args.gff_in,
-            args.fasta_in,
-            args.fasta_out,
-            args.bedtools_path,
-            args.name_args,
-        )
-
-        handle_single_result(log, result, "Error extracting sequences single")
-
-    elif args.mode == "multiple":
-        args.tsv = Path(args.tsv).resolve()
-        ensure_exists(log, args.tsv, "TSV file")
-
-        bedtools_wrapper.bedtools_multiple(
-            log,
-            args.tsv,
-            _workers_count(args.workers),
-            args.gff_in_ext,
-            args.gff_in_suffix,
-            args.fasta_in_ext,
-            args.fasta_in_suffix,
-            args.fasta_out_ext,
-            args.fasta_out_suffix,
-            args.an_column,
-            args.bedtools_path,
-            args.name_args,
-            args.overwrite,
-        )
-
-
-def getfasta_biopython_command(
+def getfasta_command(
     args: argparse.Namespace,
     log: log_setup.GDTLogger,
 ) -> None:
@@ -742,17 +654,7 @@ def cli_entrypoint() -> int:
             extract_command(args, log)
 
         elif args.cmd == "getfasta":
-            if not (args.biopython ^ args.bedtools):  # xnor
-                main.error(
-                    "You must specify only one of --bedtools or --biopython, "
-                    "not both or none."
-                )
-
-            if args.biopython:
-                getfasta_biopython_command(args, log)
-
-        elif args.bedtools:
-            getfasta_bedtools_command(args, log)
+            getfasta_command(args, log)
 
     except KeyboardInterrupt:
         log.warning("Process interrupted by user (Ctrl+C)")
