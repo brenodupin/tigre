@@ -93,16 +93,16 @@ def args_multiple(
         required=req,
         type=str,
         default=ext,
-        help=f"File Extension for {io}put {up} files. Default: '{ext}'",
+        help=f"File Extension for {io}put {up} files. Default: '{ext}'.",
     )
     parser.add_argument(
         f"--{file}-{io}-suffix",
         required=req,
         type=str,
         default=suffix,
-        help=f"Suffix to be added when building {io}put {up} Paths from the TSV file. "
-        f"Example: '{suffix}' will create {up} paths like '<AN>{suffix}.gff3' if "
-        f"--{file}-{io}-ext is '{ext}'. Default: '{suffix}'",
+        help=f"Suffix to append when building {io}put {up} file paths from the TSV "
+        f"file. Example: '{suffix}' creates paths like '<AN>{suffix}.gff3' if the "
+        f"extension is '{ext}'. Default: '{suffix}'.",
     )
 
 
@@ -117,7 +117,7 @@ def args_single(
         f"--{file}-{io}",
         required=required,
         type=str,
-        help=f"{file.upper()} {io}put file",
+        help=f"{file.upper()} {io}put file.",
     )
 
 
@@ -130,23 +130,23 @@ def args_tsv(
         "--tsv",
         required=True,
         type=str,
-        help="TSV file with column of Accession Numbers,"
-        f" which file paths are derive from to {action}",
+        help="TSV file with a column of accession numbers, from which file paths are "
+        f"derived for {action}.",
     )
     parser.add_argument(
         "--an-column",
         required=False,
         type=str,
         default="AN",
-        help="Column name for Accession Number inside the TSV. Default: 'AN'",
+        help="Column name containing the accession number in the TSV. Default: 'AN'.",
     )
     parser.add_argument(
         "--workers",
         required=False,
         type=int,
         default=0,
-        help="Number of workers to use in parallel processing. "
-        f"Default: 0 (use all available cores: {MAX_CPU})",
+        help="Number of workers to use for parallel processing. Set to 0 to use all "
+        f"available cores ({MAX_CPU}). Default: 0.",
     )
 
 
@@ -158,7 +158,7 @@ def args_log(parser: _Parser) -> None:
         "--verbose",
         action="count",
         default=0,
-        help="Increase verbosity. Use multiple times for more verbose output: "
+        help="Increase verbosity level. Use multiple times for more verbose output: "
         "-v (TRACE file), -vv (DEBUG console + TRACE file), "
         "-vvv (TRACE console + TRACE file). Default: INFO console + DEBUG file.",
     )
@@ -167,15 +167,15 @@ def args_log(parser: _Parser) -> None:
         required=False,
         type=str,
         default=None,
-        help="Path to the log file. "
-        "If not provided, a default log file will be created.",
+        help="Path to the log file. If not provided, a default log file will be "
+        "created.",
     )
     group.add_argument(
         "--no-log-file",
         required=False,
         action="store_true",
         default=False,
-        help="No file logging will be done. ",
+        help="Disable file logging. Default: False.",
     )
 
     group.add_argument(
@@ -183,7 +183,7 @@ def args_log(parser: _Parser) -> None:
         required=False,
         action="store_true",
         default=False,
-        help="Suppress console output. Default: console output enabled.",
+        help="Suppress console output. Default: False.",
     )
 
 
@@ -197,23 +197,23 @@ def extract_group(parser: _Parser) -> None:
         required=False,
         action="store_true",
         default=False,
-        help="Add the region line to the output GFF3 file. Default: False",
+        help="Add region line to the output GFF3 file. Default: False.",
     )
     group.add_argument(
         "--overwrite",
         required=False,
         action="store_true",
         default=False,
-        help="Overwrite existing output files. Default: False (do not overwrite).",
+        help="Overwrite existing output files. Default: False.",
     )
     group.add_argument(
         "--feature-type",
         required=False,
         type=str,
         default="intergenic_region",
-        help="Feature type to use for intergenic regions in the output GFF3 file. "
-        "Default: 'intergenic_region'. (Any feature that spans the genome boundary "
-        "in circular genomes, will be appended with '_merged')",
+        help="Feature type name to use for intervening regions in the output GFF3 "
+        "file. Features spanning the genome boundary in circular genomes will be "
+        "appended with '_merged'. Default: 'intergenic_region'.",
     )
 
 
@@ -320,15 +320,15 @@ def getfasta_group(parser: _Parser) -> None:
         required=False,
         action="store_true",
         default=False,
-        help="Adjust FASTA headers to use 0-based indexing (bedtools-compatible). "
-        "Affects only headers, not sequences. Used only with `--biopython`.",
+        help="Adjust FASTA headers to use 0-based indexing for bedtools compatibility. "
+        "Affects headers only, not sequences. Default: False.",
     )
     group.add_argument(
         "--overwrite",
         required=False,
         action="store_true",
         default=False,
-        help="Overwrite existing output files. Default: False (do not overwrite).",
+        help="Overwrite existing output files. Default: False.",
     )
 
 
@@ -431,29 +431,30 @@ def clean_group(parser: _Parser) -> None:
         type=str,
         dest="gdt",
         default=None,
-        help="If provided, will use GDT to standardize gene names.",
+        help="Path to a Gene Dictionary Table (GDT) file to standardize gene names. "
+        "Optional.",
     )
     group.add_argument(
         "--query-string",
         required=False,
         type=str,
         default=gff3_utils.QS_GENE_TRNA_RRNA_REGION,
-        help="Query string passes to pandas to filter the GFF3 file."
-        f" Default: '{gff3_utils.QS_GENE_TRNA_RRNA_REGION}'. ",
+        help=f"pandas query string to filter features in GFF3 file. Default: "
+        f"'{gff3_utils.QS_GENE_TRNA_RRNA_REGION}'.",
     )
     group.add_argument(
         "--keep-orfs",
         required=False,
         action="store_true",
         default=False,
-        help="Keep ORF sequences in output. Default: False (do not keep ORFs).",
+        help="Keep ORF sequences in the output. Default: False.",
     )
     group.add_argument(
         "--overwrite",
         required=False,
         action="store_true",
         default=False,
-        help="Overwrite existing output files. Default: False (do not overwrite).",
+        help="Overwrite existing output files. Default: False.",
     )
 
 
@@ -496,16 +497,15 @@ def clean_parser(
         required=False,
         action="store_true",
         default=False,
-        help="Force the use of the GDT server to process the GFF3 files. "
-        "Default: False (it will check if it needs or not to use the server).",
+        help="Force the use of the GDT server to process GFF3 files, overriding "
+        "auto-detection. Default: False.",
     )
     multiple.add_argument(
         "--no-server",
         required=False,
         action="store_true",
         default=False,
-        help="It wont use GDT server to process the GFF3 files. "
-        "Default: False (it will check if it needs or not to use the server).",
+        help="Disable the use of the GDT server to process GFF3 files. Default: False.",
     )
 
 
