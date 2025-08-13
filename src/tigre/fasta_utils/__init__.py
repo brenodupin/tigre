@@ -3,7 +3,10 @@
 
 from typing import TYPE_CHECKING
 
-from .bedtools_wrapper import bedtools_getfasta, bedtools_multiple, get_bedtools_version
+# waiting for bedtools to merge our PR adding support for circular sequences
+# https://github.com/arq5x/bedtools2/pull/1127
+# from .bedtools_wrapper import bedtools_getfasta, bedtools_multiple, bedtools_version
+
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -11,13 +14,10 @@ if TYPE_CHECKING:
     from .. import log_setup
 
 try:
-    from Bio import SeqIO
-    from Bio.SeqRecord import SeqRecord
+    # utilities that require biopython
+    from .biopython_wrapper import biopython_getfasta, biopython_multiple
 
     BIOPYTHON_AVAILABLE = True
-
-    # utilities that require biopython
-    from .biopython_wrapper import biopython_getfasta
 
 
 except ImportError:
@@ -37,8 +37,8 @@ except ImportError:
         )
 
     def biopython_multiple(
-        log: log_setup.GDTLogger,
-        tsv_path: Path,
+        log: "log_setup.GDTLogger",
+        tsv_path: "Path",
         workers: int,
         gff_in_ext: str = ".gff3",
         gff_in_suffix: str = "_intergenic",
@@ -48,6 +48,7 @@ except ImportError:
         fasta_out_suffix: str = "_intergenic",
         an_column: str = "AN",
         bedtools_compatible: bool = False,
+        overwrite: bool = False,
     ) -> None:
         """Stub for biopython_multiple when Biopython is not available."""
         raise ImportError(

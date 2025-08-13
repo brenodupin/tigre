@@ -11,7 +11,7 @@ import pandas as pd
 from .. import gff3_utils, log_setup
 
 
-def get_bedtools_version(bedtools_path: Path | str = "bedtools") -> Optional[str]:
+def bedtools_version(bedtools_path: Path | str = "bedtools") -> Optional[str]:
     """Check if bedtools is available in the system."""
     try:
         result = subprocess.run(
@@ -113,7 +113,7 @@ def bedtools_multiple(
     raise NotImplementedError(
         "bedtools still does not support circular sequences, we've submitted a PR to "
         "add this feature, but it is not yet merged. "
-        "Please use the biopython process for now."
+        "The biopython process is the only option available for now."
     )
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
