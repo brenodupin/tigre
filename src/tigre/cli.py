@@ -7,17 +7,17 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import TYPE_CHECKING, TypeAlias
+from typing import TypeAlias
 
 from . import (
     __version__,
     clean,
     clean_gdt,
+    fasta_utils,
     gff3_utils,
     igr,
     log_setup,
 )
-from .fasta_utils import BIOPYTHON_AVAILABLE, biopython_wrapper
 
 C_RESET = "\x1b[0m"
 C_BLUE = "\x1b[36m"
@@ -26,27 +26,23 @@ C_YELLOW = "\x1b[33m"
 C_BOLD = "\x1b[1m"
 C_BG_GRAY = "\x1b[100m"
 
-C_BANNER = f""" T   I   G   {C_GREEN}E   {C_YELLOW}R{C_RESET}   \\    /\\
+BANNER = f""" T   I   G   {C_GREEN}E   {C_YELLOW}R{C_RESET}   \\    /\\
  {C_BLUE}|   |   |   |{C_RESET} x {C_BLUE}|{C_RESET}    )  ( ')
  {C_BOLD}{C_BG_GRAY}T   I   G   {C_YELLOW}R   {C_GREEN}E{C_RESET}   (  /  )
  o   n   e   e   x    \\(__)|
  o   t   n   g   t     jgs
- l   e   i   i   r
-     r   c   o   a
- f           n   c
- o               t
- r               i
-                 o
-                 n"""
-
-if TYPE_CHECKING:
-    pass
+ l   e   i    i   r
+     r   c     o   a c t i o n
+ f              n
+ o
+ r"""
 
 MAX_CPU: int = os.cpu_count() or 1
 
 _Subparser: TypeAlias = "argparse._SubParsersAction[argparse.ArgumentParser]"
 _Parser: TypeAlias = "argparse.ArgumentParser"
 _Group: TypeAlias = "argparse._ArgumentGroup"
+_Args: TypeAlias = "argparse.Namespace"
 
 
 def _workers_count(workers: int, threading: bool = False) -> int:
@@ -97,7 +93,7 @@ def ensure_overwrite(
 
 
 def args_multiple(
-    parser: _Group,
+    group: _Group,
     file: str = "gff",
     io: str = "in",
     ext: str = ".gff3",
@@ -106,14 +102,14 @@ def args_multiple(
 ) -> None:
     """Add common arguments for multiple file processing."""
     up = file.upper()
-    parser.add_argument(
+    group.add_argument(
         f"--{file}-{io}-ext",
         required=req,
         type=str,
         default=ext,
         help=f"File Extension for {io}put {up} files. Default: '{ext}'.",
     )
-    parser.add_argument(
+    group.add_argument(
         f"--{file}-{io}-suffix",
         required=req,
         type=str,
@@ -125,13 +121,13 @@ def args_multiple(
 
 
 def args_single(
-    parser: _Group,
+    group: _Group,
     file: str = "gff",
     io: str = "in",
     required: bool = True,
 ) -> None:
     """Add common arguments for single file processing."""
-    parser.add_argument(
+    group.add_argument(
         f"--{file}-{io}",
         required=required,
         type=str,
@@ -140,25 +136,25 @@ def args_single(
 
 
 def args_tsv(
-    parser: argparse._ArgumentGroup,
+    group: argparse._ArgumentGroup,
     action: str,
 ) -> None:
     """Add arguments for TSV file processing."""
-    parser.add_argument(
+    group.add_argument(
         "--tsv",
         required=True,
         type=str,
         help="TSV file with a column of accession numbers, from which file paths are "
         f"derived for {action}.",
     )
-    parser.add_argument(
+    group.add_argument(
         "--an-column",
         required=False,
         type=str,
         default="AN",
         help="Column name containing the accession number in the TSV. Default: 'AN'.",
     )
-    parser.add_argument(
+    group.add_argument(
         "--workers",
         required=False,
         type=int,
@@ -177,8 +173,8 @@ def args_log(parser: _Parser) -> None:
         action="count",
         default=0,
         help="Increase verbosity level. Use multiple times for more verbose output: "
-        "-v (TRACE file), -vv (DEBUG console + TRACE file), "
-        "-vvv (TRACE console + TRACE file). Default: INFO console + DEBUG file.",
+        "-v (INFO console, TRACE file), -vv (DEBUG console, TRACE file), "
+        "-vvv (TRACE console, TRACE file). Default: INFO console + DEBUG file.",
     )
     group.add_argument(
         "--log",
@@ -193,7 +189,7 @@ def args_log(parser: _Parser) -> None:
         required=False,
         action="store_true",
         default=False,
-        help="Disable file logging. Default: False.",
+        help="Disable file logging.",
     )
 
     group.add_argument(
@@ -201,7 +197,7 @@ def args_log(parser: _Parser) -> None:
         required=False,
         action="store_true",
         default=False,
-        help="Suppress console output. Default: False.",
+        help="Suppress console output.",
     )
 
 
@@ -215,14 +211,14 @@ def extract_group(parser: _Parser) -> None:
         required=False,
         action="store_true",
         default=False,
-        help="Add region line to the output GFF3 file. Default: False.",
+        help="Add region line to the output GFF3 file.",
     )
     group.add_argument(
         "--overwrite",
         required=False,
         action="store_true",
         default=False,
-        help="Overwrite existing output files. Default: False.",
+        help="Overwrite existing output files.",
     )
     group.add_argument(
         "--feature-type",
@@ -242,8 +238,7 @@ def extract_parser(
     """Create extract command parser and add it to the subparsers."""
     extract = sub.add_parser(
         "extract",
-        help="`extract` command for tigre, to extract intergenic regions "
-        "from GFF3 file(s).",
+        help="Extract intergenic regions from processed GFF3 file(s).",
         parents=[global_args],
     )
     extract_group(extract)
@@ -252,7 +247,7 @@ def extract_parser(
 
     single_parser = extract_sub.add_parser(
         "single",
-        help="Process a single GFF file",
+        help="Process a single GFF3 file",
         parents=[global_args],
     )
     extract_group(single_parser)
@@ -262,7 +257,7 @@ def extract_parser(
 
     multiple_parser = extract_sub.add_parser(
         "multiple",
-        help="Process multiple GFF files from TSV",
+        help="Process multiple GFF3 files from TSV",
         parents=[global_args],
     )
     extract_group(multiple_parser)
@@ -273,7 +268,7 @@ def extract_parser(
 
 
 def extract_command(
-    args: argparse.Namespace,
+    args: _Args,
     log: log_setup.GDTLogger,
 ) -> None:
     """Execute the extract command based on the provided arguments."""
@@ -357,7 +352,7 @@ def getfasta_parser(
     """Create getfasta command parser and add it to the subparsers."""
     getfasta = sub.add_parser(
         "getfasta",
-        help="`getfasta` command for tigre, to get fasta from intergenic regions.",
+        help="Generate FASTA sequences from intergenic regions.",
         parents=[global_args],
     )
     getfasta_group(getfasta)
@@ -366,7 +361,7 @@ def getfasta_parser(
 
     single_parser = getfasta_sub.add_parser(
         "single",
-        help="Process a single GFF file",
+        help="Process a single GFF3 file",
         parents=[global_args],
     )
     getfasta_group(single_parser)
@@ -377,7 +372,7 @@ def getfasta_parser(
 
     multiple_parser = getfasta_sub.add_parser(
         "multiple",
-        help="Process multiple GFF files from TSV",
+        help="Process multiple GFF3 files from TSV",
         parents=[global_args],
     )
     getfasta_group(multiple_parser)
@@ -389,11 +384,11 @@ def getfasta_parser(
 
 
 def getfasta_command(
-    args: argparse.Namespace,
+    args: _Args,
     log: log_setup.GDTLogger,
 ) -> None:
     """Execute the Biopython getfasta command based on the provided arguments."""
-    if not BIOPYTHON_AVAILABLE:
+    if not fasta_utils.BIOPYTHON_AVAILABLE:
         log.error(
             "Biopython is not available. Please install it with: "
             "pip install biopython or pip install tigre[bio]"
@@ -408,7 +403,7 @@ def getfasta_command(
         ensure_exists(log, args.fasta_in, "Fasta input")
         ensure_overwrite(log, args.fasta_out, "Fasta output", args.overwrite)
 
-        result = biopython_wrapper.biopython_getfasta(
+        result = fasta_utils.biopython_wrapper.biopython_getfasta(
             log.spawn_buffer(),
             args.gff_in,
             args.fasta_in,
@@ -419,7 +414,7 @@ def getfasta_command(
         handle_single_result(log, result, "Error extracting sequences single")
 
     elif args.mode == "multiple":
-        biopython_wrapper.biopython_multiple(
+        fasta_utils.biopython_wrapper.biopython_multiple(
             log,
             Path(args.tsv).resolve(),
             _workers_count(args.workers),
@@ -483,7 +478,7 @@ def clean_parser(
     """Create clean command parser and add it to the subparsers."""
     clean = sub.add_parser(
         "clean",
-        help="`clean` command for tigre, to clean the GFF3 files.",
+        help="Clean, standardize, and prepare GFF3 file(s) for processing.",
         parents=[global_args],
     )
     clean_group(clean)
@@ -492,7 +487,7 @@ def clean_parser(
 
     single_parser = clean_sub.add_parser(
         "single",
-        help="Process a single GFF file",
+        help="Process a single GFF3 file",
         parents=[global_args],
     )
     clean_group(single_parser)
@@ -502,7 +497,7 @@ def clean_parser(
 
     multiple_parser = clean_sub.add_parser(
         "multiple",
-        help="Process multiple GFF files from TSV",
+        help="Process multiple GFF3 files from TSV",
         parents=[global_args],
     )
     clean_group(multiple_parser)
@@ -516,19 +511,19 @@ def clean_parser(
         action="store_true",
         default=False,
         help="Force the use of the GDT server to process GFF3 files, overriding "
-        "auto-detection. Default: False.",
+        "auto-detection.",
     )
     multiple.add_argument(
         "--no-server",
         required=False,
         action="store_true",
         default=False,
-        help="Disable the use of the GDT server to process GFF3 files. Default: False.",
+        help="Disable the use of the GDT server to process GFF3 files.",
     )
 
 
 def clean_command(
-    args: argparse.Namespace,
+    args: _Args,
     log: log_setup.GDTLogger,
 ) -> None:
     """Execute the clean command based on the provided arguments."""
@@ -616,10 +611,9 @@ def cli_entrypoint() -> int:
     args_log(global_args)
 
     main = argparse.ArgumentParser(
-        description=C_BANNER,
+        description=BANNER,
         formatter_class=argparse.RawDescriptionHelpFormatter,
         parents=[global_args],
-        epilog=f"Source ~ \033[32mhttps://github.com/brenodupin/tigre{C_RESET}",
     )
     main.add_argument(
         "--version",
@@ -633,12 +627,6 @@ def cli_entrypoint() -> int:
     clean_parser(subs, global_args)
     extract_parser(subs, global_args)
     getfasta_parser(subs, global_args)
-
-    subs.add_parser(
-        "test",
-        help="Test command to check CLI startup and logging.",
-        parents=[global_args],
-    )
 
     args = main.parse_args()
 
@@ -667,7 +655,10 @@ def cli_entrypoint() -> int:
     try:
         if args.cmd == "clean":
             if args.gdt and args.mode == "multiple" and args.server and args.no_server:
-                main.error("You cannot specify both --server and --no-server together.")
+                main.error(
+                    "You cannot specify both --server and --no-server together."
+                    "Please choose one or neither."
+                )
 
             clean_command(args, log)
 
@@ -692,7 +683,7 @@ def cli_entrypoint() -> int:
         return 1
 
     total_time = datetime.now() - start_time
-    log.info(f"Execution completed in {_time_formatted(total_time.total_seconds())}")
+    log.info(f"Execution completed in {_time_formatted(total_time.total_seconds())}.")
     return 0
 
 

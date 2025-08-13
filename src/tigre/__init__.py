@@ -3,10 +3,7 @@
 
 __version__ = "0.1.0"
 
-from typing import TYPE_CHECKING, Any
-
-if TYPE_CHECKING:
-    from . import fasta_utils
+from typing import Any
 
 from .clean import *
 from .cli import *

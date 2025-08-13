@@ -12,9 +12,9 @@ import pandas as pd
 from . import clean, clean_gdt_server, gff3_utils, log_setup
 
 if TYPE_CHECKING:
-    import argparse
-
     import gdt  # type: ignore[import-not-found]
+
+    from .cli import _Args
 
 
 def clean_attr_gdt(
@@ -197,7 +197,7 @@ def clean_multiple_gdt(
 
 def clean_gdt_multiple(
     log: log_setup.GDTLogger,
-    args: "argparse.Namespace",
+    args: "_Args",
     workers_process: int,
     workers_threading: int,
 ) -> None:
