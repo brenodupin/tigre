@@ -548,7 +548,7 @@ def clean_command(
                 log.spawn_buffer(),
                 args.gff_in,
                 args.gff_out,
-                clean_gdt.load_gdt(log, args.gdict),
+                clean_gdt.load_gdt(log, args.gdt),
                 args.query_string,
                 args.keep_orfs,
             )
@@ -635,6 +635,9 @@ def cli_entrypoint() -> int:
             "You cannot specify both --log and --no-log-file together. "
             "Please choose one or neither."
         )
+
+    if not args.quiet:
+        print(BANNER)
 
     log = log_setup.setup_logger(
         args.verbose,
