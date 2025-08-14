@@ -1,0 +1,167 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_065239.1 1 312993
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=57918
+NC_065239.1	RefSeq	region	1	312993	.	+	.	ID=NC_065239.1:1..312993;Dbxref=taxon:57918;Is_circular=true;Name=MT;gbkey=Src;genome=mitochondrion;mol_type=genomic DNA
+NC_065239.1	RefSeq	gene	877	2632	.	+	.	ID=gene-NQY56_mgr02;Dbxref=GeneID:73939744;Name=18rrn;gbkey=Gene;gene=18rrn;gene_biotype=rRNA;locus_tag=NQY56_mgr02
+NC_065239.1	RefSeq	rRNA	877	2632	.	+	.	ID=rna-NQY56_mgr02;Parent=gene-NQY56_mgr02;Dbxref=GeneID:73939744;gbkey=rRNA;gene=18rrn;locus_tag=NQY56_mgr02;product=18S ribosomal RNA
+NC_065239.1	RefSeq	exon	877	2632	.	+	.	ID=exon-NQY56_mgr02-1;Parent=rna-NQY56_mgr02;Dbxref=GeneID:73939744;gbkey=rRNA;gene=18rrn;locus_tag=NQY56_mgr02;product=18S ribosomal RNA
+NC_065239.1	RefSeq	gene	2729	2843	.	+	.	ID=gene-NQY56_mgr03;Dbxref=GeneID:73939701;Name=5rrn;gbkey=Gene;gene=5rrn;gene_biotype=rRNA;locus_tag=NQY56_mgr03
+NC_065239.1	RefSeq	rRNA	2729	2843	.	+	.	ID=rna-NQY56_mgr03;Parent=gene-NQY56_mgr03;Dbxref=GeneID:73939701;gbkey=rRNA;gene=5rrn;locus_tag=NQY56_mgr03;product=5S ribosomal RNA
+NC_065239.1	RefSeq	exon	2729	2843	.	+	.	ID=exon-NQY56_mgr03-1;Parent=rna-NQY56_mgr03;Dbxref=GeneID:73939701;gbkey=rRNA;gene=5rrn;locus_tag=NQY56_mgr03;product=5S ribosomal RNA
+NC_065239.1	RefSeq	gene	9244	10983	.	-	.	ID=gene-NQY56_mgp29;Dbxref=GeneID:73939703;Name=ccmFn;gbkey=Gene;gene=ccmFn;gene_biotype=protein_coding;locus_tag=NQY56_mgp29
+NC_065239.1	RefSeq	CDS	9244	10983	.	-	0	ID=cds-YP_010438574.1;Parent=gene-NQY56_mgp29;Dbxref=GenBank:YP_010438574.1,GeneID:73939703;Name=YP_010438574.1;gbkey=CDS;gene=ccmFn;locus_tag=NQY56_mgp29;product=cytochrome c biogenesis FN;protein_id=YP_010438574.1
+NC_065239.1	RefSeq	gene	15404	15698	.	+	.	ID=gene-NQY56_mgp28;Dbxref=GeneID:73939702;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=NQY56_mgp28;part=1
+NC_065239.1	RefSeq	gene	65321	65403	.	+	.	ID=gene-NQY56_mgp28;Dbxref=GeneID:73939702;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=NQY56_mgp28;part=2
+NC_065239.1	RefSeq	gene	66839	67030	.	+	.	ID=gene-NQY56_mgp28;Dbxref=GeneID:73939702;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=NQY56_mgp28;part=3
+NC_065239.1	RefSeq	gene	269605	269663	.	-	.	ID=gene-NQY56_mgp28;Dbxref=GeneID:73939702;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=NQY56_mgp28;part=4
+NC_065239.1	RefSeq	gene	265975	266233	.	-	.	ID=gene-NQY56_mgp28;Dbxref=GeneID:73939702;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=NQY56_mgp28;part=5
+NC_065239.1	RefSeq	CDS	15404	15698	.	+	0	ID=cds-YP_010438575.1;Parent=gene-NQY56_mgp28;Dbxref=GenBank:YP_010438575.1,GeneID:73939702;Name=YP_010438575.1;exception=trans-splicing;gbkey=CDS;gene=nad1;locus_tag=NQY56_mgp28;part=1;product=NADH dehydrogenase subunit 1;protein_id=YP_010438575.1
+NC_065239.1	RefSeq	CDS	65321	65403	.	+	2	ID=cds-YP_010438575.1;Parent=gene-NQY56_mgp28;Dbxref=GenBank:YP_010438575.1,GeneID:73939702;Name=YP_010438575.1;exception=trans-splicing;gbkey=CDS;gene=nad1;locus_tag=NQY56_mgp28;part=2;product=NADH dehydrogenase subunit 1;protein_id=YP_010438575.1
+NC_065239.1	RefSeq	CDS	66839	67030	.	+	0	ID=cds-YP_010438575.1;Parent=gene-NQY56_mgp28;Dbxref=GenBank:YP_010438575.1,GeneID:73939702;Name=YP_010438575.1;exception=trans-splicing;gbkey=CDS;gene=nad1;locus_tag=NQY56_mgp28;part=3;product=NADH dehydrogenase subunit 1;protein_id=YP_010438575.1
+NC_065239.1	RefSeq	CDS	269605	269663	.	-	0	ID=cds-YP_010438575.1;Parent=gene-NQY56_mgp28;Dbxref=GenBank:YP_010438575.1,GeneID:73939702;Name=YP_010438575.1;exception=trans-splicing;gbkey=CDS;gene=nad1;locus_tag=NQY56_mgp28;part=4;product=NADH dehydrogenase subunit 1;protein_id=YP_010438575.1
+NC_065239.1	RefSeq	CDS	265975	266233	.	-	1	ID=cds-YP_010438575.1;Parent=gene-NQY56_mgp28;Dbxref=GenBank:YP_010438575.1,GeneID:73939702;Name=YP_010438575.1;exception=trans-splicing;gbkey=CDS;gene=nad1;locus_tag=NQY56_mgp28;part=5;product=NADH dehydrogenase subunit 1;protein_id=YP_010438575.1
+NC_065239.1	RefSeq	gene	29900	31396	.	+	.	ID=gene-NQY56_mgp27;Dbxref=GeneID:73939705;Name=cox1;gbkey=Gene;gene=cox1;gene_biotype=protein_coding;locus_tag=NQY56_mgp27
+NC_065239.1	RefSeq	CDS	29900	31396	.	+	0	ID=cds-YP_010438576.1;Parent=gene-NQY56_mgp27;Dbxref=GenBank:YP_010438576.1,GeneID:73939705;Name=YP_010438576.1;gbkey=CDS;gene=cox1;locus_tag=NQY56_mgp27;product=cytochrome c oxidase subunit I;protein_id=YP_010438576.1
+NC_065239.1	RefSeq	gene	35919	36005	.	-	.	ID=gene-NQY56_mgt01;Dbxref=GeneID:73939706;Name=trnS-UGA;gbkey=Gene;gene=trnS-UGA;gene_biotype=tRNA;locus_tag=NQY56_mgt01
+NC_065239.1	RefSeq	tRNA	35919	36005	.	-	.	ID=rna-NQY56_mgt01;Parent=gene-NQY56_mgt01;Dbxref=GeneID:73939706;gbkey=tRNA;gene=trnS-UGA;locus_tag=NQY56_mgt01;product=tRNA-Ser
+NC_065239.1	RefSeq	exon	35919	36005	.	-	.	ID=exon-NQY56_mgt01-1;Parent=rna-NQY56_mgt01;Dbxref=GeneID:73939706;gbkey=tRNA;gene=trnS-UGA;locus_tag=NQY56_mgt01;product=tRNA-Ser
+NC_065239.1	RefSeq	gene	38906	38979	.	-	.	ID=gene-NQY56_mgt02;Dbxref=GeneID:73939707;Name=trnD-GUC;gbkey=Gene;gene=trnD-GUC;gene_biotype=tRNA;locus_tag=NQY56_mgt02
+NC_065239.1	RefSeq	tRNA	38906	38979	.	-	.	ID=rna-NQY56_mgt02;Parent=gene-NQY56_mgt02;Dbxref=GeneID:73939707;gbkey=tRNA;gene=trnD-GUC;locus_tag=NQY56_mgt02;product=tRNA-Asp
+NC_065239.1	RefSeq	exon	38906	38979	.	-	.	ID=exon-NQY56_mgt02-1;Parent=rna-NQY56_mgt02;Dbxref=GeneID:73939707;gbkey=tRNA;gene=trnD-GUC;locus_tag=NQY56_mgt02;product=tRNA-Asp
+NC_065239.1	RefSeq	gene	42090	50081	.	+	.	ID=gene-NQY56_mgp26;Dbxref=GeneID:73939708;Name=nad4;gbkey=Gene;gene=nad4;gene_biotype=protein_coding;locus_tag=NQY56_mgp26
+NC_065239.1	RefSeq	CDS	42090	42550	.	+	0	ID=cds-YP_010438577.1;Parent=gene-NQY56_mgp26;Dbxref=GenBank:YP_010438577.1,GeneID:73939708;Name=YP_010438577.1;gbkey=CDS;gene=nad4;locus_tag=NQY56_mgp26;product=NADH dehydrogenase subunit 4;protein_id=YP_010438577.1
+NC_065239.1	RefSeq	CDS	43890	44404	.	+	1	ID=cds-YP_010438577.1;Parent=gene-NQY56_mgp26;Dbxref=GenBank:YP_010438577.1,GeneID:73939708;Name=YP_010438577.1;gbkey=CDS;gene=nad4;locus_tag=NQY56_mgp26;product=NADH dehydrogenase subunit 4;protein_id=YP_010438577.1
+NC_065239.1	RefSeq	CDS	47574	47996	.	+	2	ID=cds-YP_010438577.1;Parent=gene-NQY56_mgp26;Dbxref=GenBank:YP_010438577.1,GeneID:73939708;Name=YP_010438577.1;gbkey=CDS;gene=nad4;locus_tag=NQY56_mgp26;product=NADH dehydrogenase subunit 4;protein_id=YP_010438577.1
+NC_065239.1	RefSeq	CDS	49993	50081	.	+	2	ID=cds-YP_010438577.1;Parent=gene-NQY56_mgp26;Dbxref=GenBank:YP_010438577.1,GeneID:73939708;Name=YP_010438577.1;gbkey=CDS;gene=nad4;locus_tag=NQY56_mgp26;product=NADH dehydrogenase subunit 4;protein_id=YP_010438577.1
+NC_065239.1	RefSeq	gene	57978	58049	.	-	.	ID=gene-NQY56_mgt03;Dbxref=GeneID:73939709;Name=trnQ-UUG;gbkey=Gene;gene=trnQ-UUG;gene_biotype=tRNA;locus_tag=NQY56_mgt03
+NC_065239.1	RefSeq	tRNA	57978	58049	.	-	.	ID=rna-NQY56_mgt03;Parent=gene-NQY56_mgt03;Dbxref=GeneID:73939709;gbkey=tRNA;gene=trnQ-UUG;locus_tag=NQY56_mgt03;product=tRNA-Gln
+NC_065239.1	RefSeq	exon	57978	58049	.	-	.	ID=exon-NQY56_mgt03-1;Parent=rna-NQY56_mgt03;Dbxref=GeneID:73939709;gbkey=tRNA;gene=trnQ-UUG;locus_tag=NQY56_mgt03;product=tRNA-Gln
+NC_065239.1	RefSeq	gene	61406	61477	.	-	.	ID=gene-NQY56_mgt04;Dbxref=GeneID:73939710;Name=trnG-GCC;gbkey=Gene;gene=trnG-GCC;gene_biotype=tRNA;locus_tag=NQY56_mgt04
+NC_065239.1	RefSeq	tRNA	61406	61477	.	-	.	ID=rna-NQY56_mgt04;Parent=gene-NQY56_mgt04;Dbxref=GeneID:73939710;gbkey=tRNA;gene=trnG-GCC;locus_tag=NQY56_mgt04;product=tRNA-Gly
+NC_065239.1	RefSeq	exon	61406	61477	.	-	.	ID=exon-NQY56_mgt04-1;Parent=rna-NQY56_mgt04;Dbxref=GeneID:73939710;gbkey=tRNA;gene=trnG-GCC;locus_tag=NQY56_mgt04;product=tRNA-Gly
+NC_065239.1	RefSeq	gene	64072	64422	.	+	.	ID=gene-NQY56_mgp25;Dbxref=GeneID:73939711;Name=rps13;gbkey=Gene;gene=rps13;gene_biotype=protein_coding;locus_tag=NQY56_mgp25
+NC_065239.1	RefSeq	CDS	64072	64422	.	+	0	ID=cds-YP_010438578.1;Parent=gene-NQY56_mgp25;Dbxref=GenBank:YP_010438578.1,GeneID:73939711;Name=YP_010438578.1;gbkey=CDS;gene=rps13;locus_tag=NQY56_mgp25;product=ribosomal protein S13;protein_id=YP_010438578.1
+NC_065239.1	RefSeq	gene	69890	70119	.	+	.	ID=gene-NQY56_mgp30;Dbxref=GeneID:73939753;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=NQY56_mgp30;part=1
+NC_065239.1	RefSeq	gene	70947	72162	.	+	.	ID=gene-NQY56_mgp30;Dbxref=GeneID:73939753;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=NQY56_mgp30;part=2
+NC_065239.1	RefSeq	gene	4428	4449	.	+	.	ID=gene-NQY56_mgp30;Dbxref=GeneID:73939753;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=NQY56_mgp30;part=3
+NC_065239.1	RefSeq	gene	177600	177994	.	-	.	ID=gene-NQY56_mgp30;Dbxref=GeneID:73939753;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=NQY56_mgp30;part=4
+NC_065239.1	RefSeq	gene	176467	176616	.	-	.	ID=gene-NQY56_mgp30;Dbxref=GeneID:73939753;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=NQY56_mgp30;part=5
+NC_065239.1	RefSeq	CDS	69890	70119	.	+	0	ID=cds-YP_010438573.1;Parent=gene-NQY56_mgp30;Dbxref=GenBank:YP_010438573.1,GeneID:73939753;Name=YP_010438573.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=NQY56_mgp30;part=1;product=NADH dehydrogenase subunit 5;protein_id=YP_010438573.1
+NC_065239.1	RefSeq	CDS	70947	72162	.	+	1	ID=cds-YP_010438573.1;Parent=gene-NQY56_mgp30;Dbxref=GenBank:YP_010438573.1,GeneID:73939753;Name=YP_010438573.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=NQY56_mgp30;part=2;product=NADH dehydrogenase subunit 5;protein_id=YP_010438573.1
+NC_065239.1	RefSeq	CDS	4428	4449	.	+	0	ID=cds-YP_010438573.1;Parent=gene-NQY56_mgp30;Dbxref=GenBank:YP_010438573.1,GeneID:73939753;Name=YP_010438573.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=NQY56_mgp30;part=3;product=NADH dehydrogenase subunit 5;protein_id=YP_010438573.1
+NC_065239.1	RefSeq	CDS	177600	177994	.	-	2	ID=cds-YP_010438573.1;Parent=gene-NQY56_mgp30;Dbxref=GenBank:YP_010438573.1,GeneID:73939753;Name=YP_010438573.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=NQY56_mgp30;part=4;product=NADH dehydrogenase subunit 5;protein_id=YP_010438573.1
+NC_065239.1	RefSeq	CDS	176467	176616	.	-	0	ID=cds-YP_010438573.1;Parent=gene-NQY56_mgp30;Dbxref=GenBank:YP_010438573.1,GeneID:73939753;Name=YP_010438573.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=NQY56_mgp30;part=5;product=NADH dehydrogenase subunit 5;protein_id=YP_010438573.1
+NC_065239.1	RefSeq	gene	81292	81786	.	+	.	ID=gene-NQY56_mgp24;Dbxref=GeneID:73939712;Name=atp8;gbkey=Gene;gene=atp8;gene_biotype=protein_coding;locus_tag=NQY56_mgp24
+NC_065239.1	RefSeq	CDS	81292	81786	.	+	0	ID=cds-YP_010438579.1;Parent=gene-NQY56_mgp24;Dbxref=GenBank:YP_010438579.1,GeneID:73939712;Name=YP_010438579.1;gbkey=CDS;gene=atp8;locus_tag=NQY56_mgp24;product=ATP synthase F0 subunit 8;protein_id=YP_010438579.1
+NC_065239.1	RefSeq	gene	82661	83458	.	+	.	ID=gene-NQY56_mgp23;Dbxref=GeneID:73939713;Name=cox3;gbkey=Gene;gene=cox3;gene_biotype=protein_coding;locus_tag=NQY56_mgp23
+NC_065239.1	RefSeq	CDS	82661	83458	.	+	0	ID=cds-YP_010438580.1;Parent=gene-NQY56_mgp23;Dbxref=GenBank:YP_010438580.1,GeneID:73939713;Name=YP_010438580.1;gbkey=CDS;gene=cox3;locus_tag=NQY56_mgp23;product=cytochrome c oxidase subunit III;protein_id=YP_010438580.1
+NC_065239.1	RefSeq	gene	83386	83775	.	+	.	ID=gene-NQY56_mgp22;Dbxref=GeneID:73939714;Name=sdh4;gbkey=Gene;gene=sdh4;gene_biotype=protein_coding;locus_tag=NQY56_mgp22
+NC_065239.1	RefSeq	CDS	83386	83775	.	+	0	ID=cds-YP_010438581.1;Parent=gene-NQY56_mgp22;Dbxref=GenBank:YP_010438581.1,GeneID:73939714;Name=YP_010438581.1;gbkey=CDS;gene=sdh4;locus_tag=NQY56_mgp22;product=succinate dehydrogenase subunit 4;protein_id=YP_010438581.1
+NC_065239.1	RefSeq	gene	88068	88220	.	+	.	ID=gene-NQY56_mgp21;Dbxref=GeneID:73939704;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=NQY56_mgp21;part=1
+NC_065239.1	RefSeq	gene	89390	89781	.	+	.	ID=gene-NQY56_mgp21;Dbxref=GeneID:73939704;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=NQY56_mgp21;part=2
+NC_065239.1	RefSeq	gene	212367	212527	.	-	.	ID=gene-NQY56_mgp21;Dbxref=GeneID:73939704;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=NQY56_mgp21;part=3
+NC_065239.1	RefSeq	gene	210321	210893	.	-	.	ID=gene-NQY56_mgp21;Dbxref=GeneID:73939704;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=NQY56_mgp21;part=4
+NC_065239.1	RefSeq	gene	208688	208875	.	-	.	ID=gene-NQY56_mgp21;Dbxref=GeneID:73939704;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=NQY56_mgp21;part=5
+NC_065239.1	RefSeq	CDS	88068	88220	.	+	0	ID=cds-YP_010438582.1;Parent=gene-NQY56_mgp21;Dbxref=GenBank:YP_010438582.1,GeneID:73939704;Name=YP_010438582.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=NQY56_mgp21;part=1;product=NADH dehydrogenase subunit 2;protein_id=YP_010438582.1
+NC_065239.1	RefSeq	CDS	89390	89781	.	+	0	ID=cds-YP_010438582.1;Parent=gene-NQY56_mgp21;Dbxref=GenBank:YP_010438582.1,GeneID:73939704;Name=YP_010438582.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=NQY56_mgp21;part=2;product=NADH dehydrogenase subunit 2;protein_id=YP_010438582.1
+NC_065239.1	RefSeq	CDS	212367	212527	.	-	1	ID=cds-YP_010438582.1;Parent=gene-NQY56_mgp21;Dbxref=GenBank:YP_010438582.1,GeneID:73939704;Name=YP_010438582.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=NQY56_mgp21;part=3;product=NADH dehydrogenase subunit 2;protein_id=YP_010438582.1
+NC_065239.1	RefSeq	CDS	210321	210893	.	-	2	ID=cds-YP_010438582.1;Parent=gene-NQY56_mgp21;Dbxref=GenBank:YP_010438582.1,GeneID:73939704;Name=YP_010438582.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=NQY56_mgp21;part=4;product=NADH dehydrogenase subunit 2;protein_id=YP_010438582.1
+NC_065239.1	RefSeq	CDS	208688	208875	.	-	2	ID=cds-YP_010438582.1;Parent=gene-NQY56_mgp21;Dbxref=GenBank:YP_010438582.1,GeneID:73939704;Name=YP_010438582.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=NQY56_mgp21;part=5;product=NADH dehydrogenase subunit 2;protein_id=YP_010438582.1
+NC_065239.1	RefSeq	gene	92025	92097	.	+	.	ID=gene-NQY56_mgt05;Dbxref=GeneID:73939715;Name=trnM-CAU;gbkey=Gene;gene=trnM-CAU;gene_biotype=tRNA;locus_tag=NQY56_mgt05
+NC_065239.1	RefSeq	tRNA	92025	92097	.	+	.	ID=rna-NQY56_mgt05;Parent=gene-NQY56_mgt05;Dbxref=GeneID:73939715;gbkey=tRNA;gene=trnM-CAU;locus_tag=NQY56_mgt05;product=tRNA-Met
+NC_065239.1	RefSeq	exon	92025	92097	.	+	.	ID=exon-NQY56_mgt05-1;Parent=rna-NQY56_mgt05;Dbxref=GeneID:73939715;gbkey=tRNA;gene=trnM-CAU;locus_tag=NQY56_mgt05;product=tRNA-Met
+NC_065239.1	RefSeq	gene	96595	97605	.	+	.	ID=gene-NQY56_mgp20;Dbxref=GeneID:73939716;Name=cob;gbkey=Gene;gene=cob;gene_biotype=protein_coding;locus_tag=NQY56_mgp20
+NC_065239.1	RefSeq	CDS	96595	97605	.	+	0	ID=cds-YP_010438583.1;Parent=gene-NQY56_mgp20;Dbxref=GenBank:YP_010438583.1,GeneID:73939716;Name=YP_010438583.1;gbkey=CDS;gene=cob;locus_tag=NQY56_mgp20;product=cytochrome b;protein_id=YP_010438583.1
+NC_065239.1	RefSeq	gene	112126	112950	.	-	.	ID=gene-NQY56_mgp19;Dbxref=GeneID:73939717;Name=atp6;gbkey=Gene;gene=atp6;gene_biotype=protein_coding;locus_tag=NQY56_mgp19
+NC_065239.1	RefSeq	CDS	112126	112950	.	-	0	ID=cds-YP_010438584.1;Parent=gene-NQY56_mgp19;Dbxref=GenBank:YP_010438584.1,GeneID:73939717;Name=YP_010438584.1;Note=start codon is created by C to U RNA editing;exception=RNA editing;gbkey=CDS;gene=atp6;locus_tag=NQY56_mgp19;product=ATP synthase F0 subunit 6;protein_id=YP_010438584.1
+NC_065239.1	RefSeq	gene	123581	124510	.	+	.	ID=gene-NQY56_mgp18;Dbxref=GeneID:73939718;Name=ccmC;gbkey=Gene;gene=ccmC;gene_biotype=protein_coding;locus_tag=NQY56_mgp18
+NC_065239.1	RefSeq	CDS	123581	124510	.	+	0	ID=cds-YP_010438585.1;Parent=gene-NQY56_mgp18;Dbxref=GenBank:YP_010438585.1,GeneID:73939718;Name=YP_010438585.1;gbkey=CDS;gene=ccmC;locus_tag=NQY56_mgp18;product=cytochrome c biogenesis C;protein_id=YP_010438585.1
+NC_065239.1	RefSeq	gene	126423	126495	.	-	.	ID=gene-NQY56_mgt06;Dbxref=GeneID:73939719;Name=trnK-UUU;gbkey=Gene;gene=trnK-UUU;gene_biotype=tRNA;locus_tag=NQY56_mgt06
+NC_065239.1	RefSeq	tRNA	126423	126495	.	-	.	ID=rna-NQY56_mgt06;Parent=gene-NQY56_mgt06;Dbxref=GeneID:73939719;gbkey=tRNA;gene=trnK-UUU;locus_tag=NQY56_mgt06;product=tRNA-Lys
+NC_065239.1	RefSeq	exon	126423	126495	.	-	.	ID=exon-NQY56_mgt06-1;Parent=rna-NQY56_mgt06;Dbxref=GeneID:73939719;gbkey=tRNA;gene=trnK-UUU;locus_tag=NQY56_mgt06;product=tRNA-Lys
+NC_065239.1	RefSeq	gene	127353	127973	.	+	.	ID=gene-NQY56_mgp17;Dbxref=GeneID:73939720;Name=ccmB;gbkey=Gene;gene=ccmB;gene_biotype=protein_coding;locus_tag=NQY56_mgp17
+NC_065239.1	RefSeq	CDS	127353	127973	.	+	0	ID=cds-YP_010438586.1;Parent=gene-NQY56_mgp17;Dbxref=GenBank:YP_010438586.1,GeneID:73939720;Name=YP_010438586.1;gbkey=CDS;gene=ccmB;locus_tag=NQY56_mgp17;product=CcmB;protein_id=YP_010438586.1
+NC_065239.1	RefSeq	gene	129173	129245	.	+	.	ID=gene-NQY56_mgt07;Dbxref=GeneID:73939721;Name=trnS-GCU;gbkey=Gene;gene=trnS-GCU;gene_biotype=tRNA;locus_tag=NQY56_mgt07
+NC_065239.1	RefSeq	tRNA	129173	129245	.	+	.	ID=rna-NQY56_mgt07;Parent=gene-NQY56_mgt07;Dbxref=GeneID:73939721;gbkey=tRNA;gene=trnS-GCU;locus_tag=NQY56_mgt07;product=tRNA-Ser
+NC_065239.1	RefSeq	exon	129173	129245	.	+	.	ID=exon-NQY56_mgt07-1;Parent=rna-NQY56_mgt07;Dbxref=GeneID:73939721;gbkey=tRNA;gene=trnS-GCU;locus_tag=NQY56_mgt07;product=tRNA-Ser
+NC_065239.1	RefSeq	gene	129593	129666	.	+	.	ID=gene-NQY56_mgt08;Dbxref=GeneID:73939722;Name=trnF-GAA;gbkey=Gene;gene=trnF-GAA;gene_biotype=tRNA;locus_tag=NQY56_mgt08
+NC_065239.1	RefSeq	tRNA	129593	129666	.	+	.	ID=rna-NQY56_mgt08;Parent=gene-NQY56_mgt08;Dbxref=GeneID:73939722;gbkey=tRNA;gene=trnF-GAA;locus_tag=NQY56_mgt08;product=tRNA-Phe
+NC_065239.1	RefSeq	exon	129593	129666	.	+	.	ID=exon-NQY56_mgt08-1;Parent=rna-NQY56_mgt08;Dbxref=GeneID:73939722;gbkey=tRNA;gene=trnF-GAA;locus_tag=NQY56_mgt08;product=tRNA-Phe
+NC_065239.1	RefSeq	gene	129882	129956	.	+	.	ID=gene-NQY56_mgt09;Dbxref=GeneID:73939723;Name=trnP-UGG;gbkey=Gene;gene=trnP-UGG;gene_biotype=tRNA;locus_tag=NQY56_mgt09
+NC_065239.1	RefSeq	tRNA	129882	129956	.	+	.	ID=rna-NQY56_mgt09;Parent=gene-NQY56_mgt09;Dbxref=GeneID:73939723;gbkey=tRNA;gene=trnP-UGG;locus_tag=NQY56_mgt09;product=tRNA-Pro
+NC_065239.1	RefSeq	exon	129882	129956	.	+	.	ID=exon-NQY56_mgt09-1;Parent=rna-NQY56_mgt09;Dbxref=GeneID:73939723;gbkey=tRNA;gene=trnP-UGG;locus_tag=NQY56_mgt09;product=tRNA-Pro
+NC_065239.1	RefSeq	gene	136552	136857	.	+	.	ID=gene-NQY56_mgp16;Dbxref=GeneID:73939724;Name=atp9;gbkey=Gene;gene=atp9;gene_biotype=protein_coding;locus_tag=NQY56_mgp16
+NC_065239.1	RefSeq	CDS	136552	136857	.	+	0	ID=cds-YP_010438587.1;Parent=gene-NQY56_mgp16;Dbxref=GenBank:YP_010438587.1,GeneID:73939724;Name=YP_010438587.1;gbkey=CDS;gene=atp9;locus_tag=NQY56_mgp16;product=ATP synthase F0 subunit 9;protein_id=YP_010438587.1
+NC_065239.1	RefSeq	gene	151119	151176	.	-	.	ID=gene-NQY56_mgt10;Dbxref=GeneID:73939725;Name=trnS-CGA;gbkey=Gene;gene=trnS-CGA;gene_biotype=tRNA;locus_tag=NQY56_mgt10
+NC_065239.1	RefSeq	tRNA	151119	151176	.	-	.	ID=rna-NQY56_mgt10;Parent=gene-NQY56_mgt10;Dbxref=GeneID:73939725;gbkey=tRNA;gene=trnS-CGA;locus_tag=NQY56_mgt10;product=tRNA-Ser
+NC_065239.1	RefSeq	exon	151119	151176	.	-	.	ID=exon-NQY56_mgt10-1;Parent=rna-NQY56_mgt10;Dbxref=GeneID:73939725;gbkey=tRNA;gene=trnS-CGA;locus_tag=NQY56_mgt10;product=tRNA-Ser
+NC_065239.1	RefSeq	gene	162093	162164	.	-	.	ID=gene-NQY56_mgt11;Dbxref=GeneID:73939726;Name=trnE-UUC;gbkey=Gene;gene=trnE-UUC;gene_biotype=tRNA;locus_tag=NQY56_mgt11
+NC_065239.1	RefSeq	tRNA	162093	162164	.	-	.	ID=rna-NQY56_mgt11;Parent=gene-NQY56_mgt11;Dbxref=GeneID:73939726;gbkey=tRNA;gene=trnE-UUC;locus_tag=NQY56_mgt11;product=tRNA-Glu
+NC_065239.1	RefSeq	exon	162093	162164	.	-	.	ID=exon-NQY56_mgt11-1;Parent=rna-NQY56_mgt11;Dbxref=GeneID:73939726;gbkey=tRNA;gene=trnE-UUC;locus_tag=NQY56_mgt11;product=tRNA-Glu
+NC_065239.1	RefSeq	gene	170377	170949	.	+	.	ID=gene-NQY56_mgp15;Dbxref=GeneID:73939727;Name=nad9;gbkey=Gene;gene=nad9;gene_biotype=protein_coding;locus_tag=NQY56_mgp15
+NC_065239.1	RefSeq	CDS	170377	170949	.	+	0	ID=cds-YP_010438588.1;Parent=gene-NQY56_mgp15;Dbxref=GenBank:YP_010438588.1,GeneID:73939727;Name=YP_010438588.1;gbkey=CDS;gene=nad9;locus_tag=NQY56_mgp15;product=NADH dehydrogenase subunit 9;protein_id=YP_010438588.1
+NC_065239.1	RefSeq	gene	171679	171752	.	+	.	ID=gene-NQY56_mgt12;Dbxref=GeneID:73939728;Name=trnP-UGG;gbkey=Gene;gene=trnP-UGG;gene_biotype=tRNA;locus_tag=NQY56_mgt12
+NC_065239.1	RefSeq	tRNA	171679	171752	.	+	.	ID=rna-NQY56_mgt12;Parent=gene-NQY56_mgt12;Dbxref=GeneID:73939728;gbkey=tRNA;gene=trnP-UGG;locus_tag=NQY56_mgt12;product=tRNA-Pro
+NC_065239.1	RefSeq	exon	171679	171752	.	+	.	ID=exon-NQY56_mgt12-1;Parent=rna-NQY56_mgt12;Dbxref=GeneID:73939728;gbkey=tRNA;gene=trnP-UGG;locus_tag=NQY56_mgt12;product=tRNA-Pro
+NC_065239.1	RefSeq	gene	171848	171921	.	+	.	ID=gene-NQY56_mgt13;Dbxref=GeneID:73939729;Name=trnW-CCA;gbkey=Gene;gene=trnW-CCA;gene_biotype=tRNA;locus_tag=NQY56_mgt13
+NC_065239.1	RefSeq	tRNA	171848	171921	.	+	.	ID=rna-NQY56_mgt13;Parent=gene-NQY56_mgt13;Dbxref=GeneID:73939729;gbkey=tRNA;gene=trnW-CCA;locus_tag=NQY56_mgt13;product=tRNA-Trp
+NC_065239.1	RefSeq	exon	171848	171921	.	+	.	ID=exon-NQY56_mgt13-1;Parent=rna-NQY56_mgt13;Dbxref=GeneID:73939729;gbkey=tRNA;gene=trnW-CCA;locus_tag=NQY56_mgt13;product=tRNA-Trp
+NC_065239.1	RefSeq	gene	175224	175297	.	-	.	ID=gene-NQY56_mgt14;Dbxref=GeneID:73939730;Name=trnH-GUG;gbkey=Gene;gene=trnH-GUG;gene_biotype=tRNA;locus_tag=NQY56_mgt14
+NC_065239.1	RefSeq	tRNA	175224	175297	.	-	.	ID=rna-NQY56_mgt14;Parent=gene-NQY56_mgt14;Dbxref=GeneID:73939730;gbkey=tRNA;gene=trnH-GUG;locus_tag=NQY56_mgt14;product=tRNA-His
+NC_065239.1	RefSeq	exon	175224	175297	.	-	.	ID=exon-NQY56_mgt14-1;Parent=rna-NQY56_mgt14;Dbxref=GeneID:73939730;gbkey=tRNA;gene=trnH-GUG;locus_tag=NQY56_mgt14;product=tRNA-His
+NC_065239.1	RefSeq	gene	191103	191822	.	-	.	ID=gene-NQY56_mgp14;Dbxref=GeneID:73939731;Name=mttB;gbkey=Gene;gene=mttB;gene_biotype=protein_coding;locus_tag=NQY56_mgp14
+NC_065239.1	RefSeq	CDS	191103	191822	.	-	0	ID=cds-YP_010438589.1;Parent=gene-NQY56_mgp14;Dbxref=GenBank:YP_010438589.1,GeneID:73939731;Name=YP_010438589.1;gbkey=CDS;gene=mttB;locus_tag=NQY56_mgp14;product=Sec-independent protein translocase protein;protein_id=YP_010438589.1
+NC_065239.1	RefSeq	gene	204489	204561	.	-	.	ID=gene-NQY56_mgt15;Dbxref=GeneID:73939732;Name=trnT-UGU;gbkey=Gene;gene=trnT-UGU;gene_biotype=tRNA;locus_tag=NQY56_mgt15
+NC_065239.1	RefSeq	tRNA	204489	204561	.	-	.	ID=rna-NQY56_mgt15;Parent=gene-NQY56_mgt15;Dbxref=GeneID:73939732;gbkey=tRNA;gene=trnT-UGU;locus_tag=NQY56_mgt15;product=tRNA-Thr
+NC_065239.1	RefSeq	exon	204489	204561	.	-	.	ID=exon-NQY56_mgt15-1;Parent=rna-NQY56_mgt15;Dbxref=GeneID:73939732;gbkey=tRNA;gene=trnT-UGU;locus_tag=NQY56_mgt15;product=tRNA-Thr
+NC_065239.1	RefSeq	gene	213004	213086	.	-	.	ID=gene-NQY56_mgt16;Dbxref=GeneID:73939733;Name=trnY-GUA;gbkey=Gene;gene=trnY-GUA;gene_biotype=tRNA;locus_tag=NQY56_mgt16
+NC_065239.1	RefSeq	tRNA	213004	213086	.	-	.	ID=rna-NQY56_mgt16;Parent=gene-NQY56_mgt16;Dbxref=GeneID:73939733;gbkey=tRNA;gene=trnY-GUA;locus_tag=NQY56_mgt16;product=tRNA-Tyr
+NC_065239.1	RefSeq	exon	213004	213086	.	-	.	ID=exon-NQY56_mgt16-1;Parent=rna-NQY56_mgt16;Dbxref=GeneID:73939733;gbkey=tRNA;gene=trnY-GUA;locus_tag=NQY56_mgt16;product=tRNA-Tyr
+NC_065239.1	RefSeq	gene	213981	214052	.	-	.	ID=gene-NQY56_mgt17;Dbxref=GeneID:73939734;Name=trnN-GUU;gbkey=Gene;gene=trnN-GUU;gene_biotype=tRNA;locus_tag=NQY56_mgt17
+NC_065239.1	RefSeq	tRNA	213981	214052	.	-	.	ID=rna-NQY56_mgt17;Parent=gene-NQY56_mgt17;Dbxref=GeneID:73939734;gbkey=tRNA;gene=trnN-GUU;locus_tag=NQY56_mgt17;product=tRNA-Asn
+NC_065239.1	RefSeq	exon	213981	214052	.	-	.	ID=exon-NQY56_mgt17-1;Parent=rna-NQY56_mgt17;Dbxref=GeneID:73939734;gbkey=tRNA;gene=trnN-GUU;locus_tag=NQY56_mgt17;product=tRNA-Asn
+NC_065239.1	RefSeq	gene	215658	215728	.	-	.	ID=gene-NQY56_mgt18;Dbxref=GeneID:73939735;Name=trnC-GCA;gbkey=Gene;gene=trnC-GCA;gene_biotype=tRNA;locus_tag=NQY56_mgt18
+NC_065239.1	RefSeq	tRNA	215658	215728	.	-	.	ID=rna-NQY56_mgt18;Parent=gene-NQY56_mgt18;Dbxref=GeneID:73939735;gbkey=tRNA;gene=trnC-GCA;locus_tag=NQY56_mgt18;product=tRNA-Cys
+NC_065239.1	RefSeq	exon	215658	215728	.	-	.	ID=exon-NQY56_mgt18-1;Parent=rna-NQY56_mgt18;Dbxref=GeneID:73939735;gbkey=tRNA;gene=trnC-GCA;locus_tag=NQY56_mgt18;product=tRNA-Cys
+NC_065239.1	RefSeq	gene	218495	218568	.	-	.	ID=gene-NQY56_mgt19;Dbxref=GeneID:73939736;Name=trnM-CAU;gbkey=Gene;gene=trnM-CAU;gene_biotype=tRNA;locus_tag=NQY56_mgt19
+NC_065239.1	RefSeq	tRNA	218495	218568	.	-	.	ID=rna-NQY56_mgt19;Parent=gene-NQY56_mgt19;Dbxref=GeneID:73939736;gbkey=tRNA;gene=trnM-CAU;locus_tag=NQY56_mgt19;product=tRNA-Met
+NC_065239.1	RefSeq	exon	218495	218568	.	-	.	ID=exon-NQY56_mgt19-1;Parent=rna-NQY56_mgt19;Dbxref=GeneID:73939736;gbkey=tRNA;gene=trnM-CAU;locus_tag=NQY56_mgt19;product=tRNA-Met
+NC_065239.1	RefSeq	gene	222166	224415	.	-	.	ID=gene-NQY56_mgp13;Dbxref=GeneID:73939737;Name=ccmFc;gbkey=Gene;gene=ccmFc;gene_biotype=protein_coding;locus_tag=NQY56_mgp13
+NC_065239.1	RefSeq	CDS	223654	224415	.	-	0	ID=cds-YP_010438590.1;Parent=gene-NQY56_mgp13;Dbxref=GenBank:YP_010438590.1,GeneID:73939737;Name=YP_010438590.1;gbkey=CDS;gene=ccmFc;locus_tag=NQY56_mgp13;product=cytochrome c biogenesis FC;protein_id=YP_010438590.1
+NC_065239.1	RefSeq	CDS	222166	222744	.	-	0	ID=cds-YP_010438590.1;Parent=gene-NQY56_mgp13;Dbxref=GenBank:YP_010438590.1,GeneID:73939737;Name=YP_010438590.1;gbkey=CDS;gene=ccmFc;locus_tag=NQY56_mgp13;product=cytochrome c biogenesis FC;protein_id=YP_010438590.1
+NC_065239.1	RefSeq	gene	226208	229583	.	-	.	ID=gene-NQY56_mgp12;Dbxref=GeneID:73939738;Name=rps3;gbkey=Gene;gene=rps3;gene_biotype=protein_coding;locus_tag=NQY56_mgp12
+NC_065239.1	RefSeq	CDS	229510	229583	.	-	0	ID=cds-YP_010438591.1;Parent=gene-NQY56_mgp12;Dbxref=GenBank:YP_010438591.1,GeneID:73939738;Name=YP_010438591.1;gbkey=CDS;gene=rps3;locus_tag=NQY56_mgp12;product=ribosomal protein S3;protein_id=YP_010438591.1
+NC_065239.1	RefSeq	CDS	226208	227804	.	-	1	ID=cds-YP_010438591.1;Parent=gene-NQY56_mgp12;Dbxref=GenBank:YP_010438591.1,GeneID:73939738;Name=YP_010438591.1;gbkey=CDS;gene=rps3;locus_tag=NQY56_mgp12;product=ribosomal protein S3;protein_id=YP_010438591.1
+NC_065239.1	RefSeq	gene	233684	234472	.	+	.	ID=gene-NQY56_mgp11;Dbxref=GeneID:73939739;Name=cox2;gbkey=Gene;gene=cox2;gene_biotype=protein_coding;locus_tag=NQY56_mgp11
+NC_065239.1	RefSeq	CDS	233684	234472	.	+	0	ID=cds-YP_010438592.1;Parent=gene-NQY56_mgp11;Dbxref=GenBank:YP_010438592.1,GeneID:73939739;Name=YP_010438592.1;gbkey=CDS;gene=cox2;locus_tag=NQY56_mgp11;product=cytochrome c oxidase subunit II;protein_id=YP_010438592.1
+NC_065239.1	RefSeq	gene	245218	246258	.	+	.	ID=gene-NQY56_mgp10;Dbxref=GeneID:73939740;Name=rps4;gbkey=Gene;gene=rps4;gene_biotype=protein_coding;locus_tag=NQY56_mgp10
+NC_065239.1	RefSeq	CDS	245218	246258	.	+	0	ID=cds-YP_010438593.1;Parent=gene-NQY56_mgp10;Dbxref=GenBank:YP_010438593.1,GeneID:73939740;Name=YP_010438593.1;gbkey=CDS;gene=rps4;locus_tag=NQY56_mgp10;product=ribosomal protein S4;protein_id=YP_010438593.1
+NC_065239.1	RefSeq	gene	246876	247493	.	+	.	ID=gene-NQY56_mgp09;Dbxref=GeneID:73939741;Name=nad6;gbkey=Gene;gene=nad6;gene_biotype=protein_coding;locus_tag=NQY56_mgp09
+NC_065239.1	RefSeq	CDS	246876	247493	.	+	0	ID=cds-YP_010438594.1;Parent=gene-NQY56_mgp09;Dbxref=GenBank:YP_010438594.1,GeneID:73939741;Name=YP_010438594.1;gbkey=CDS;gene=nad6;locus_tag=NQY56_mgp09;product=NADH dehydrogenase subunit 6;protein_id=YP_010438594.1
+NC_065239.1	RefSeq	gene	248438	251295	.	-	.	ID=gene-NQY56_mgr01;Dbxref=GeneID:73939742;Name=26rrn;gbkey=Gene;gene=26rrn;gene_biotype=rRNA;locus_tag=NQY56_mgr01
+NC_065239.1	RefSeq	rRNA	248438	251295	.	-	.	ID=rna-NQY56_mgr01;Parent=gene-NQY56_mgr01;Dbxref=GeneID:73939742;gbkey=rRNA;gene=26rrn;locus_tag=NQY56_mgr01;product=26S ribosomal RNA
+NC_065239.1	RefSeq	exon	248438	251295	.	-	.	ID=exon-NQY56_mgr01-1;Parent=rna-NQY56_mgr01;Dbxref=GeneID:73939742;gbkey=rRNA;gene=26rrn;locus_tag=NQY56_mgr01;product=26S ribosomal RNA
+NC_065239.1	RefSeq	gene	251420	251493	.	+	.	ID=gene-NQY56_mgt20;Dbxref=GeneID:73939743;Name=trnM-CAU;gbkey=Gene;gene=trnM-CAU;gene_biotype=tRNA;locus_tag=NQY56_mgt20
+NC_065239.1	RefSeq	tRNA	251420	251493	.	+	.	ID=rna-NQY56_mgt20;Parent=gene-NQY56_mgt20;Dbxref=GeneID:73939743;gbkey=tRNA;gene=trnM-CAU;locus_tag=NQY56_mgt20;product=tRNA-Met
+NC_065239.1	RefSeq	exon	251420	251493	.	+	.	ID=exon-NQY56_mgt20-1;Parent=rna-NQY56_mgt20;Dbxref=GeneID:73939743;gbkey=tRNA;gene=trnM-CAU;locus_tag=NQY56_mgt20;product=tRNA-Met
+NC_065239.1	RefSeq	gene	257074	258606	.	+	.	ID=gene-NQY56_mgp08;Dbxref=GeneID:73939745;Name=atp1;gbkey=Gene;gene=atp1;gene_biotype=protein_coding;locus_tag=NQY56_mgp08
+NC_065239.1	RefSeq	CDS	257074	258606	.	+	0	ID=cds-YP_010438595.1;Parent=gene-NQY56_mgp08;Dbxref=GenBank:YP_010438595.1,GeneID:73939745;Name=YP_010438595.1;gbkey=CDS;gene=atp1;locus_tag=NQY56_mgp08;product=ATPase subunit 1;protein_id=YP_010438595.1
+NC_065239.1	RefSeq	gene	266983	268950	.	-	.	ID=gene-NQY56_mgp07;Dbxref=GeneID:73939746;Name=matR;gbkey=Gene;gene=matR;gene_biotype=protein_coding;locus_tag=NQY56_mgp07
+NC_065239.1	RefSeq	CDS	266983	268950	.	-	0	ID=cds-YP_010438596.1;Parent=gene-NQY56_mgp07;Dbxref=GenBank:YP_010438596.1,GeneID:73939746;Name=YP_010438596.1;gbkey=CDS;gene=matR;locus_tag=NQY56_mgp07;product=maturase R;protein_id=YP_010438596.1
+NC_065239.1	RefSeq	gene	282904	283341	.	-	.	ID=gene-NQY56_mgp06;Dbxref=GeneID:73939747;Name=rps7;gbkey=Gene;gene=rps7;gene_biotype=protein_coding;locus_tag=NQY56_mgp06
+NC_065239.1	RefSeq	CDS	282904	283341	.	-	0	ID=cds-YP_010438597.1;Parent=gene-NQY56_mgp06;Dbxref=GenBank:YP_010438597.1,GeneID:73939747;Name=YP_010438597.1;gbkey=CDS;gene=rps7;locus_tag=NQY56_mgp06;product=ribosomal protein S7;protein_id=YP_010438597.1
+NC_065239.1	RefSeq	gene	284044	284634	.	-	.	ID=gene-NQY56_mgp05;Dbxref=GeneID:73939748;Name=rps1;gbkey=Gene;gene=rps1;gene_biotype=protein_coding;locus_tag=NQY56_mgp05
+NC_065239.1	RefSeq	CDS	284044	284634	.	-	0	ID=cds-YP_010438598.1;Parent=gene-NQY56_mgp05;Dbxref=GenBank:YP_010438598.1,GeneID:73939748;Name=YP_010438598.1;gbkey=CDS;gene=rps1;locus_tag=NQY56_mgp05;product=ribosomal protein S1;protein_id=YP_010438598.1
+NC_065239.1	RefSeq	gene	287430	287786	.	+	.	ID=gene-NQY56_mgp04;Dbxref=GeneID:73939749;Name=nad3;gbkey=Gene;gene=nad3;gene_biotype=protein_coding;locus_tag=NQY56_mgp04
+NC_065239.1	RefSeq	CDS	287430	287786	.	+	0	ID=cds-YP_010438599.1;Parent=gene-NQY56_mgp04;Dbxref=GenBank:YP_010438599.1,GeneID:73939749;Name=YP_010438599.1;gbkey=CDS;gene=nad3;locus_tag=NQY56_mgp04;product=NADH dehydrogenase subunit 3;protein_id=YP_010438599.1
+NC_065239.1	RefSeq	gene	297275	297577	.	+	.	ID=gene-NQY56_mgp03;Dbxref=GeneID:73939750;Name=nad4L;gbkey=Gene;gene=nad4L;gene_biotype=protein_coding;locus_tag=NQY56_mgp03
+NC_065239.1	RefSeq	CDS	297275	297577	.	+	0	ID=cds-YP_010438600.1;Parent=gene-NQY56_mgp03;Dbxref=GenBank:YP_010438600.1,GeneID:73939750;Name=YP_010438600.1;Note=start codon is created by C to U RNA editing;exception=RNA editing;gbkey=CDS;gene=nad4L;locus_tag=NQY56_mgp03;product=NADH dehydrogenase subunit 4L;protein_id=YP_010438600.1
+NC_065239.1	RefSeq	gene	297725	298285	.	+	.	ID=gene-NQY56_mgp02;Dbxref=GeneID:73939751;Name=atp4;gbkey=Gene;gene=atp4;gene_biotype=protein_coding;locus_tag=NQY56_mgp02
+NC_065239.1	RefSeq	CDS	297725	298285	.	+	0	ID=cds-YP_010438601.1;Parent=gene-NQY56_mgp02;Dbxref=GenBank:YP_010438601.1,GeneID:73939751;Name=YP_010438601.1;gbkey=CDS;gene=atp4;locus_tag=NQY56_mgp02;product=ATP synthase F0 subunit 4;protein_id=YP_010438601.1
+NC_065239.1	RefSeq	gene	299211	302415	.	+	.	ID=gene-NQY56_mgp01;Dbxref=GeneID:73939752;Name=nad7;gbkey=Gene;gene=nad7;gene_biotype=protein_coding;locus_tag=NQY56_mgp01
+NC_065239.1	RefSeq	CDS	299211	299353	.	+	0	ID=cds-YP_010438602.1;Parent=gene-NQY56_mgp01;Dbxref=GenBank:YP_010438602.1,GeneID:73939752;Name=YP_010438602.1;gbkey=CDS;gene=nad7;locus_tag=NQY56_mgp01;product=NADH dehydrogenase subunit 7;protein_id=YP_010438602.1
+NC_065239.1	RefSeq	CDS	300230	300298	.	+	1	ID=cds-YP_010438602.1;Parent=gene-NQY56_mgp01;Dbxref=GenBank:YP_010438602.1,GeneID:73939752;Name=YP_010438602.1;gbkey=CDS;gene=nad7;locus_tag=NQY56_mgp01;product=NADH dehydrogenase subunit 7;protein_id=YP_010438602.1
+NC_065239.1	RefSeq	CDS	301443	302415	.	+	1	ID=cds-YP_010438602.1;Parent=gene-NQY56_mgp01;Dbxref=GenBank:YP_010438602.1,GeneID:73939752;Name=YP_010438602.1;gbkey=CDS;gene=nad7;locus_tag=NQY56_mgp01;product=NADH dehydrogenase subunit 7;protein_id=YP_010438602.1
+

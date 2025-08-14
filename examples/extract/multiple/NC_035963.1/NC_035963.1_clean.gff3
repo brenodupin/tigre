@@ -1,0 +1,74 @@
+##gff-version 3
+#!gff-spec-version 1.26
+#!processor TIGRE clean.py
+##sequence-region NC_035963.1 1 446257
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=4081
+NC_035963.1	RefSeq	region	1	446257	.	+	.	ID=NC_035963.1:1..446257;Dbxref=taxon:4081;Is_circular=true;Name=MT;bio-material=TGRC:LA1421;gb-synonym=Lycopersicon esculentum;gbkey=Src;genome=mitochondrion;mol_type=genomic DNA
+NC_035963.1	RefSeq	overlapping_feature_set	2660	5827	.	-	.	name_left=MIT-RPL16;source_left=NC_035963.1|gene|2660|3175|-|gene-CQW56_mgp01;name_right=MIT-RPS3;source_right=NC_035963.1|gene|3066|5827|-|gene-CQW56_mgp02;
+NC_035963.1	RefSeq	gene	5841	6125	.	-	.	name=MIT-RPS19;source=NC_035963.1|gene|5841|6125|-|gene-CQW56_mgp03;
+NC_035963.1	RefSeq	overlapping_feature_set	10105	10176	.	-	.	name_left=MIT-TQ;source_left=NC_035963.1|gene|10105|10176|-|gene-CQW56_mgt01;name_right=MIT-TQ;source_right=NC_035963.1|gene|10105|10176|-|gene-CQW56_mgt01;
+NC_035963.1	RefSeq	overlapping_feature_set	13452	13523	.	-	.	name_left=MIT-TG;source_left=NC_035963.1|gene|13452|13523|-|gene-CQW56_mgt02;name_right=MIT-TG;source_right=NC_035963.1|gene|13452|13523|-|gene-CQW56_mgt02;
+NC_035963.1	RefSeq	overlapping_feature_set	25379	25451	.	+	.	name_left=MIT-TM;source_left=NC_035963.1|gene|25379|25451|+|gene-CQW56_mgt03;name_right=MIT-TM;source_right=NC_035963.1|gene|25379|25451|+|gene-CQW56_mgt03;
+NC_035963.1	RefSeq	gene	26852	27208	.	+	.	name=MIT-ND3;source=NC_035963.1|gene|26852|27208|+|gene-CQW56_mgp40;
+NC_035963.1	RefSeq	gene	27257	27628	.	+	.	name=MIT-RPS12;source=NC_035963.1|gene|27257|27628|+|gene-CQW56_mgp39;
+NC_035963.1	RefSeq	gene	42545	43093	.	+	.	name=MIT-RPL5;source=NC_035963.1|gene|42545|43093|+|gene-CQW56_mgp38;
+NC_035963.1	RefSeq	gene	48779	49375	.	-	.	name=MIT-ATP4;source=NC_035963.1|gene|48779|49375|-|gene-CQW56_mgp36;
+NC_035963.1	RefSeq	gene	49564	49866	.	-	.	name=MIT-ND4L;source=NC_035963.1|gene|49564|49866|-|gene-CQW56_mgp35;
+NC_035963.1	RefSeq	gene	54546	55145	.	+	.	name=MIT-RPS1;source=NC_035963.1|gene|54546|55145|+|gene-CQW56_mgp34;
+NC_035963.1	RefSeq	gene	56700	57170	.	+	.	name=MIT-ATP8;source=NC_035963.1|gene|56700|57170|+|gene-CQW56_mgp33;
+NC_035963.1	RefSeq	overlapping_feature_set	57803	58941	.	+	.	name_left=MIT-CO3;source_left=NC_035963.1|gene|57803|58600|+|gene-CQW56_mgp32;name_right=MIT-SDH4;source_right=NC_035963.1|gene|58528|58941|+|gene-CQW56_mgp31;
+NC_035963.1	RefSeq	overlapping_feature_set	66101	66187	.	-	.	name_left=MIT-TS1|2;source_left=NC_035963.1|gene|66101|66187|-|gene-CQW56_mgt04;name_right=MIT-TS1|2;source_right=NC_035963.1|gene|66101|66187|-|gene-CQW56_mgt04;
+NC_035963.1	RefSeq	overlapping_feature_set	66875	66948	.	-	.	name_left=MIT-TD;source_left=NC_035963.1|gene|66875|66948|-|gene-CQW56_mgt05;name_right=MIT-TD;source_right=NC_035963.1|gene|66875|66948|-|gene-CQW56_mgt05;
+NC_035963.1	RefSeq	overlapping_feature_set	73392	73478	.	+	.	name_left=MIT-TS1|2;source_left=NC_035963.1|gene|73392|73478|+|gene-CQW56_mgt06;name_right=MIT-TS1|2;source_right=NC_035963.1|gene|73392|73478|+|gene-CQW56_mgt06;
+NC_035963.1	RefSeq	gene	74572	75753	.	+	.	name=MIT-COB;source=NC_035963.1|gene|74572|75753|+|gene-CQW56_mgp30;
+NC_035963.1	RefSeq	overlapping_feature_set	80687	80758	.	-	.	name_left=MIT-TN;source_left=NC_035963.1|gene|80687|80758|-|gene-CQW56_mgt07;name_right=MIT-TN;source_right=NC_035963.1|gene|80687|80758|-|gene-CQW56_mgt07;
+NC_035963.1	RefSeq	gene	100079	102344	.	+	.	name=MIT-CCMFC;source=NC_035963.1|gene|100079|102344|+|gene-CQW56_mgp29;
+NC_035963.1	RefSeq	overlapping_feature_set	111144	111217	.	-	.	name_left=MIT-TL1|2;source_left=NC_035963.1|gene|111144|111217|-|gene-CQW56_mgt08;name_right=MIT-TL1|2;source_right=NC_035963.1|gene|111144|111217|-|gene-CQW56_mgt08;
+NC_035963.1	RefSeq	gene	111265	112017	.	-	.	name=MIT-CCMC;source=NC_035963.1|gene|111265|112017|-|gene-CQW56_mgp28;
+NC_035963.1	RefSeq	overlapping_feature_set	115234	118401	.	-	.	name_left=MIT-RPL16;source_left=NC_035963.1|gene|115234|115749|-|gene-CQW56_mgp27;name_right=MIT-RPS3;source_right=NC_035963.1|gene|115640|118401|-|gene-CQW56_mgp26;
+NC_035963.1	RefSeq	gene	118415	118699	.	-	.	name=MIT-RPS19;source=NC_035963.1|gene|118415|118699|-|gene-CQW56_mgp25;
+NC_035963.1	RefSeq	overlapping_feature_set	122679	122750	.	-	.	name_left=MIT-TQ;source_left=NC_035963.1|gene|122679|122750|-|gene-CQW56_mgt09;name_right=MIT-TQ;source_right=NC_035963.1|gene|122679|122750|-|gene-CQW56_mgt09;
+NC_035963.1	RefSeq	overlapping_feature_set	126026	126097	.	-	.	name_left=MIT-TG;source_left=NC_035963.1|gene|126026|126097|-|gene-CQW56_mgt10;name_right=MIT-TG;source_right=NC_035963.1|gene|126026|126097|-|gene-CQW56_mgt10;
+NC_035963.1	RefSeq	overlapping_feature_set	137953	138025	.	+	.	name_left=MIT-TM;source_left=NC_035963.1|gene|137953|138025|+|gene-CQW56_mgt11;name_right=MIT-TM;source_right=NC_035963.1|gene|137953|138025|+|gene-CQW56_mgt11;
+NC_035963.1	RefSeq	overlapping_feature_set	144731	144801	.	+	.	name_left=MIT-TC;source_left=NC_035963.1|gene|144731|144801|+|gene-CQW56_mgt12;name_right=MIT-TC;source_right=NC_035963.1|gene|144731|144801|+|gene-CQW56_mgt12;
+NC_035963.1	RefSeq	overlapping_feature_set	146946	147017	.	+	.	name_left=MIT-TN;source_left=NC_035963.1|gene|146946|147017|+|gene-CQW56_mgt13;name_right=MIT-TN;source_right=NC_035963.1|gene|146946|147017|+|gene-CQW56_mgt13;
+NC_035963.1	RefSeq	overlapping_feature_set	147553	147635	.	+	.	name_left=MIT-TY;source_left=NC_035963.1|gene|147553|147635|+|gene-CQW56_mgt14;name_right=MIT-TY;source_right=NC_035963.1|gene|147553|147635|+|gene-CQW56_mgt14;
+NC_035963.1	RefSeq	overlapping_feature_set	165876	165949	.	+	.	name_left=MIT-TM;source_left=NC_035963.1|gene|165876|165949|+|gene-CQW56_mgt15;name_right=MIT-TM;source_right=NC_035963.1|gene|165876|165949|+|gene-CQW56_mgt15;
+NC_035963.1	RefSeq	overlapping_feature_set	166528	170022	.	+	.	name_left=MIT-RNR26;source_left=NC_035963.1|gene|166528|170022|+|gene-CQW56_mgr05;name_right=MIT-RNR26;source_right=NC_035963.1|gene|166528|170022|+|gene-CQW56_mgr05;
+NC_035963.1	RefSeq	gene	171280	172119	.	+	.	name=MIT-MTTB;source=NC_035963.1|gene|171280|172119|+|gene-CQW56_mgp24;
+NC_035963.1	RefSeq	overlapping_feature_set	185333	185420	.	+	.	name_left=MIT-TS1|2;source_left=NC_035963.1|gene|185333|185420|+|gene-CQW56_mgt16;name_right=MIT-TS1|2;source_right=NC_035963.1|gene|185333|185420|+|gene-CQW56_mgt16;
+NC_035963.1	RefSeq	overlapping_feature_set	185783	185856	.	+	.	name_left=MIT-TF;source_left=NC_035963.1|gene|185783|185856|+|gene-CQW56_mgt17;name_right=MIT-TF;source_right=NC_035963.1|gene|185783|185856|+|gene-CQW56_mgt17;
+NC_035963.1	RefSeq	overlapping_feature_set	186107	186181	.	+	.	name_left=MIT-TP;source_left=NC_035963.1|gene|186107|186181|+|gene-CQW56_mgt18;name_right=MIT-TP;source_right=NC_035963.1|gene|186107|186181|+|gene-CQW56_mgt18;
+NC_035963.1	RefSeq	gene	188669	190204	.	+	.	name=MIT-ATP1;source=NC_035963.1|gene|188669|190204|+|gene-CQW56_mgp23;
+NC_035963.1	RefSeq	gene	204549	205169	.	-	.	name=MIT-CCMB;source=NC_035963.1|gene|204549|205169|-|gene-CQW56_mgp22;
+NC_035963.1	RefSeq	overlapping_feature_set	207716	207788	.	+	.	name_left=MIT-TK;source_left=NC_035963.1|gene|207716|207788|+|gene-CQW56_mgt19;name_right=MIT-TK;source_right=NC_035963.1|gene|207716|207788|+|gene-CQW56_mgt19;
+NC_035963.1	RefSeq	overlapping_feature_set	211050	211123	.	+	.	name_left=MIT-TH;source_left=NC_035963.1|gene|211050|211123|+|gene-CQW56_mgt20;name_right=MIT-TH;source_right=NC_035963.1|gene|211050|211123|+|gene-CQW56_mgt20;
+NC_035963.1	RefSeq	gene	214863	215435	.	+	.	name=MIT-ND9;source=NC_035963.1|gene|214863|215435|+|gene-CQW56_mgp21;
+NC_035963.1	RefSeq	overlapping_feature_set	216309	216382	.	+	.	name_left=MIT-TP;source_left=NC_035963.1|gene|216309|216382|+|gene-CQW56_mgt21;name_right=MIT-TP;source_right=NC_035963.1|gene|216309|216382|+|gene-CQW56_mgt21;
+NC_035963.1	RefSeq	overlapping_feature_set	216540	216613	.	+	.	name_left=MIT-TW;source_left=NC_035963.1|gene|216540|216613|+|gene-CQW56_mgt22;name_right=MIT-TW;source_right=NC_035963.1|gene|216540|216613|+|gene-CQW56_mgt22;
+NC_035963.1	RefSeq	gene	221308	221634	.	-	.	name=MIT-SDH3;source=NC_035963.1|gene|221308|221634|-|gene-CQW56_mgp20;
+NC_035963.1	RefSeq	overlapping_feature_set	226904	226977	.	+	.	name_left=MIT-TM;source_left=NC_035963.1|gene|226904|226977|+|gene-CQW56_mgt23;name_right=MIT-TM;source_right=NC_035963.1|gene|226904|226977|+|gene-CQW56_mgt23;
+NC_035963.1	RefSeq	gene	235256	235489	.	+	.	name=MIT-ATP9;source=NC_035963.1|gene|235256|235489|+|gene-CQW56_mgp19;
+NC_035963.1	RefSeq	gene	241604	242083	.	-	.	name=MIT-RPL10;source=NC_035963.1|gene|241604|242083|-|gene-CQW56_mgp18;
+NC_035963.1	RefSeq	gene	242373	245283	.	-	.	name=MIT-RPL2;source=NC_035963.1|gene|242373|245283|-|gene-CQW56_mgp17;
+NC_035963.1	RefSeq	tRNA	248506	248577	.	-	.	name=MIT-TE;source=NC_035963.1|tRNA|248506|248577|-|rna-CQW56_mgt24;
+NC_035963.1	RefSeq	overlapping_feature_set	262231	262349	.	-	.	name_left=MIT-RNR5;source_left=NC_035963.1|gene|262231|262349|-|gene-CQW56_mgr04;name_right=MIT-RNR5;source_right=NC_035963.1|gene|262231|262349|-|gene-CQW56_mgr04;
+NC_035963.1	RefSeq	overlapping_feature_set	262513	264458	.	-	.	name_left=MIT-RNR18;source_left=NC_035963.1|gene|262513|264458|-|gene-CQW56_mgr03;name_right=MIT-RNR18;source_right=NC_035963.1|gene|262513|264458|-|gene-CQW56_mgr03;
+NC_035963.1	RefSeq	gene	269623	271599	.	+	.	name=MIT-MATR;source=NC_035963.1|gene|269623|271599|+|gene-CQW56_mgp16;
+NC_035963.1	RefSeq	gene	290737	291390	.	-	.	name=MIT-ND6;source=NC_035963.1|gene|290737|291390|-|gene-CQW56_mgp15;
+NC_035963.1	RefSeq	gene	292085	293134	.	-	.	name=MIT-RPS4;source=NC_035963.1|gene|292085|293134|-|gene-CQW56_mgp14;
+NC_035963.1	RefSeq	gene	305165	313821	.	+	.	name=MIT-ND4;source=NC_035963.1|gene|305165|313821|+|gene-CQW56_mgp13;
+NC_035963.1	RefSeq	gene	314088	315225	.	+	.	name=MIT-RPS10;source=NC_035963.1|gene|314088|315225|+|gene-CQW56_mgp12;
+NC_035963.1	RefSeq	gene	315388	316971	.	+	.	name=MIT-CO1;source=NC_035963.1|gene|315388|316971|+|gene-CQW56_mgp11;
+NC_035963.1	RefSeq	gene	319605	321374	.	+	.	name=MIT-CCMFN;source=NC_035963.1|gene|319605|321374|+|gene-CQW56_mgp10;
+NC_035963.1	RefSeq	overlapping_feature_set	341815	341888	.	+	.	name_left=MIT-TM;source_left=NC_035963.1|gene|341815|341888|+|gene-CQW56_mgt25;name_right=MIT-TM;source_right=NC_035963.1|gene|341815|341888|+|gene-CQW56_mgt25;
+NC_035963.1	RefSeq	gene	352956	358254	.	-	.	name=MIT-ND7;source=NC_035963.1|gene|352956|358254|-|gene-CQW56_mgp09;
+NC_035963.1	RefSeq	gene	375286	375636	.	-	.	name=MIT-RPS13;source=NC_035963.1|gene|375286|375636|-|gene-CQW56_mgp08;
+NC_035963.1	RefSeq	overlapping_feature_set	380865	382810	.	+	.	name_left=MIT-RNR18;source_left=NC_035963.1|gene|380865|382810|+|gene-CQW56_mgr02;name_right=MIT-RNR18;source_right=NC_035963.1|gene|380865|382810|+|gene-CQW56_mgr02;
+NC_035963.1	RefSeq	overlapping_feature_set	382974	383092	.	+	.	name_left=MIT-RNR5;source_left=NC_035963.1|gene|382974|383092|+|gene-CQW56_mgr01;name_right=MIT-RNR5;source_right=NC_035963.1|gene|382974|383092|+|gene-CQW56_mgr01;
+NC_035963.1	RefSeq	overlapping_feature_set	396746	396817	.	+	.	name_left=MIT-TE;source_left=NC_035963.1|gene|396746|396817|+|gene-CQW56_mgt26;name_right=MIT-TE;source_right=NC_035963.1|gene|396746|396817|+|gene-CQW56_mgt26;
+NC_035963.1	RefSeq	gene	400040	402950	.	+	.	name=MIT-RPL2;source=NC_035963.1|gene|400040|402950|+|gene-CQW56_mgp07;
+NC_035963.1	RefSeq	gene	403240	403719	.	+	.	name=MIT-RPL10;source=NC_035963.1|gene|403240|403719|+|gene-CQW56_mgp06;
+NC_035963.1	RefSeq	gene	409834	410067	.	-	.	name=MIT-ATP9;source=NC_035963.1|gene|409834|410067|-|gene-CQW56_mgp05;
+NC_035963.1	RefSeq	overlapping_feature_set	418346	418419	.	-	.	name_left=MIT-TM;source_left=NC_035963.1|gene|418346|418419|-|gene-CQW56_mgt27;name_right=MIT-TM;source_right=NC_035963.1|gene|418346|418419|-|gene-CQW56_mgt27;
+NC_035963.1	RefSeq	gene	425133	426473	.	+	.	name=MIT-ATP6;source=NC_035963.1|gene|425133|426473|+|gene-CQW56_mgp04;

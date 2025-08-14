@@ -1,0 +1,201 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_045136.1 1 682840
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=3983
+NC_045136.1	RefSeq	region	1	682840	.	+	.	ID=NC_045136.1:1..682840;Dbxref=taxon:3983;Is_circular=true;Name=MT;gbkey=Src;genome=mitochondrion;mol_type=genomic DNA
+NC_045136.1	RefSeq	gene	8104	10940	.	+	.	ID=gene-GH804_mgp02;Dbxref=GeneID:42317494;Name=cox2;gbkey=Gene;gene=cox2;gene_biotype=protein_coding;locus_tag=GH804_mgp02
+NC_045136.1	RefSeq	CDS	8104	8802	.	+	0	ID=cds-YP_009709913.1;Parent=gene-GH804_mgp02;Dbxref=GenBank:YP_009709913.1,GeneID:42317494;Name=YP_009709913.1;gbkey=CDS;gene=cox2;locus_tag=GH804_mgp02;product=cytochrome c oxidase subunit 2;protein_id=YP_009709913.1
+NC_045136.1	RefSeq	CDS	10857	10940	.	+	0	ID=cds-YP_009709913.1;Parent=gene-GH804_mgp02;Dbxref=GenBank:YP_009709913.1,GeneID:42317494;Name=YP_009709913.1;gbkey=CDS;gene=cox2;locus_tag=GH804_mgp02;product=cytochrome c oxidase subunit 2;protein_id=YP_009709913.1
+NC_045136.1	RefSeq	exon	8104	8802	.	+	.	ID=id-GH804_mgp02-1;Parent=gene-GH804_mgp02;Dbxref=GeneID:42317494;Note=cox2;exon_number=1;gbkey=exon;gene=cox2;locus_tag=GH804_mgp02;number=1
+NC_045136.1	RefSeq	exon	10857	10940	.	+	.	ID=id-GH804_mgp02-2;Parent=gene-GH804_mgp02;Dbxref=GeneID:42317494;Note=cox2;exon_number=2;gbkey=exon;gene=cox2;locus_tag=GH804_mgp02;number=2
+NC_045136.1	RefSeq	intron	8803	10856	.	+	.	ID=id-GH804_mgp02;Parent=gene-GH804_mgp02;Dbxref=GeneID:42317494;Note=cox2;gbkey=intron;gene=cox2;locus_tag=GH804_mgp02
+NC_045136.1	RefSeq	gene	11786	12556	.	+	.	ID=gene-GH804_mgp03;Dbxref=GeneID:42317542;Name=mttB;gbkey=Gene;gene=mttB;gene_biotype=protein_coding;locus_tag=GH804_mgp03
+NC_045136.1	RefSeq	CDS	11786	12556	.	+	0	ID=cds-YP_009709914.1;Parent=gene-GH804_mgp03;Dbxref=GenBank:YP_009709914.1,GeneID:42317542;Name=YP_009709914.1;gbkey=CDS;gene=mttB;locus_tag=GH804_mgp03;product=transport membrane protein;protein_id=YP_009709914.1
+NC_045136.1	RefSeq	gene	17393	18085	.	+	.	ID=gene-GH804_mgp05;Dbxref=GeneID:42317543;Name=rps1;gbkey=Gene;gene=rps1;gene_biotype=protein_coding;locus_tag=GH804_mgp05
+NC_045136.1	RefSeq	CDS	17393	18085	.	+	0	ID=cds-YP_009709916.1;Parent=gene-GH804_mgp05;Dbxref=GenBank:YP_009709916.1,GeneID:42317543;Name=YP_009709916.1;gbkey=CDS;gene=rps1;locus_tag=GH804_mgp05;product=ribosomal protein S1;protein_id=YP_009709916.1
+NC_045136.1	RefSeq	gene	28697	35146	.	-	.	ID=gene-GH804_mgp06;Dbxref=GeneID:42317496;Name=nad7;gbkey=Gene;gene=nad7;gene_biotype=protein_coding;locus_tag=GH804_mgp06
+NC_045136.1	RefSeq	CDS	35004	35146	.	-	0	ID=cds-YP_009709917.1;Parent=gene-GH804_mgp06;Dbxref=GenBank:YP_009709917.1,GeneID:42317496;Name=YP_009709917.1;gbkey=CDS;gene=nad7;locus_tag=GH804_mgp06;product=NADH dehydrogenase subunit 7;protein_id=YP_009709917.1
+NC_045136.1	RefSeq	CDS	34034	34102	.	-	1	ID=cds-YP_009709917.1;Parent=gene-GH804_mgp06;Dbxref=GenBank:YP_009709917.1,GeneID:42317496;Name=YP_009709917.1;gbkey=CDS;gene=nad7;locus_tag=GH804_mgp06;product=NADH dehydrogenase subunit 7;protein_id=YP_009709917.1
+NC_045136.1	RefSeq	CDS	32018	32484	.	-	1	ID=cds-YP_009709917.1;Parent=gene-GH804_mgp06;Dbxref=GenBank:YP_009709917.1,GeneID:42317496;Name=YP_009709917.1;gbkey=CDS;gene=nad7;locus_tag=GH804_mgp06;product=NADH dehydrogenase subunit 7;protein_id=YP_009709917.1
+NC_045136.1	RefSeq	CDS	30725	30968	.	-	2	ID=cds-YP_009709917.1;Parent=gene-GH804_mgp06;Dbxref=GenBank:YP_009709917.1,GeneID:42317496;Name=YP_009709917.1;gbkey=CDS;gene=nad7;locus_tag=GH804_mgp06;product=NADH dehydrogenase subunit 7;protein_id=YP_009709917.1
+NC_045136.1	RefSeq	CDS	28697	28958	.	-	1	ID=cds-YP_009709917.1;Parent=gene-GH804_mgp06;Dbxref=GenBank:YP_009709917.1,GeneID:42317496;Name=YP_009709917.1;gbkey=CDS;gene=nad7;locus_tag=GH804_mgp06;product=NADH dehydrogenase subunit 7;protein_id=YP_009709917.1
+NC_045136.1	RefSeq	exon	28697	28958	.	-	.	ID=id-GH804_mgp06-5;Parent=gene-GH804_mgp06;Dbxref=GeneID:42317496;Note=nad7;exon_number=5;gbkey=exon;gene=nad7;locus_tag=GH804_mgp06;number=5
+NC_045136.1	RefSeq	exon	30725	30968	.	-	.	ID=id-GH804_mgp06-4;Parent=gene-GH804_mgp06;Dbxref=GeneID:42317496;Note=nad7;exon_number=4;gbkey=exon;gene=nad7;locus_tag=GH804_mgp06;number=4
+NC_045136.1	RefSeq	exon	32018	32484	.	-	.	ID=id-GH804_mgp06-3;Parent=gene-GH804_mgp06;Dbxref=GeneID:42317496;Note=nad7;exon_number=3;gbkey=exon;gene=nad7;locus_tag=GH804_mgp06;number=3
+NC_045136.1	RefSeq	exon	34034	34102	.	-	.	ID=id-GH804_mgp06-2;Parent=gene-GH804_mgp06;Dbxref=GeneID:42317496;Note=nad7;exon_number=2;gbkey=exon;gene=nad7;locus_tag=GH804_mgp06;number=2
+NC_045136.1	RefSeq	exon	35004	35146	.	-	.	ID=id-GH804_mgp06-1;Parent=gene-GH804_mgp06;Dbxref=GeneID:42317496;Note=nad7;exon_number=1;gbkey=exon;gene=nad7;locus_tag=GH804_mgp06;number=1
+NC_045136.1	RefSeq	intron	28959	30724	.	-	.	ID=id-GH804_mgp06;Parent=gene-GH804_mgp06;Dbxref=GeneID:42317496;Note=nad7;exon_number=4;gbkey=intron;gene=nad7;locus_tag=GH804_mgp06;number=4
+NC_045136.1	RefSeq	intron	30969	32017	.	-	.	ID=id-GH804_mgp06-6;Parent=gene-GH804_mgp06;Dbxref=GeneID:42317496;Note=nad7;exon_number=3;gbkey=intron;gene=nad7;locus_tag=GH804_mgp06;number=3
+NC_045136.1	RefSeq	intron	32485	34033	.	-	.	ID=id-GH804_mgp06-7;Parent=gene-GH804_mgp06;Dbxref=GeneID:42317496;Note=nad7;exon_number=2;gbkey=intron;gene=nad7;locus_tag=GH804_mgp06;number=2
+NC_045136.1	RefSeq	intron	34103	35003	.	-	.	ID=id-GH804_mgp06-8;Parent=gene-GH804_mgp06;Dbxref=GeneID:42317496;Note=nad7;exon_number=1;gbkey=intron;gene=nad7;locus_tag=GH804_mgp06;number=1
+NC_045136.1	RefSeq	gene	43521	44699	.	-	.	ID=gene-GH804_mgp07;Dbxref=GeneID:42317497;Name=cob;gbkey=Gene;gene=cob;gene_biotype=protein_coding;locus_tag=GH804_mgp07
+NC_045136.1	RefSeq	CDS	43521	44699	.	-	0	ID=cds-YP_009709918.1;Parent=gene-GH804_mgp07;Dbxref=GenBank:YP_009709918.1,GeneID:42317497;Name=YP_009709918.1;gbkey=CDS;gene=cob;locus_tag=GH804_mgp07;product=apocytochrome b;protein_id=YP_009709918.1
+NC_045136.1	RefSeq	gene	53482	56525	.	+	.	ID=gene-GH804_mgr01;Dbxref=GeneID:42317498;Name=rrnL;gbkey=Gene;gene=rrnL;gene_biotype=rRNA;locus_tag=GH804_mgr01
+NC_045136.1	RefSeq	rRNA	53482	56525	.	+	.	ID=rna-GH804_mgr01;Parent=gene-GH804_mgr01;Dbxref=GeneID:42317498;gbkey=rRNA;gene=rrnL;locus_tag=GH804_mgr01;product=large subunit ribosomal RNA
+NC_045136.1	RefSeq	exon	53482	56525	.	+	.	ID=exon-GH804_mgr01-1;Parent=rna-GH804_mgr01;Dbxref=GeneID:42317498;gbkey=rRNA;gene=rrnL;locus_tag=GH804_mgr01;product=large subunit ribosomal RNA
+NC_045136.1	RefSeq	gene	98712	98830	.	-	.	ID=gene-GH804_mgr02;Dbxref=GeneID:42317499;Name=rrn5;gbkey=Gene;gene=rrn5;gene_biotype=rRNA;locus_tag=GH804_mgr02
+NC_045136.1	RefSeq	rRNA	98712	98830	.	-	.	ID=rna-GH804_mgr02;Parent=gene-GH804_mgr02;Dbxref=GeneID:42317499;gbkey=rRNA;gene=rrn5;locus_tag=GH804_mgr02;product=5S ribosomal RNA
+NC_045136.1	RefSeq	exon	98712	98830	.	-	.	ID=exon-GH804_mgr02-1;Parent=rna-GH804_mgr02;Dbxref=GeneID:42317499;gbkey=rRNA;gene=rrn5;locus_tag=GH804_mgr02;product=5S ribosomal RNA
+NC_045136.1	RefSeq	gene	99421	101357	.	-	.	ID=gene-GH804_mgr03;Dbxref=GeneID:42317500;Name=rrnS;gbkey=Gene;gene=rrnS;gene_biotype=rRNA;locus_tag=GH804_mgr03
+NC_045136.1	RefSeq	rRNA	99421	101357	.	-	.	ID=rna-GH804_mgr03;Parent=gene-GH804_mgr03;Dbxref=GeneID:42317500;gbkey=rRNA;gene=rrnS;locus_tag=GH804_mgr03;product=small subunit ribosomal RNA
+NC_045136.1	RefSeq	exon	99421	101357	.	-	.	ID=exon-GH804_mgr03-1;Parent=rna-GH804_mgr03;Dbxref=GeneID:42317500;gbkey=rRNA;gene=rrnS;locus_tag=GH804_mgr03;product=small subunit ribosomal RNA
+NC_045136.1	RefSeq	gene	127352	136326	.	+	.	ID=gene-GH804_mgp32;Dbxref=GeneID:42317501;Name=nad4;gbkey=Gene;gene=nad4;gene_biotype=protein_coding;locus_tag=GH804_mgp32
+NC_045136.1	RefSeq	CDS	127352	127812	.	+	0	ID=cds-YP_009709919.1;Parent=gene-GH804_mgp32;Dbxref=GenBank:YP_009709919.1,GeneID:42317501;Name=YP_009709919.1;gbkey=CDS;gene=nad4;locus_tag=GH804_mgp32;product=NADH dehydrogenase subunit 4;protein_id=YP_009709919.1
+NC_045136.1	RefSeq	CDS	129242	129756	.	+	1	ID=cds-YP_009709919.1;Parent=gene-GH804_mgp32;Dbxref=GenBank:YP_009709919.1,GeneID:42317501;Name=YP_009709919.1;gbkey=CDS;gene=nad4;locus_tag=GH804_mgp32;product=NADH dehydrogenase subunit 4;protein_id=YP_009709919.1
+NC_045136.1	RefSeq	CDS	133145	133567	.	+	2	ID=cds-YP_009709919.1;Parent=gene-GH804_mgp32;Dbxref=GenBank:YP_009709919.1,GeneID:42317501;Name=YP_009709919.1;gbkey=CDS;gene=nad4;locus_tag=GH804_mgp32;product=NADH dehydrogenase subunit 4;protein_id=YP_009709919.1
+NC_045136.1	RefSeq	CDS	136238	136326	.	+	2	ID=cds-YP_009709919.1;Parent=gene-GH804_mgp32;Dbxref=GenBank:YP_009709919.1,GeneID:42317501;Name=YP_009709919.1;gbkey=CDS;gene=nad4;locus_tag=GH804_mgp32;product=NADH dehydrogenase subunit 4;protein_id=YP_009709919.1
+NC_045136.1	RefSeq	exon	127352	127812	.	+	.	ID=id-GH804_mgp32-1;Parent=gene-GH804_mgp32;Dbxref=GeneID:42317501;Note=nad4;exon_number=1;gbkey=exon;gene=nad4;locus_tag=GH804_mgp32;number=1
+NC_045136.1	RefSeq	exon	129242	129756	.	+	.	ID=id-GH804_mgp32-2;Parent=gene-GH804_mgp32;Dbxref=GeneID:42317501;Note=nad4;exon_number=2;gbkey=exon;gene=nad4;locus_tag=GH804_mgp32;number=2
+NC_045136.1	RefSeq	exon	133145	133567	.	+	.	ID=id-GH804_mgp32-3;Parent=gene-GH804_mgp32;Dbxref=GeneID:42317501;Note=nad4;exon_number=3;gbkey=exon;gene=nad4;locus_tag=GH804_mgp32;number=3
+NC_045136.1	RefSeq	exon	136238	136326	.	+	.	ID=id-GH804_mgp32-4;Parent=gene-GH804_mgp32;Dbxref=GeneID:42317501;Note=nad4;exon_number=4;gbkey=exon;gene=nad4;locus_tag=GH804_mgp32;number=4
+NC_045136.1	RefSeq	intron	127813	129241	.	+	.	ID=id-GH804_mgp32;Parent=gene-GH804_mgp32;Dbxref=GeneID:42317501;Note=nad4;exon_number=1;gbkey=intron;gene=nad4;locus_tag=GH804_mgp32;number=1
+NC_045136.1	RefSeq	intron	129757	133144	.	+	.	ID=id-GH804_mgp32-5;Parent=gene-GH804_mgp32;Dbxref=GeneID:42317501;Note=nad4;exon_number=2;gbkey=intron;gene=nad4;locus_tag=GH804_mgp32;number=2
+NC_045136.1	RefSeq	intron	133568	136237	.	+	.	ID=id-GH804_mgp32-6;Parent=gene-GH804_mgp32;Dbxref=GeneID:42317501;Note=nad4;exon_number=3;gbkey=intron;gene=nad4;locus_tag=GH804_mgp32;number=3
+NC_045136.1	RefSeq	gene	149879	150235	.	+	.	ID=gene-GH804_mgp31;Dbxref=GeneID:42317502;Name=sdh3;gbkey=Gene;gene=sdh3;gene_biotype=protein_coding;locus_tag=GH804_mgp31
+NC_045136.1	RefSeq	CDS	149879	150235	.	+	0	ID=cds-YP_009709920.1;Parent=gene-GH804_mgp31;Dbxref=GenBank:YP_009709920.1,GeneID:42317502;Name=YP_009709920.1;gbkey=CDS;gene=sdh3;locus_tag=GH804_mgp31;product=succinate dehydrogenase subunit 3;protein_id=YP_009709920.1
+NC_045136.1	RefSeq	gene	150373	150663	.	+	.	ID=gene-GH804_mgp30;Dbxref=GeneID:42317503;Name=nad4L;gbkey=Gene;gene=nad4L;gene_biotype=protein_coding;locus_tag=GH804_mgp30
+NC_045136.1	RefSeq	CDS	150373	150663	.	+	0	ID=cds-YP_009709921.1;Parent=gene-GH804_mgp30;Dbxref=GenBank:YP_009709921.1,GeneID:42317503;Name=YP_009709921.1;gbkey=CDS;gene=nad4L;locus_tag=GH804_mgp30;product=NADH dehydrogenase subunit 4L;protein_id=YP_009709921.1
+NC_045136.1	RefSeq	gene	150858	151454	.	+	.	ID=gene-GH804_mgp29;Dbxref=GeneID:42317504;Name=atp4;gbkey=Gene;gene=atp4;gene_biotype=protein_coding;locus_tag=GH804_mgp29
+NC_045136.1	RefSeq	CDS	150858	151454	.	+	0	ID=cds-YP_009709922.1;Parent=gene-GH804_mgp29;Dbxref=GenBank:YP_009709922.1,GeneID:42317504;Name=YP_009709922.1;gbkey=CDS;gene=atp4;locus_tag=GH804_mgp29;product=ATPase subunit 4;protein_id=YP_009709922.1
+NC_045136.1	RefSeq	gene	161266	161751	.	+	.	ID=gene-GH804_mgp28;Dbxref=GeneID:42317505;Name=atp8;gbkey=Gene;gene=atp8;gene_biotype=protein_coding;locus_tag=GH804_mgp28
+NC_045136.1	RefSeq	CDS	161266	161751	.	+	0	ID=cds-YP_009709923.1;Parent=gene-GH804_mgp28;Dbxref=GenBank:YP_009709923.1,GeneID:42317505;Name=YP_009709923.1;gbkey=CDS;gene=atp8;locus_tag=GH804_mgp28;product=ATPase subunit 8;protein_id=YP_009709923.1
+NC_045136.1	RefSeq	gene	162402	163199	.	+	.	ID=gene-GH804_mgp27;Dbxref=GeneID:42317506;Name=cox3;gbkey=Gene;gene=cox3;gene_biotype=protein_coding;locus_tag=GH804_mgp27
+NC_045136.1	RefSeq	CDS	162402	163199	.	+	0	ID=cds-YP_009709924.1;Parent=gene-GH804_mgp27;Dbxref=GenBank:YP_009709924.1,GeneID:42317506;Name=YP_009709924.1;gbkey=CDS;gene=cox3;locus_tag=GH804_mgp27;product=cytochrome c oxidase subunit 3;protein_id=YP_009709924.1
+NC_045136.1	RefSeq	gene	163127	163513	.	+	.	ID=gene-GH804_mgp26;Dbxref=GeneID:42317507;Name=sdh4;gbkey=Gene;gene=sdh4;gene_biotype=protein_coding;locus_tag=GH804_mgp26
+NC_045136.1	RefSeq	CDS	163127	163513	.	+	0	ID=cds-YP_009709925.1;Parent=gene-GH804_mgp26;Dbxref=GenBank:YP_009709925.1,GeneID:42317507;Name=YP_009709925.1;Note=predicted C to U RNA editing creates stop codon;exception=RNA editing;gbkey=CDS;gene=sdh4;locus_tag=GH804_mgp26;product=succinate dehydrogenase subunit 4;protein_id=YP_009709925.1
+NC_045136.1	RefSeq	gene	193906	196210	.	+	.	ID=gene-GH804_mgp25;Dbxref=GeneID:42317508;Name=ccmFc;gbkey=Gene;gene=ccmFc;gene_biotype=protein_coding;locus_tag=GH804_mgp25
+NC_045136.1	RefSeq	CDS	193906	194673	.	+	0	ID=cds-YP_009709926.1;Parent=gene-GH804_mgp25;Dbxref=GenBank:YP_009709926.1,GeneID:42317508;Name=YP_009709926.1;gbkey=CDS;gene=ccmFc;locus_tag=GH804_mgp25;product=cytochrome c biogenesis FC;protein_id=YP_009709926.1
+NC_045136.1	RefSeq	CDS	195632	196210	.	+	0	ID=cds-YP_009709926.1;Parent=gene-GH804_mgp25;Dbxref=GenBank:YP_009709926.1,GeneID:42317508;Name=YP_009709926.1;gbkey=CDS;gene=ccmFc;locus_tag=GH804_mgp25;product=cytochrome c biogenesis FC;protein_id=YP_009709926.1
+NC_045136.1	RefSeq	exon	193906	194673	.	+	.	ID=id-GH804_mgp25-1;Parent=gene-GH804_mgp25;Dbxref=GeneID:42317508;Note=ccmFc;exon_number=1;gbkey=exon;gene=ccmFc;locus_tag=GH804_mgp25;number=1
+NC_045136.1	RefSeq	exon	195632	196210	.	+	.	ID=id-GH804_mgp25-2;Parent=gene-GH804_mgp25;Dbxref=GeneID:42317508;Note=ccmFc;exon_number=2;gbkey=exon;gene=ccmFc;locus_tag=GH804_mgp25;number=2
+NC_045136.1	RefSeq	intron	194674	195631	.	+	.	ID=id-GH804_mgp25;Parent=gene-GH804_mgp25;Dbxref=GeneID:42317508;Note=ccmFc;gbkey=intron;gene=ccmFc;locus_tag=GH804_mgp25
+NC_045136.1	RefSeq	gene	200503	200889	.	+	.	ID=gene-GH804_mgp24;Dbxref=GeneID:42317495;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=GH804_mgp24
+NC_045136.1	RefSeq	gene	224582	226327	.	+	.	ID=gene-GH804_mgp24;Dbxref=GeneID:42317495;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=GH804_mgp24
+NC_045136.1	RefSeq	gene	452654	456401	.	+	.	ID=gene-GH804_mgp24;Dbxref=GeneID:42317495;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=GH804_mgp24
+NC_045136.1	RefSeq	CDS	200503	200889	.	+	0	ID=cds-YP_009709927.1;Parent=gene-GH804_mgp24;Dbxref=GenBank:YP_009709927.1,GeneID:42317495;Name=YP_009709927.1;exception=RNA editing%2C trans-splicing;gbkey=CDS;gene=nad1;locus_tag=GH804_mgp24;product=NADH dehydrogenase subunit 1;protein_id=YP_009709927.1
+NC_045136.1	RefSeq	CDS	224582	224662	.	+	0	ID=cds-YP_009709927.1;Parent=gene-GH804_mgp24;Dbxref=GenBank:YP_009709927.1,GeneID:42317495;Name=YP_009709927.1;exception=RNA editing%2C trans-splicing;gbkey=CDS;gene=nad1;locus_tag=GH804_mgp24;product=NADH dehydrogenase subunit 1;protein_id=YP_009709927.1
+NC_045136.1	RefSeq	CDS	226136	226327	.	+	0	ID=cds-YP_009709927.1;Parent=gene-GH804_mgp24;Dbxref=GenBank:YP_009709927.1,GeneID:42317495;Name=YP_009709927.1;exception=RNA editing%2C trans-splicing;gbkey=CDS;gene=nad1;locus_tag=GH804_mgp24;product=NADH dehydrogenase subunit 1;protein_id=YP_009709927.1
+NC_045136.1	RefSeq	CDS	452654	452712	.	+	0	ID=cds-YP_009709927.1;Parent=gene-GH804_mgp24;Dbxref=GenBank:YP_009709927.1,GeneID:42317495;Name=YP_009709927.1;exception=RNA editing%2C trans-splicing;gbkey=CDS;gene=nad1;locus_tag=GH804_mgp24;product=NADH dehydrogenase subunit 1;protein_id=YP_009709927.1
+NC_045136.1	RefSeq	CDS	456143	456401	.	+	1	ID=cds-YP_009709927.1;Parent=gene-GH804_mgp24;Dbxref=GenBank:YP_009709927.1,GeneID:42317495;Name=YP_009709927.1;exception=RNA editing%2C trans-splicing;gbkey=CDS;gene=nad1;locus_tag=GH804_mgp24;product=NADH dehydrogenase subunit 1;protein_id=YP_009709927.1
+NC_045136.1	RefSeq	exon	200503	200889	.	+	.	ID=id-GH804_mgp24-1;Parent=gene-GH804_mgp24;Dbxref=GeneID:42317495;Note=nad1;exon_number=1;gbkey=exon;gene=nad1;locus_tag=GH804_mgp24;number=1
+NC_045136.1	RefSeq	exon	224582	224662	.	+	.	ID=id-GH804_mgp24-2;Parent=gene-GH804_mgp24;Dbxref=GeneID:42317495;Note=nad1;exon_number=2;gbkey=exon;gene=nad1;locus_tag=GH804_mgp24;number=2
+NC_045136.1	RefSeq	exon	226136	226327	.	+	.	ID=id-GH804_mgp24-3;Parent=gene-GH804_mgp24;Dbxref=GeneID:42317495;Note=nad1;exon_number=3;gbkey=exon;gene=nad1;locus_tag=GH804_mgp24;number=3
+NC_045136.1	RefSeq	exon	452654	452712	.	+	.	ID=id-GH804_mgp24-4;Parent=gene-GH804_mgp24;Dbxref=GeneID:42317495;Note=nad1;exon_number=4;gbkey=exon;gene=nad1;locus_tag=GH804_mgp24;number=4
+NC_045136.1	RefSeq	exon	456143	456401	.	+	.	ID=id-GH804_mgp24-5;Parent=gene-GH804_mgp24;Dbxref=GeneID:42317495;Note=nad1;exon_number=5;gbkey=exon;gene=nad1;locus_tag=GH804_mgp24;number=5
+NC_045136.1	RefSeq	intron	224663	226135	.	+	.	ID=id-GH804_mgp24;Parent=gene-GH804_mgp24;Dbxref=GeneID:42317495;Note=nad1;exon_number=1;gbkey=intron;gene=nad1;locus_tag=GH804_mgp24;number=1
+NC_045136.1	RefSeq	intron	452713	456142	.	+	.	ID=id-GH804_mgp24-6;Parent=gene-GH804_mgp24;Dbxref=GeneID:42317495;Note=nad1;exon_number=2;gbkey=intron;gene=nad1;locus_tag=GH804_mgp24;number=2
+NC_045136.1	RefSeq	gene	204922	205542	.	-	.	ID=gene-GH804_mgp23;Dbxref=GeneID:42317509;Name=ccmB;gbkey=Gene;gene=ccmB;gene_biotype=protein_coding;locus_tag=GH804_mgp23
+NC_045136.1	RefSeq	CDS	204922	205542	.	-	0	ID=cds-YP_009709928.1;Parent=gene-GH804_mgp23;Dbxref=GenBank:YP_009709928.1,GeneID:42317509;Name=YP_009709928.1;gbkey=CDS;gene=ccmB;locus_tag=GH804_mgp23;product=cytochrome c biogenesis B;protein_id=YP_009709928.1
+NC_045136.1	RefSeq	gene	212607	213371	.	+	.	ID=gene-GH804_mgp22;Dbxref=GeneID:42317510;Name=atp6;gbkey=Gene;gene=atp6;gene_biotype=protein_coding;locus_tag=GH804_mgp22
+NC_045136.1	RefSeq	CDS	212607	213371	.	+	0	ID=cds-YP_009709929.1;Parent=gene-GH804_mgp22;Dbxref=GenBank:YP_009709929.1,GeneID:42317510;Name=YP_009709929.1;gbkey=CDS;gene=atp6;locus_tag=GH804_mgp22;product=ATPase subunit 6;protein_id=YP_009709929.1
+NC_045136.1	RefSeq	gene	223341	223691	.	+	.	ID=gene-GH804_mgp21;Dbxref=GeneID:42317511;Name=rps13;gbkey=Gene;gene=rps13;gene_biotype=protein_coding;locus_tag=GH804_mgp21
+NC_045136.1	RefSeq	CDS	223341	223691	.	+	0	ID=cds-YP_009709930.1;Parent=gene-GH804_mgp21;Dbxref=GenBank:YP_009709930.1,GeneID:42317511;Name=YP_009709930.1;gbkey=CDS;gene=rps13;locus_tag=GH804_mgp21;product=ribosomal protein S13;protein_id=YP_009709930.1
+NC_045136.1	RefSeq	gene	227978	228550	.	+	.	ID=gene-GH804_mgp20;Dbxref=GeneID:42317512;Name=nad9;gbkey=Gene;gene=nad9;gene_biotype=protein_coding;locus_tag=GH804_mgp20
+NC_045136.1	RefSeq	CDS	227978	228550	.	+	0	ID=cds-YP_009709931.1;Parent=gene-GH804_mgp20;Dbxref=GenBank:YP_009709931.1,GeneID:42317512;Name=YP_009709931.1;gbkey=CDS;gene=nad9;locus_tag=GH804_mgp20;product=NADH dehydrogenase subunit 9;protein_id=YP_009709931.1
+NC_045136.1	RefSeq	gene	229553	229626	.	+	.	ID=gene-GH804_mgt01;Dbxref=GeneID:42317513;Name=trnW;gbkey=Gene;gene=trnW;gene_biotype=tRNA;locus_tag=GH804_mgt01
+NC_045136.1	RefSeq	tRNA	229553	229626	.	+	.	ID=rna-GH804_mgt01;Parent=gene-GH804_mgt01;Dbxref=GeneID:42317513;Note=anticodon:CCA%3B plastid-like form;gbkey=tRNA;gene=trnW;locus_tag=GH804_mgt01;product=tRNA-Trp
+NC_045136.1	RefSeq	exon	229553	229626	.	+	.	ID=exon-GH804_mgt01-1;Parent=rna-GH804_mgt01;Dbxref=GeneID:42317513;Note=anticodon:CCA%3B plastid-like form;gbkey=tRNA;gene=trnW;locus_tag=GH804_mgt01;product=tRNA-Trp
+NC_045136.1	RefSeq	gene	2696	4492	.	-	.	ID=gene-GH804_mgp01;Dbxref=GeneID:42317545;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=GH804_mgp01;part=1
+NC_045136.1	RefSeq	gene	242151	247093	.	-	.	ID=gene-GH804_mgp01;Dbxref=GeneID:42317545;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=GH804_mgp01;part=2
+NC_045136.1	RefSeq	CDS	4340	4492	.	-	0	ID=cds-YP_009709912.1;Parent=gene-GH804_mgp01;Dbxref=GenBank:YP_009709912.1,GeneID:42317545;Name=YP_009709912.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=GH804_mgp01;part=1;product=NADH dehydrogenase subunit 2;protein_id=YP_009709912.1
+NC_045136.1	RefSeq	CDS	2696	3087	.	-	0	ID=cds-YP_009709912.1;Parent=gene-GH804_mgp01;Dbxref=GenBank:YP_009709912.1,GeneID:42317545;Name=YP_009709912.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=GH804_mgp01;part=2;product=NADH dehydrogenase subunit 2;protein_id=YP_009709912.1
+NC_045136.1	RefSeq	CDS	246933	247093	.	-	1	ID=cds-YP_009709912.1;Parent=gene-GH804_mgp01;Dbxref=GenBank:YP_009709912.1,GeneID:42317545;Name=YP_009709912.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=GH804_mgp01;part=3;product=NADH dehydrogenase subunit 2;protein_id=YP_009709912.1
+NC_045136.1	RefSeq	CDS	243836	244407	.	-	2	ID=cds-YP_009709912.1;Parent=gene-GH804_mgp01;Dbxref=GenBank:YP_009709912.1,GeneID:42317545;Name=YP_009709912.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=GH804_mgp01;part=4;product=NADH dehydrogenase subunit 2;protein_id=YP_009709912.1
+NC_045136.1	RefSeq	CDS	242151	242339	.	-	0	ID=cds-YP_009709912.1;Parent=gene-GH804_mgp01;Dbxref=GenBank:YP_009709912.1,GeneID:42317545;Name=YP_009709912.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=GH804_mgp01;part=5;product=NADH dehydrogenase subunit 2;protein_id=YP_009709912.1
+NC_045136.1	RefSeq	exon	2696	3087	.	-	.	ID=id-GH804_mgp01-2;Parent=gene-GH804_mgp01;Dbxref=GeneID:42317545;Note=nad2;exon_number=2;gbkey=exon;gene=nad2;locus_tag=GH804_mgp01;number=2
+NC_045136.1	RefSeq	exon	4340	4492	.	-	.	ID=id-GH804_mgp01-1;Parent=gene-GH804_mgp01;Dbxref=GeneID:42317545;Note=nad2;exon_number=1;gbkey=exon;gene=nad2;locus_tag=GH804_mgp01;number=1
+NC_045136.1	RefSeq	exon	242151	242339	.	-	.	ID=id-GH804_mgp01-5;Parent=gene-GH804_mgp01;Dbxref=GeneID:42317545;Note=nad2;exon_number=5;gbkey=exon;gene=nad2;locus_tag=GH804_mgp01;number=5
+NC_045136.1	RefSeq	exon	243836	244407	.	-	.	ID=id-GH804_mgp01-4;Parent=gene-GH804_mgp01;Dbxref=GeneID:42317545;Note=nad2;exon_number=4;gbkey=exon;gene=nad2;locus_tag=GH804_mgp01;number=4
+NC_045136.1	RefSeq	exon	246933	247093	.	-	.	ID=id-GH804_mgp01-3;Parent=gene-GH804_mgp01;Dbxref=GeneID:42317545;Note=nad2;exon_number=3;gbkey=exon;gene=nad2;locus_tag=GH804_mgp01;number=3
+NC_045136.1	RefSeq	intron	3088	4339	.	-	.	ID=id-GH804_mgp01;Parent=gene-GH804_mgp01;Dbxref=GeneID:42317545;Note=nad2;exon_number=1;gbkey=intron;gene=nad2;locus_tag=GH804_mgp01;number=1
+NC_045136.1	RefSeq	intron	242340	243835	.	-	.	ID=id-GH804_mgp01-6;Parent=gene-GH804_mgp01;Dbxref=GeneID:42317545;Note=nad2;exon_number=3;gbkey=intron;gene=nad2;locus_tag=GH804_mgp01;number=3
+NC_045136.1	RefSeq	intron	244408	246932	.	-	.	ID=id-GH804_mgp01-7;Parent=gene-GH804_mgp01;Dbxref=GeneID:42317545;Note=nad2;exon_number=2;gbkey=intron;gene=nad2;locus_tag=GH804_mgp01;number=2
+NC_045136.1	RefSeq	gene	248539	248609	.	-	.	ID=gene-GH804_mgt02;Dbxref=GeneID:42317514;Name=trnN;gbkey=Gene;gene=trnN;gene_biotype=tRNA;locus_tag=GH804_mgt02
+NC_045136.1	RefSeq	tRNA	248539	248609	.	-	.	ID=rna-GH804_mgt02;Parent=gene-GH804_mgt02;Dbxref=GeneID:42317514;Note=anticodon:GTT%3B plastid-like form;gbkey=tRNA;gene=trnN;locus_tag=GH804_mgt02;product=tRNA-Asn
+NC_045136.1	RefSeq	exon	248539	248609	.	-	.	ID=exon-GH804_mgt02-1;Parent=rna-GH804_mgt02;Dbxref=GeneID:42317514;Note=anticodon:GTT%3B plastid-like form;gbkey=tRNA;gene=trnN;locus_tag=GH804_mgt02;product=tRNA-Asn
+NC_045136.1	RefSeq	gene	249243	249313	.	-	.	ID=gene-GH804_mgt03;Dbxref=GeneID:42317515;Name=trnC;gbkey=Gene;gene=trnC;gene_biotype=tRNA;locus_tag=GH804_mgt03
+NC_045136.1	RefSeq	tRNA	249243	249313	.	-	.	ID=rna-GH804_mgt03;Parent=gene-GH804_mgt03;Dbxref=GeneID:42317515;Note=anticodon:GCA;gbkey=tRNA;gene=trnC;locus_tag=GH804_mgt03;product=tRNA-Cys
+NC_045136.1	RefSeq	exon	249243	249313	.	-	.	ID=exon-GH804_mgt03-1;Parent=rna-GH804_mgt03;Dbxref=GeneID:42317515;Note=anticodon:GCA;gbkey=tRNA;gene=trnC;locus_tag=GH804_mgt03;product=tRNA-Cys
+NC_045136.1	RefSeq	gene	274794	276323	.	+	.	ID=gene-GH804_mgp19;Dbxref=GeneID:42317516;Name=atp1;gbkey=Gene;gene=atp1;gene_biotype=protein_coding;locus_tag=GH804_mgp19
+NC_045136.1	RefSeq	CDS	274794	276323	.	+	0	ID=cds-YP_009709932.1;Parent=gene-GH804_mgp19;Dbxref=GenBank:YP_009709932.1,GeneID:42317516;Name=YP_009709932.1;gbkey=CDS;gene=atp1;locus_tag=GH804_mgp19;product=ATPase subunit 1;protein_id=YP_009709932.1
+NC_045136.1	RefSeq	gene	287115	287186	.	-	.	ID=gene-GH804_mgt04;Dbxref=GeneID:42317517;Name=trnQ;gbkey=Gene;gene=trnQ;gene_biotype=tRNA;locus_tag=GH804_mgt04
+NC_045136.1	RefSeq	tRNA	287115	287186	.	-	.	ID=rna-GH804_mgt04;Parent=gene-GH804_mgt04;Dbxref=GeneID:42317517;Note=anticodon:TTG;gbkey=tRNA;gene=trnQ;locus_tag=GH804_mgt04;product=tRNA-Gln
+NC_045136.1	RefSeq	exon	287115	287186	.	-	.	ID=exon-GH804_mgt04-1;Parent=rna-GH804_mgt04;Dbxref=GeneID:42317517;Note=anticodon:TTG;gbkey=tRNA;gene=trnQ;locus_tag=GH804_mgt04;product=tRNA-Gln
+NC_045136.1	RefSeq	gene	291362	291433	.	-	.	ID=gene-GH804_mgt05;Dbxref=GeneID:42317518;Name=trnG;gbkey=Gene;gene=trnG;gene_biotype=tRNA;locus_tag=GH804_mgt05
+NC_045136.1	RefSeq	tRNA	291362	291433	.	-	.	ID=rna-GH804_mgt05;Parent=gene-GH804_mgt05;Dbxref=GeneID:42317518;Note=anticodon:GCC;gbkey=tRNA;gene=trnG;locus_tag=GH804_mgt05;product=tRNA-Gly
+NC_045136.1	RefSeq	exon	291362	291433	.	-	.	ID=exon-GH804_mgt05-1;Parent=rna-GH804_mgt05;Dbxref=GeneID:42317518;Note=anticodon:GCC;gbkey=tRNA;gene=trnG;locus_tag=GH804_mgt05;product=tRNA-Gly
+NC_045136.1	RefSeq	gene	298495	299247	.	+	.	ID=gene-GH804_mgp18;Dbxref=GeneID:42317519;Name=ccmC;gbkey=Gene;gene=ccmC;gene_biotype=protein_coding;locus_tag=GH804_mgp18
+NC_045136.1	RefSeq	CDS	298495	299247	.	+	0	ID=cds-YP_009709933.1;Parent=gene-GH804_mgp18;Dbxref=GenBank:YP_009709933.1,GeneID:42317519;Name=YP_009709933.1;gbkey=CDS;gene=ccmC;locus_tag=GH804_mgp18;product=cytochrome c biogenesis C;protein_id=YP_009709933.1
+NC_045136.1	RefSeq	gene	314676	314749	.	-	.	ID=gene-GH804_mgt06;Dbxref=GeneID:42317520;Name=trnfM;gbkey=Gene;gene=trnfM;gene_biotype=tRNA;locus_tag=GH804_mgt06
+NC_045136.1	RefSeq	tRNA	314676	314749	.	-	.	ID=rna-GH804_mgt06;Parent=gene-GH804_mgt06;Dbxref=GeneID:42317520;Note=anticodon:CAT%3BfMet;gbkey=tRNA;gene=trnfM;locus_tag=GH804_mgt06;product=tRNA-Met
+NC_045136.1	RefSeq	exon	314676	314749	.	-	.	ID=exon-GH804_mgt06-1;Parent=rna-GH804_mgt06;Dbxref=GeneID:42317520;Note=anticodon:CAT%3BfMet;gbkey=tRNA;gene=trnfM;locus_tag=GH804_mgt06;product=tRNA-Met
+NC_045136.1	RefSeq	gene	316023	316093	.	-	.	ID=gene-GH804_mgt07;Dbxref=GeneID:42317521;Name=trnK;gbkey=Gene;gene=trnK;gene_biotype=tRNA;locus_tag=GH804_mgt07
+NC_045136.1	RefSeq	tRNA	316023	316093	.	-	.	ID=rna-GH804_mgt07;Parent=gene-GH804_mgt07;Dbxref=GeneID:42317521;Note=anticodon:TTT;gbkey=tRNA;gene=trnK;locus_tag=GH804_mgt07;product=tRNA-Lys
+NC_045136.1	RefSeq	exon	316023	316093	.	-	.	ID=exon-GH804_mgt07-1;Parent=rna-GH804_mgt07;Dbxref=GeneID:42317521;Note=anticodon:TTT;gbkey=tRNA;gene=trnK;locus_tag=GH804_mgt07;product=tRNA-Lys
+NC_045136.1	RefSeq	gene	336338	336413	.	-	.	ID=gene-GH804_mgt08;Dbxref=GeneID:42317522;Name=trnH;gbkey=Gene;gene=trnH;gene_biotype=tRNA;locus_tag=GH804_mgt08
+NC_045136.1	RefSeq	tRNA	336338	336413	.	-	.	ID=rna-GH804_mgt08;Parent=gene-GH804_mgt08;Dbxref=GeneID:42317522;Note=anticodon:GTG%3Bplastid-like form;gbkey=tRNA;gene=trnH;locus_tag=GH804_mgt08;product=tRNA-His
+NC_045136.1	RefSeq	exon	336338	336413	.	-	.	ID=exon-GH804_mgt08-1;Parent=rna-GH804_mgt08;Dbxref=GeneID:42317522;Note=anticodon:GTG%3Bplastid-like form;gbkey=tRNA;gene=trnH;locus_tag=GH804_mgt08;product=tRNA-His
+NC_045136.1	RefSeq	gene	338710	338781	.	+	.	ID=gene-GH804_mgt09;Dbxref=GeneID:42317523;Name=trnE;gbkey=Gene;gene=trnE;gene_biotype=tRNA;locus_tag=GH804_mgt09
+NC_045136.1	RefSeq	tRNA	338710	338781	.	+	.	ID=rna-GH804_mgt09;Parent=gene-GH804_mgt09;Dbxref=GeneID:42317523;Note=anticodon:TTC;gbkey=tRNA;gene=trnE;locus_tag=GH804_mgt09;product=tRNA-Glu
+NC_045136.1	RefSeq	exon	338710	338781	.	+	.	ID=exon-GH804_mgt09-1;Parent=rna-GH804_mgt09;Dbxref=GeneID:42317523;Note=anticodon:TTC;gbkey=tRNA;gene=trnE;locus_tag=GH804_mgt09;product=tRNA-Glu
+NC_045136.1	RefSeq	gene	388477	388833	.	+	.	ID=gene-GH804_mgp17;Dbxref=GeneID:42317524;Name=nad3;gbkey=Gene;gene=nad3;gene_biotype=protein_coding;locus_tag=GH804_mgp17
+NC_045136.1	RefSeq	CDS	388477	388833	.	+	0	ID=cds-YP_009709934.1;Parent=gene-GH804_mgp17;Dbxref=GenBank:YP_009709934.1,GeneID:42317524;Name=YP_009709934.1;gbkey=CDS;gene=nad3;locus_tag=GH804_mgp17;product=NADH dehydrogenase subunit 3;protein_id=YP_009709934.1
+NC_045136.1	RefSeq	gene	388882	389259	.	+	.	ID=gene-GH804_mgp16;Dbxref=GeneID:42317525;Name=rps12;gbkey=Gene;gene=rps12;gene_biotype=protein_coding;locus_tag=GH804_mgp16
+NC_045136.1	RefSeq	CDS	388882	389259	.	+	0	ID=cds-YP_009709935.1;Parent=gene-GH804_mgp16;Dbxref=GenBank:YP_009709935.1,GeneID:42317525;Name=YP_009709935.1;gbkey=CDS;gene=rps12;locus_tag=GH804_mgp16;product=ribosomal protein S12;protein_id=YP_009709935.1
+NC_045136.1	RefSeq	gene	420446	420533	.	+	.	ID=gene-GH804_mgt10;Dbxref=GeneID:42317526;Name=trnS;gbkey=Gene;gene=trnS;gene_biotype=tRNA;locus_tag=GH804_mgt10
+NC_045136.1	RefSeq	tRNA	420446	420533	.	+	.	ID=rna-GH804_mgt10;Parent=gene-GH804_mgt10;Dbxref=GeneID:42317526;Note=anticodon:GCT;gbkey=tRNA;gene=trnS;locus_tag=GH804_mgt10;product=tRNA-Ser
+NC_045136.1	RefSeq	exon	420446	420533	.	+	.	ID=exon-GH804_mgt10-1;Parent=rna-GH804_mgt10;Dbxref=GeneID:42317526;Note=anticodon:GCT;gbkey=tRNA;gene=trnS;locus_tag=GH804_mgt10;product=tRNA-Ser
+NC_045136.1	RefSeq	gene	420938	421011	.	+	.	ID=gene-GH804_mgt11;Dbxref=GeneID:42317527;Name=trnF;gbkey=Gene;gene=trnF;gene_biotype=tRNA;locus_tag=GH804_mgt11
+NC_045136.1	RefSeq	tRNA	420938	421011	.	+	.	ID=rna-GH804_mgt11;Parent=gene-GH804_mgt11;Dbxref=GeneID:42317527;Note=anticodon:GAA;gbkey=tRNA;gene=trnF;locus_tag=GH804_mgt11;product=tRNA-Phe
+NC_045136.1	RefSeq	exon	420938	421011	.	+	.	ID=exon-GH804_mgt11-1;Parent=rna-GH804_mgt11;Dbxref=GeneID:42317527;Note=anticodon:GAA;gbkey=tRNA;gene=trnF;locus_tag=GH804_mgt11;product=tRNA-Phe
+NC_045136.1	RefSeq	gene	421281	421355	.	+	.	ID=gene-GH804_mgt12;Dbxref=GeneID:42317528;Name=trnP;gbkey=Gene;gene=trnP;gene_biotype=tRNA;locus_tag=GH804_mgt12
+NC_045136.1	RefSeq	tRNA	421281	421355	.	+	.	ID=rna-GH804_mgt12;Parent=gene-GH804_mgt12;Dbxref=GeneID:42317528;Note=anticodon:TGG;gbkey=tRNA;gene=trnP;locus_tag=GH804_mgt12;product=tRNA-Pro
+NC_045136.1	RefSeq	exon	421281	421355	.	+	.	ID=exon-GH804_mgt12-1;Parent=rna-GH804_mgt12;Dbxref=GeneID:42317528;Note=anticodon:TGG;gbkey=tRNA;gene=trnP;locus_tag=GH804_mgt12;product=tRNA-Pro
+NC_045136.1	RefSeq	gene	438926	439150	.	+	.	ID=gene-GH804_mgp15;Dbxref=GeneID:42317529;Name=atp9;gbkey=Gene;gene=atp9;gene_biotype=protein_coding;locus_tag=GH804_mgp15
+NC_045136.1	RefSeq	CDS	438926	439150	.	+	0	ID=cds-YP_009709936.1;Parent=gene-GH804_mgp15;Dbxref=GenBank:YP_009709936.1,GeneID:42317529;Name=YP_009709936.1;gbkey=CDS;gene=atp9;locus_tag=GH804_mgp15;product=ATPase subunit 9;protein_id=YP_009709936.1
+NC_045136.1	RefSeq	gene	453364	455223	.	+	.	ID=gene-GH804_mgp14;Dbxref=GeneID:42317530;Name=matR;gbkey=Gene;gene=matR;gene_biotype=protein_coding;locus_tag=GH804_mgp14
+NC_045136.1	RefSeq	CDS	453364	455223	.	+	0	ID=cds-YP_009709937.1;Parent=gene-GH804_mgp14;Dbxref=GenBank:YP_009709937.1,GeneID:42317530;Name=YP_009709937.1;gbkey=CDS;gene=matR;locus_tag=GH804_mgp14;product=maturase;protein_id=YP_009709937.1
+NC_045136.1	RefSeq	gene	457373	457446	.	+	.	ID=gene-GH804_mgt13;Dbxref=GeneID:42317531;Name=trnfM;gbkey=Gene;gene=trnfM;gene_biotype=tRNA;locus_tag=GH804_mgt13
+NC_045136.1	RefSeq	tRNA	457373	457446	.	+	.	ID=rna-GH804_mgt13;Parent=gene-GH804_mgt13;Dbxref=GeneID:42317531;Note=anticodon:CAT%3BfMet;gbkey=tRNA;gene=trnfM;locus_tag=GH804_mgt13;product=tRNA-Met
+NC_045136.1	RefSeq	exon	457373	457446	.	+	.	ID=exon-GH804_mgt13-1;Parent=rna-GH804_mgt13;Dbxref=GeneID:42317531;Note=anticodon:CAT%3BfMet;gbkey=tRNA;gene=trnfM;locus_tag=GH804_mgt13;product=tRNA-Met
+NC_045136.1	RefSeq	gene	463063	463515	.	-	.	ID=gene-GH804_mgp13;Dbxref=GeneID:42317532;Name=rpl10;gbkey=Gene;gene=rpl10;gene_biotype=protein_coding;locus_tag=GH804_mgp13
+NC_045136.1	RefSeq	CDS	463063	463515	.	-	0	ID=cds-YP_009709938.1;Parent=gene-GH804_mgp13;Dbxref=GenBank:YP_009709938.1,GeneID:42317532;Name=YP_009709938.1;gbkey=CDS;gene=rpl10;locus_tag=GH804_mgp13;product=ribosomal protein L10;protein_id=YP_009709938.1
+NC_045136.1	RefSeq	gene	491225	493512	.	-	.	ID=gene-GH804_mgp04;Dbxref=GeneID:42317544;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=GH804_mgp04;part=1
+NC_045136.1	RefSeq	gene	12989	13010	.	+	.	ID=gene-GH804_mgp04;Dbxref=GeneID:42317544;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=GH804_mgp04;part=2
+NC_045136.1	RefSeq	gene	258840	260343	.	-	.	ID=gene-GH804_mgp04;Dbxref=GeneID:42317544;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=GH804_mgp04;part=3
+NC_045136.1	RefSeq	CDS	493283	493512	.	-	0	ID=cds-YP_009709915.1;Parent=gene-GH804_mgp04;Dbxref=GenBank:YP_009709915.1,GeneID:42317544;Name=YP_009709915.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=GH804_mgp04;part=1;product=NADH dehydrogenase subunit 5;protein_id=YP_009709915.1
+NC_045136.1	RefSeq	CDS	491225	492440	.	-	1	ID=cds-YP_009709915.1;Parent=gene-GH804_mgp04;Dbxref=GenBank:YP_009709915.1,GeneID:42317544;Name=YP_009709915.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=GH804_mgp04;part=2;product=NADH dehydrogenase subunit 5;protein_id=YP_009709915.1
+NC_045136.1	RefSeq	CDS	12989	13010	.	+	0	ID=cds-YP_009709915.1;Parent=gene-GH804_mgp04;Dbxref=GenBank:YP_009709915.1,GeneID:42317544;Name=YP_009709915.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=GH804_mgp04;part=3;product=NADH dehydrogenase subunit 5;protein_id=YP_009709915.1
+NC_045136.1	RefSeq	CDS	259949	260343	.	-	2	ID=cds-YP_009709915.1;Parent=gene-GH804_mgp04;Dbxref=GenBank:YP_009709915.1,GeneID:42317544;Name=YP_009709915.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=GH804_mgp04;part=4;product=NADH dehydrogenase subunit 5;protein_id=YP_009709915.1
+NC_045136.1	RefSeq	CDS	258840	258989	.	-	0	ID=cds-YP_009709915.1;Parent=gene-GH804_mgp04;Dbxref=GenBank:YP_009709915.1,GeneID:42317544;Name=YP_009709915.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=GH804_mgp04;part=5;product=NADH dehydrogenase subunit 5;protein_id=YP_009709915.1
+NC_045136.1	RefSeq	exon	12989	13010	.	+	.	ID=id-GH804_mgp04-3;Parent=gene-GH804_mgp04;Dbxref=GeneID:42317544;Note=nad5;exon_number=3;gbkey=exon;gene=nad5;locus_tag=GH804_mgp04;number=3
+NC_045136.1	RefSeq	exon	258840	258989	.	-	.	ID=id-GH804_mgp04-5;Parent=gene-GH804_mgp04;Dbxref=GeneID:42317544;Note=nad5;exon_number=5;gbkey=exon;gene=nad5;locus_tag=GH804_mgp04;number=5
+NC_045136.1	RefSeq	exon	259949	260343	.	-	.	ID=id-GH804_mgp04-4;Parent=gene-GH804_mgp04;Dbxref=GeneID:42317544;Note=nad5;exon_number=4;gbkey=exon;gene=nad5;locus_tag=GH804_mgp04;number=4
+NC_045136.1	RefSeq	exon	491225	492440	.	-	.	ID=id-GH804_mgp04-2;Parent=gene-GH804_mgp04;Dbxref=GeneID:42317544;Note=nad5;exon_number=2;gbkey=exon;gene=nad5;locus_tag=GH804_mgp04;number=2
+NC_045136.1	RefSeq	exon	493283	493512	.	-	.	ID=id-GH804_mgp04-1;Parent=gene-GH804_mgp04;Dbxref=GeneID:42317544;Note=nad5;exon_number=1;gbkey=exon;gene=nad5;locus_tag=GH804_mgp04;number=1
+NC_045136.1	RefSeq	intron	258990	259948	.	-	.	ID=id-GH804_mgp04;Parent=gene-GH804_mgp04;Dbxref=GeneID:42317544;Note=nad5;exon_number=2;gbkey=intron;gene=nad5;locus_tag=GH804_mgp04;number=2
+NC_045136.1	RefSeq	intron	492441	493282	.	-	.	ID=id-GH804_mgp04-6;Parent=gene-GH804_mgp04;Dbxref=GeneID:42317544;Note=nad5;exon_number=1;gbkey=intron;gene=nad5;locus_tag=GH804_mgp04;number=1
+NC_045136.1	RefSeq	gene	535853	536413	.	-	.	ID=gene-GH804_mgp12;Dbxref=GeneID:42317533;Name=rpl5;gbkey=Gene;gene=rpl5;gene_biotype=protein_coding;locus_tag=GH804_mgp12
+NC_045136.1	RefSeq	CDS	535853	536413	.	-	0	ID=cds-YP_009709939.1;Parent=gene-GH804_mgp12;Dbxref=GenBank:YP_009709939.1,GeneID:42317533;Name=YP_009709939.1;gbkey=CDS;gene=rpl5;locus_tag=GH804_mgp12;product=ribosomal protein L5;protein_id=YP_009709939.1
+NC_045136.1	RefSeq	gene	586863	587921	.	+	.	ID=gene-GH804_mgp11;Dbxref=GeneID:42317534;Name=rps4;gbkey=Gene;gene=rps4;gene_biotype=protein_coding;locus_tag=GH804_mgp11
+NC_045136.1	RefSeq	CDS	586863	587921	.	+	0	ID=cds-YP_009709940.1;Parent=gene-GH804_mgp11;Dbxref=GenBank:YP_009709940.1,GeneID:42317534;Name=YP_009709940.1;exception=RNA editing;gbkey=CDS;gene=rps4;locus_tag=GH804_mgp11;product=ribosomal protein S4;protein_id=YP_009709940.1
+NC_045136.1	RefSeq	gene	588570	589187	.	+	.	ID=gene-GH804_mgp10;Dbxref=GeneID:42317535;Name=nad6;gbkey=Gene;gene=nad6;gene_biotype=protein_coding;locus_tag=GH804_mgp10
+NC_045136.1	RefSeq	CDS	588570	589187	.	+	0	ID=cds-YP_009709941.1;Parent=gene-GH804_mgp10;Dbxref=GenBank:YP_009709941.1,GeneID:42317535;Name=YP_009709941.1;gbkey=CDS;gene=nad6;locus_tag=GH804_mgp10;product=NADH dehydrogenase subunit 6;protein_id=YP_009709941.1
+NC_045136.1	RefSeq	gene	618516	618602	.	+	.	ID=gene-GH804_mgt14;Dbxref=GeneID:42317536;Name=trnS;gbkey=Gene;gene=trnS;gene_biotype=tRNA;locus_tag=GH804_mgt14
+NC_045136.1	RefSeq	tRNA	618516	618602	.	+	.	ID=rna-GH804_mgt14;Parent=gene-GH804_mgt14;Dbxref=GeneID:42317536;Note=anticodon:TGA;gbkey=tRNA;gene=trnS;locus_tag=GH804_mgt14;product=tRNA-Ser
+NC_045136.1	RefSeq	exon	618516	618602	.	+	.	ID=exon-GH804_mgt14-1;Parent=rna-GH804_mgt14;Dbxref=GeneID:42317536;Note=anticodon:TGA;gbkey=tRNA;gene=trnS;locus_tag=GH804_mgt14;product=tRNA-Ser
+NC_045136.1	RefSeq	gene	627505	627578	.	-	.	ID=gene-GH804_mgt15;Dbxref=GeneID:42317537;Name=trnD;gbkey=Gene;gene=trnD;gene_biotype=tRNA;locus_tag=GH804_mgt15
+NC_045136.1	RefSeq	tRNA	627505	627578	.	-	.	ID=rna-GH804_mgt15;Parent=gene-GH804_mgt15;Dbxref=GeneID:42317537;Note=anticodon:GTC;gbkey=tRNA;gene=trnD;locus_tag=GH804_mgt15;product=tRNA-Asp
+NC_045136.1	RefSeq	exon	627505	627578	.	-	.	ID=exon-GH804_mgt15-1;Parent=rna-GH804_mgt15;Dbxref=GeneID:42317537;Note=anticodon:GTC;gbkey=tRNA;gene=trnD;locus_tag=GH804_mgt15;product=tRNA-Asp
+NC_045136.1	RefSeq	gene	628561	628641	.	+	.	ID=gene-GH804_mgt16;Dbxref=GeneID:42317538;Name=trnI;gbkey=Gene;gene=trnI;gene_biotype=tRNA;locus_tag=GH804_mgt16
+NC_045136.1	RefSeq	tRNA	628561	628641	.	+	.	ID=rna-GH804_mgt16;Parent=gene-GH804_mgt16;Dbxref=GeneID:42317538;Note=anticodon:CAT;gbkey=tRNA;gene=trnI;locus_tag=GH804_mgt16;product=tRNA-Ile
+NC_045136.1	RefSeq	exon	628561	628641	.	+	.	ID=exon-GH804_mgt16-1;Parent=rna-GH804_mgt16;Dbxref=GeneID:42317538;Note=anticodon:CAT;gbkey=tRNA;gene=trnI;locus_tag=GH804_mgt16;product=tRNA-Ile
+NC_045136.1	RefSeq	gene	630981	631053	.	+	.	ID=gene-GH804_mgt17;Dbxref=GeneID:42317539;Name=trnM;gbkey=Gene;gene=trnM;gene_biotype=tRNA;locus_tag=GH804_mgt17
+NC_045136.1	RefSeq	tRNA	630981	631053	.	+	.	ID=rna-GH804_mgt17;Parent=gene-GH804_mgt17;Dbxref=GeneID:42317539;Note=anticodon:CAT%3Bplastid-like form;gbkey=tRNA;gene=trnM;locus_tag=GH804_mgt17;product=tRNA-Met
+NC_045136.1	RefSeq	exon	630981	631053	.	+	.	ID=exon-GH804_mgt17-1;Parent=rna-GH804_mgt17;Dbxref=GeneID:42317539;Note=anticodon:CAT%3Bplastid-like form;gbkey=tRNA;gene=trnM;locus_tag=GH804_mgt17;product=tRNA-Met
+NC_045136.1	RefSeq	gene	637968	639701	.	-	.	ID=gene-GH804_mgp09;Dbxref=GeneID:42317540;Name=ccmFn;gbkey=Gene;gene=ccmFn;gene_biotype=protein_coding;locus_tag=GH804_mgp09
+NC_045136.1	RefSeq	CDS	637968	639701	.	-	0	ID=cds-YP_009709942.1;Parent=gene-GH804_mgp09;Dbxref=GenBank:YP_009709942.1,GeneID:42317540;Name=YP_009709942.1;gbkey=CDS;gene=ccmFn;locus_tag=GH804_mgp09;product=cytochrome c biogenesis FN;protein_id=YP_009709942.1
+NC_045136.1	RefSeq	gene	674801	675316	.	-	.	ID=gene-GH804_mgp08;Dbxref=GeneID:42317541;Name=rpl16;gbkey=Gene;gene=rpl16;gene_biotype=protein_coding;locus_tag=GH804_mgp08
+NC_045136.1	RefSeq	CDS	674801	675316	.	-	0	ID=cds-YP_009709943.1;Parent=gene-GH804_mgp08;Dbxref=GenBank:YP_009709943.1,GeneID:42317541;Name=YP_009709943.1;gbkey=CDS;gene=rpl16;locus_tag=GH804_mgp08;product=ribosomal protein L16;protein_id=YP_009709943.1
+

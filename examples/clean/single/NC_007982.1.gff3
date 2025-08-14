@@ -1,0 +1,650 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_007982.1 1 569630
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=381124
+NC_007982.1	RefSeq	region	1	569630	.	+	.	ID=NC_007982.1:1..569630;Dbxref=taxon:381124;Is_circular=true;Name=MT;gbkey=Src;genome=mitochondrion;mol_type=genomic DNA;strain=NB;sub-species=mays
+NC_007982.1	RefSeq	gene	6391	6738	.	+	.	ID=gene-ZeamMp002;Dbxref=GeneID:4055996;Name=orf115-a1;gbkey=Gene;gene=orf115-a1;gene_biotype=protein_coding;locus_tag=ZeamMp002
+NC_007982.1	RefSeq	CDS	6391	6738	.	+	0	ID=cds-YP_588268.1;Parent=gene-ZeamMp002;Dbxref=GenBank:YP_588268.1,GeneID:4055996;Name=YP_588268.1;gbkey=CDS;gene=orf115-a1;locus_tag=ZeamMp002;product=hypothetical protein;protein_id=YP_588268.1
+NC_007982.1	RefSeq	sequence_feature	6638	13429	.	+	.	ID=id-NC_007982.1:6638..13429;Note=R1;gbkey=misc_feature
+NC_007982.1	RefSeq	gene	6951	8285	.	+	.	ID=gene-ZeamMp003;Dbxref=GeneID:4055961;Name=orf444;gbkey=Gene;gene=orf444;gene_biotype=protein_coding;locus_tag=ZeamMp003
+NC_007982.1	RefSeq	CDS	6951	8285	.	+	0	ID=cds-YP_588269.1;Parent=gene-ZeamMp003;Dbxref=GenBank:YP_588269.1,GeneID:4055961;Name=YP_588269.1;gbkey=CDS;gene=orf444;locus_tag=ZeamMp003;product=hypothetical protein;protein_id=YP_588269.1
+NC_007982.1	RefSeq	gene	8752	9915	.	+	.	ID=gene-ZeamMp004;Dbxref=GeneID:4055985;Name=orf387;gbkey=Gene;gene=orf387;gene_biotype=protein_coding;locus_tag=ZeamMp004
+NC_007982.1	RefSeq	CDS	8752	9915	.	+	0	ID=cds-YP_588270.1;Parent=gene-ZeamMp004;Dbxref=GenBank:YP_588270.1,GeneID:4055985;Name=YP_588270.1;gbkey=CDS;gene=orf387;locus_tag=ZeamMp004;product=hypothetical protein;protein_id=YP_588270.1
+NC_007982.1	RefSeq	gene	11111	13315	.	-	.	ID=gene-ZeamMp005;Dbxref=GeneID:4055965;Name=orf734;gbkey=Gene;gene=orf734;gene_biotype=protein_coding;locus_tag=ZeamMp005
+NC_007982.1	RefSeq	CDS	11111	13315	.	-	0	ID=cds-YP_588271.1;Parent=gene-ZeamMp005;Dbxref=GenBank:YP_588271.1,GeneID:4055965;Name=YP_588271.1;gbkey=CDS;gene=orf734;locus_tag=ZeamMp005;product=hypothetical protein;protein_id=YP_588271.1
+NC_007982.1	RefSeq	gene	17513	17863	.	-	.	ID=gene-ZeamMp006;Dbxref=GeneID:4055972;Name=orf116-a;gbkey=Gene;gene=orf116-a;gene_biotype=protein_coding;locus_tag=ZeamMp006
+NC_007982.1	RefSeq	CDS	17513	17863	.	-	0	ID=cds-YP_588272.1;Parent=gene-ZeamMp006;Dbxref=GenBank:YP_588272.1,GeneID:4055972;Name=YP_588272.1;gbkey=CDS;gene=orf116-a;locus_tag=ZeamMp006;product=hypothetical protein;protein_id=YP_588272.1
+NC_007982.1	RefSeq	gene	18047	18793	.	+	.	ID=gene-ZeamMp007;Dbxref=GeneID:4055850;Name=orf248;gbkey=Gene;gene=orf248;gene_biotype=protein_coding;locus_tag=ZeamMp007
+NC_007982.1	RefSeq	CDS	18047	18793	.	+	0	ID=cds-YP_588273.1;Parent=gene-ZeamMp007;Dbxref=GenBank:YP_588273.1,GeneID:4055850;Name=YP_588273.1;gbkey=CDS;gene=orf248;locus_tag=ZeamMp007;product=hypothetical protein;protein_id=YP_588273.1
+NC_007982.1	RefSeq	gene	19813	20889	.	+	.	ID=gene-ZeamMp008;Dbxref=GeneID:4055864;Name=rps4;gbkey=Gene;gene=rps4;gene_biotype=protein_coding;locus_tag=ZeamMp008
+NC_007982.1	RefSeq	CDS	19813	20889	.	+	0	ID=cds-YP_588274.1;Parent=gene-ZeamMp008;Dbxref=GenBank:YP_588274.1,GeneID:4055864;Name=YP_588274.1;gbkey=CDS;gene=rps4;locus_tag=ZeamMp008;product=ribosomal protein S4;protein_id=YP_588274.1
+NC_007982.1	RefSeq	gene	21087	21434	.	-	.	ID=gene-ZeamMp009;Dbxref=GeneID:4055871;Name=orf115-b;gbkey=Gene;gene=orf115-b;gene_biotype=protein_coding;locus_tag=ZeamMp009
+NC_007982.1	RefSeq	CDS	21087	21434	.	-	0	ID=cds-YP_588275.1;Parent=gene-ZeamMp009;Dbxref=GenBank:YP_588275.1,GeneID:4055871;Name=YP_588275.1;gbkey=CDS;gene=orf115-b;locus_tag=ZeamMp009;product=hypothetical protein;protein_id=YP_588275.1
+NC_007982.1	RefSeq	gene	21403	22593	.	+	.	ID=gene-ZeamMp010;Dbxref=GeneID:4055859;Name=orf396;gbkey=Gene;gene=orf396;gene_biotype=protein_coding;locus_tag=ZeamMp010
+NC_007982.1	RefSeq	CDS	21403	22593	.	+	0	ID=cds-YP_588276.1;Parent=gene-ZeamMp010;Dbxref=GenBank:YP_588276.1,GeneID:4055859;Name=YP_588276.1;gbkey=CDS;gene=orf396;locus_tag=ZeamMp010;product=hypothetical protein;protein_id=YP_588276.1
+NC_007982.1	RefSeq	gene	21565	22593	.	+	.	ID=gene-ZeamMp011;Dbxref=GeneID:4055953;Name=orf342;gbkey=Gene;gene=orf342;gene_biotype=protein_coding;locus_tag=ZeamMp011
+NC_007982.1	RefSeq	CDS	21565	22593	.	+	0	ID=cds-YP_588277.1;Parent=gene-ZeamMp011;Dbxref=GenBank:YP_588277.1,GeneID:4055953;Name=YP_588277.1;gbkey=CDS;gene=orf342;locus_tag=ZeamMp011;product=hypothetical protein;protein_id=YP_588277.1
+NC_007982.1	RefSeq	gene	26910	27212	.	+	.	ID=gene-ZeamMp012;Dbxref=GeneID:4055962;Name=nad4L;gbkey=Gene;gene=nad4L;gene_biotype=protein_coding;locus_tag=ZeamMp012
+NC_007982.1	RefSeq	CDS	26910	27212	.	+	0	ID=cds-YP_588278.1;Parent=gene-ZeamMp012;Dbxref=GenBank:YP_588278.1,GeneID:4055962;Name=YP_588278.1;exception=RNA editing;gbkey=CDS;gene=nad4L;locus_tag=ZeamMp012;product=NADH dehydrogenase subunit 4L;protein_id=YP_588278.1
+NC_007982.1	RefSeq	gene	27219	27551	.	-	.	ID=gene-ZeamMp013;Dbxref=GeneID:4055830;Name=orf110-a;gbkey=Gene;gene=orf110-a;gene_biotype=protein_coding;locus_tag=ZeamMp013
+NC_007982.1	RefSeq	CDS	27219	27551	.	-	0	ID=cds-YP_588279.1;Parent=gene-ZeamMp013;Dbxref=GenBank:YP_588279.1,GeneID:4055830;Name=YP_588279.1;gbkey=CDS;gene=orf110-a;locus_tag=ZeamMp013;product=hypothetical protein;protein_id=YP_588279.1
+NC_007982.1	RefSeq	gene	27503	27883	.	+	.	ID=gene-ZeamMp014;Dbxref=GeneID:4055849;Name=orf126-a;gbkey=Gene;gene=orf126-a;gene_biotype=protein_coding;locus_tag=ZeamMp014
+NC_007982.1	RefSeq	CDS	27503	27883	.	+	0	ID=cds-YP_588280.1;Parent=gene-ZeamMp014;Dbxref=GenBank:YP_588280.1,GeneID:4055849;Name=YP_588280.1;gbkey=CDS;gene=orf126-a;locus_tag=ZeamMp014;product=hypothetical protein;protein_id=YP_588280.1
+NC_007982.1	RefSeq	gene	37491	37868	.	-	.	ID=gene-ZeamMp015;Dbxref=GeneID:4055944;Name=orf125;gbkey=Gene;gene=orf125;gene_biotype=protein_coding;locus_tag=ZeamMp015
+NC_007982.1	RefSeq	CDS	37491	37868	.	-	0	ID=cds-YP_588281.1;Parent=gene-ZeamMp015;Dbxref=GenBank:YP_588281.1,GeneID:4055944;Name=YP_588281.1;gbkey=CDS;gene=orf125;locus_tag=ZeamMp015;product=hypothetical protein;protein_id=YP_588281.1
+NC_007982.1	RefSeq	gene	42663	42734	.	+	.	ID=gene-ZeamMt001;Dbxref=GeneID:4055801;Name=trnN-a1-ct;gbkey=Gene;gene=trnN-a1-ct;gene_biotype=tRNA;locus_tag=ZeamMt001
+NC_007982.1	RefSeq	tRNA	42663	42734	.	+	.	ID=rna-ZeamMt001;Parent=gene-ZeamMt001;Dbxref=GeneID:4055801;Note=chloroplast origin;gbkey=tRNA;gene=trnN-a1-ct;locus_tag=ZeamMt001;product=tRNA-Asn
+NC_007982.1	RefSeq	exon	42663	42734	.	+	.	ID=exon-ZeamMt001-1;Parent=rna-ZeamMt001;Dbxref=GeneID:4055801;Note=chloroplast origin;gbkey=tRNA;gene=trnN-a1-ct;locus_tag=ZeamMt001;product=tRNA-Asn
+NC_007982.1	RefSeq	gene	43362	43435	.	-	.	ID=gene-ZeamMt002;Dbxref=GeneID:4055914;Name=trnD-a1;gbkey=Gene;gene=trnD-a1;gene_biotype=tRNA;locus_tag=ZeamMt002
+NC_007982.1	RefSeq	tRNA	43362	43435	.	-	.	ID=rna-ZeamMt002;Parent=gene-ZeamMt002;Dbxref=GeneID:4055914;gbkey=tRNA;gene=trnD-a1;locus_tag=ZeamMt002;product=tRNA-Asp
+NC_007982.1	RefSeq	exon	43362	43435	.	-	.	ID=exon-ZeamMt002-1;Parent=rna-ZeamMt002;Dbxref=GeneID:4055914;gbkey=tRNA;gene=trnD-a1;locus_tag=ZeamMt002;product=tRNA-Asp
+NC_007982.1	RefSeq	gene	44163	44236	.	+	.	ID=gene-ZeamMt003;Dbxref=GeneID:4055929;Name=trnI-a1;gbkey=Gene;gene=trnI-a1;gene_biotype=tRNA;locus_tag=ZeamMt003
+NC_007982.1	RefSeq	tRNA	44163	44236	.	+	.	ID=rna-ZeamMt003;Parent=gene-ZeamMt003;Dbxref=GeneID:4055929;Note=tRNA-Ileu%3B tRNA with a methionine anticodon post-transcriptionaly modified to have tRNA isoleucine activity;gbkey=tRNA;gene=trnI-a1;locus_tag=ZeamMt003;product=tRNA-Met
+NC_007982.1	RefSeq	exon	44163	44236	.	+	.	ID=exon-ZeamMt003-1;Parent=rna-ZeamMt003;Dbxref=GeneID:4055929;Note=tRNA-Ileu%3B tRNA with a methionine anticodon post-transcriptionaly modified to have tRNA isoleucine activity;gbkey=tRNA;gene=trnI-a1;locus_tag=ZeamMt003;product=tRNA-Met
+NC_007982.1	RefSeq	gene	47077	47148	.	-	.	ID=gene-ZeamMt004;Dbxref=GeneID:4055862;Name=trnE-a1;gbkey=Gene;gene=trnE-a1;gene_biotype=tRNA;locus_tag=ZeamMt004
+NC_007982.1	RefSeq	tRNA	47077	47148	.	-	.	ID=rna-ZeamMt004;Parent=gene-ZeamMt004;Dbxref=GeneID:4055862;gbkey=tRNA;gene=trnE-a1;locus_tag=ZeamMt004;product=tRNA-Glu
+NC_007982.1	RefSeq	exon	47077	47148	.	-	.	ID=exon-ZeamMt004-1;Parent=rna-ZeamMt004;Dbxref=GeneID:4055862;gbkey=tRNA;gene=trnE-a1;locus_tag=ZeamMt004;product=tRNA-Glu
+NC_007982.1	RefSeq	gene	49198	49272	.	+	.	ID=gene-ZeamMt005;Dbxref=GeneID:4055799;Name=trnP-a1;gbkey=Gene;gene=trnP-a1;gene_biotype=tRNA;locus_tag=ZeamMt005
+NC_007982.1	RefSeq	tRNA	49198	49272	.	+	.	ID=rna-ZeamMt005;Parent=gene-ZeamMt005;Dbxref=GeneID:4055799;gbkey=tRNA;gene=trnP-a1;locus_tag=ZeamMt005;product=tRNA-Pro
+NC_007982.1	RefSeq	exon	49198	49272	.	+	.	ID=exon-ZeamMt005-1;Parent=rna-ZeamMt005;Dbxref=GeneID:4055799;gbkey=tRNA;gene=trnP-a1;locus_tag=ZeamMt005;product=tRNA-Pro
+NC_007982.1	RefSeq	gene	50490	50874	.	+	.	ID=gene-ZeamMp186;Dbxref=GeneID:4055939;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=ZeamMp186;part=1
+NC_007982.1	RefSeq	gene	320928	322595	.	+	.	ID=gene-ZeamMp186;Dbxref=GeneID:4055939;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=ZeamMp186;part=2
+NC_007982.1	RefSeq	gene	548714	548772	.	+	.	ID=gene-ZeamMp186;Dbxref=GeneID:4055939;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=ZeamMp186;part=3
+NC_007982.1	RefSeq	gene	266974	267232	.	-	.	ID=gene-ZeamMp186;Dbxref=GeneID:4055939;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=ZeamMp186;part=4
+NC_007982.1	RefSeq	CDS	50490	50874	.	+	0	ID=cds-YP_588282.1;Parent=gene-ZeamMp186;Dbxref=GenBank:YP_588282.1,GeneID:4055939;Name=YP_588282.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=ZeamMp186;part=1;product=NADH dehydrogenase subunit 1;protein_id=YP_588282.1
+NC_007982.1	RefSeq	CDS	320928	321010	.	+	2	ID=cds-YP_588282.1;Parent=gene-ZeamMp186;Dbxref=GenBank:YP_588282.1,GeneID:4055939;Name=YP_588282.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=ZeamMp186;part=2;product=NADH dehydrogenase subunit 1;protein_id=YP_588282.1
+NC_007982.1	RefSeq	CDS	322404	322595	.	+	0	ID=cds-YP_588282.1;Parent=gene-ZeamMp186;Dbxref=GenBank:YP_588282.1,GeneID:4055939;Name=YP_588282.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=ZeamMp186;part=3;product=NADH dehydrogenase subunit 1;protein_id=YP_588282.1
+NC_007982.1	RefSeq	CDS	548714	548772	.	+	0	ID=cds-YP_588282.1;Parent=gene-ZeamMp186;Dbxref=GenBank:YP_588282.1,GeneID:4055939;Name=YP_588282.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=ZeamMp186;part=4;product=NADH dehydrogenase subunit 1;protein_id=YP_588282.1
+NC_007982.1	RefSeq	CDS	266974	267232	.	-	1	ID=cds-YP_588282.1;Parent=gene-ZeamMp186;Dbxref=GenBank:YP_588282.1,GeneID:4055939;Name=YP_588282.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=ZeamMp186;part=5;product=NADH dehydrogenase subunit 1;protein_id=YP_588282.1
+NC_007982.1	RefSeq	exon	50490	50874	.	+	.	ID=id-ZeamMp186-1;Parent=gene-ZeamMp186;Dbxref=GeneID:4055939;exon_number=1;gbkey=exon;gene=nad1;locus_tag=ZeamMp186;number=1
+NC_007982.1	RefSeq	gene	51738	52037	.	+	.	ID=gene-ZeamMp018;Dbxref=GeneID:4055823;Name=orf99-a1;gbkey=Gene;gene=orf99-a1;gene_biotype=protein_coding;locus_tag=ZeamMp018
+NC_007982.1	RefSeq	CDS	51738	52037	.	+	0	ID=cds-YP_588283.1;Parent=gene-ZeamMp018;Dbxref=GenBank:YP_588283.1,GeneID:4055823;Name=YP_588283.1;gbkey=CDS;gene=orf99-a1;locus_tag=ZeamMp018;product=hypothetical protein;protein_id=YP_588283.1
+NC_007982.1	RefSeq	gene	57423	57722	.	-	.	ID=gene-ZeamMp020;Dbxref=GeneID:4055824;Name=orf99-b1;gbkey=Gene;gene=orf99-b1;gene_biotype=protein_coding;locus_tag=ZeamMp020
+NC_007982.1	RefSeq	CDS	57423	57722	.	-	0	ID=cds-YP_588284.1;Parent=gene-ZeamMp020;Dbxref=GenBank:YP_588284.1,GeneID:4055824;Name=YP_588284.1;gbkey=CDS;gene=orf99-b1;locus_tag=ZeamMp020;product=hypothetical protein;protein_id=YP_588284.1
+NC_007982.1	RefSeq	gene	58052	58528	.	+	.	ID=gene-ZeamMp021;Dbxref=GeneID:4055880;Name=orf158-a1;gbkey=Gene;gene=orf158-a1;gene_biotype=protein_coding;locus_tag=ZeamMp021
+NC_007982.1	RefSeq	CDS	58052	58528	.	+	0	ID=cds-YP_588285.1;Parent=gene-ZeamMp021;Dbxref=GenBank:YP_588285.1,GeneID:4055880;Name=YP_588285.1;Note=intronic orf;gbkey=CDS;gene=orf158-a1;locus_tag=ZeamMp021;product=hypothetical protein;protein_id=YP_588285.1
+NC_007982.1	RefSeq	gene	60824	63559	.	-	.	ID=gene-ZeamMp022;Dbxref=GeneID:4055913;Name=orf911;gbkey=Gene;gene=orf911;gene_biotype=protein_coding;locus_tag=ZeamMp022
+NC_007982.1	RefSeq	CDS	60824	63559	.	-	0	ID=cds-YP_588286.1;Parent=gene-ZeamMp022;Dbxref=GenBank:YP_588286.1,GeneID:4055913;Name=YP_588286.1;gbkey=CDS;gene=orf911;locus_tag=ZeamMp022;product=hypothetical protein;protein_id=YP_588286.1
+NC_007982.1	RefSeq	gene	63562	63945	.	-	.	ID=gene-ZeamMp023;Dbxref=GeneID:4055950;Name=orf127;gbkey=Gene;gene=orf127;gene_biotype=protein_coding;locus_tag=ZeamMp023
+NC_007982.1	RefSeq	CDS	63562	63945	.	-	0	ID=cds-YP_588287.1;Parent=gene-ZeamMp023;Dbxref=GenBank:YP_588287.1,GeneID:4055950;Name=YP_588287.1;gbkey=CDS;gene=orf127;locus_tag=ZeamMp023;product=hypothetical protein;protein_id=YP_588287.1
+NC_007982.1	RefSeq	gene	64470	64850	.	+	.	ID=gene-ZeamMp025;Dbxref=GeneID:4055975;Name=orf126-b1;gbkey=Gene;gene=orf126-b1;gene_biotype=protein_coding;locus_tag=ZeamMp025
+NC_007982.1	RefSeq	CDS	64470	64850	.	+	0	ID=cds-YP_588288.1;Parent=gene-ZeamMp025;Dbxref=GenBank:YP_588288.1,GeneID:4055975;Name=YP_588288.1;gbkey=CDS;gene=orf126-b1;locus_tag=ZeamMp025;product=hypothetical protein;protein_id=YP_588288.1
+NC_007982.1	RefSeq	gene	65335	65682	.	+	.	ID=gene-ZeamMp026;Dbxref=GeneID:4055795;Name=orf115-c1;gbkey=Gene;gene=orf115-c1;gene_biotype=protein_coding;locus_tag=ZeamMp026
+NC_007982.1	RefSeq	CDS	65335	65682	.	+	0	ID=cds-YP_588289.1;Parent=gene-ZeamMp026;Dbxref=GenBank:YP_588289.1,GeneID:4055795;Name=YP_588289.1;gbkey=CDS;gene=orf115-c1;locus_tag=ZeamMp026;product=hypothetical protein;protein_id=YP_588289.1
+NC_007982.1	RefSeq	gene	68277	68597	.	-	.	ID=gene-ZeamMp027;Dbxref=GeneID:4055917;Name=orf106-a1;gbkey=Gene;gene=orf106-a1;gene_biotype=protein_coding;locus_tag=ZeamMp027
+NC_007982.1	RefSeq	CDS	68277	68597	.	-	0	ID=cds-YP_588290.1;Parent=gene-ZeamMp027;Dbxref=GenBank:YP_588290.1,GeneID:4055917;Name=YP_588290.1;gbkey=CDS;gene=orf106-a1;locus_tag=ZeamMp027;product=hypothetical protein;protein_id=YP_588290.1
+NC_007982.1	RefSeq	gene	71056	71394	.	+	.	ID=gene-ZeamMp028;Dbxref=GeneID:4055867;Name=orf112-a1;gbkey=Gene;gene=orf112-a1;gene_biotype=protein_coding;locus_tag=ZeamMp028
+NC_007982.1	RefSeq	CDS	71056	71394	.	+	0	ID=cds-YP_588291.1;Parent=gene-ZeamMp028;Dbxref=GenBank:YP_588291.1,GeneID:4055867;Name=YP_588291.1;gbkey=CDS;gene=orf112-a1;locus_tag=ZeamMp028;product=hypothetical protein;protein_id=YP_588291.1
+NC_007982.1	RefSeq	gene	73895	74197	.	+	.	ID=gene-ZeamMp029;Dbxref=GeneID:4055844;Name=orf100-a1;gbkey=Gene;gene=orf100-a1;gene_biotype=protein_coding;locus_tag=ZeamMp029
+NC_007982.1	RefSeq	CDS	73895	74197	.	+	0	ID=cds-YP_588292.1;Parent=gene-ZeamMp029;Dbxref=GenBank:YP_588292.1,GeneID:4055844;Name=YP_588292.1;gbkey=CDS;gene=orf100-a1;locus_tag=ZeamMp029;product=hypothetical protein;protein_id=YP_588292.1
+NC_007982.1	RefSeq	gene	75521	75886	.	-	.	ID=gene-ZeamMp030;Dbxref=GeneID:4055916;Name=orf121-a-ct;gbkey=Gene;gene=orf121-a-ct;gene_biotype=protein_coding;locus_tag=ZeamMp030
+NC_007982.1	RefSeq	CDS	75521	75886	.	-	0	ID=cds-YP_588293.1;Parent=gene-ZeamMp030;Dbxref=GenBank:YP_588293.1,GeneID:4055916;Name=YP_588293.1;Note=chloroplast origin;gbkey=CDS;gene=orf121-a-ct;locus_tag=ZeamMp030;product=chloroplast hypothetical protein;protein_id=YP_588293.1
+NC_007982.1	RefSeq	gene	76132	84976	.	-	.	ID=gene-ZeamMp032;Dbxref=GeneID:4055888;Name=nad4;gbkey=Gene;gene=nad4;gene_biotype=protein_coding;locus_tag=ZeamMp032
+NC_007982.1	RefSeq	CDS	84516	84976	.	-	0	ID=cds-YP_588294.1;Parent=gene-ZeamMp032;Dbxref=GenBank:YP_588294.1,GeneID:4055888;Name=YP_588294.1;gbkey=CDS;gene=nad4;locus_tag=ZeamMp032;product=NADH dehydrogenase subunit 4;protein_id=YP_588294.1
+NC_007982.1	RefSeq	CDS	82760	83274	.	-	1	ID=cds-YP_588294.1;Parent=gene-ZeamMp032;Dbxref=GenBank:YP_588294.1,GeneID:4055888;Name=YP_588294.1;gbkey=CDS;gene=nad4;locus_tag=ZeamMp032;product=NADH dehydrogenase subunit 4;protein_id=YP_588294.1
+NC_007982.1	RefSeq	CDS	78912	79334	.	-	2	ID=cds-YP_588294.1;Parent=gene-ZeamMp032;Dbxref=GenBank:YP_588294.1,GeneID:4055888;Name=YP_588294.1;gbkey=CDS;gene=nad4;locus_tag=ZeamMp032;product=NADH dehydrogenase subunit 4;protein_id=YP_588294.1
+NC_007982.1	RefSeq	CDS	76132	76220	.	-	2	ID=cds-YP_588294.1;Parent=gene-ZeamMp032;Dbxref=GenBank:YP_588294.1,GeneID:4055888;Name=YP_588294.1;gbkey=CDS;gene=nad4;locus_tag=ZeamMp032;product=NADH dehydrogenase subunit 4;protein_id=YP_588294.1
+NC_007982.1	RefSeq	exon	76132	76220	.	-	.	ID=id-ZeamMp032-4;Parent=gene-ZeamMp032;Dbxref=GeneID:4055888;exon_number=4;gbkey=exon;gene=nad4;locus_tag=ZeamMp032;number=4
+NC_007982.1	RefSeq	exon	78912	79334	.	-	.	ID=id-ZeamMp032-3;Parent=gene-ZeamMp032;Dbxref=GeneID:4055888;exon_number=3;gbkey=exon;gene=nad4;locus_tag=ZeamMp032;number=3
+NC_007982.1	RefSeq	exon	82760	83274	.	-	.	ID=id-ZeamMp032-2;Parent=gene-ZeamMp032;Dbxref=GeneID:4055888;exon_number=2;gbkey=exon;gene=nad4;locus_tag=ZeamMp032;number=2
+NC_007982.1	RefSeq	exon	84516	84976	.	-	.	ID=id-ZeamMp032-1;Parent=gene-ZeamMp032;Dbxref=GeneID:4055888;exon_number=1;gbkey=exon;gene=nad4;locus_tag=ZeamMp032;number=1
+NC_007982.1	RefSeq	gene	94257	94329	.	-	.	ID=gene-ZeamMt007;Dbxref=GeneID:4055963;Name=trnK;gbkey=Gene;gene=trnK;gene_biotype=tRNA;locus_tag=ZeamMt007
+NC_007982.1	RefSeq	tRNA	94257	94329	.	-	.	ID=rna-ZeamMt007;Parent=gene-ZeamMt007;Dbxref=GeneID:4055963;gbkey=tRNA;gene=trnK;locus_tag=ZeamMt007;product=tRNA-Lys
+NC_007982.1	RefSeq	exon	94257	94329	.	-	.	ID=exon-ZeamMt007-1;Parent=rna-ZeamMt007;Dbxref=GeneID:4055963;gbkey=tRNA;gene=trnK;locus_tag=ZeamMt007;product=tRNA-Lys
+NC_007982.1	RefSeq	gene	95774	98073	.	+	.	ID=gene-ZeamMp033;Dbxref=GeneID:4055938;Name=ccmFC;gbkey=Gene;gene=ccmFC;gene_biotype=protein_coding;locus_tag=ZeamMp033
+NC_007982.1	RefSeq	CDS	95774	96528	.	+	0	ID=cds-YP_588295.1;Parent=gene-ZeamMp033;Dbxref=GenBank:YP_588295.1,GeneID:4055938;Name=YP_588295.1;gbkey=CDS;gene=ccmFC;locus_tag=ZeamMp033;product=cytochrome c biogenesis FC;protein_id=YP_588295.1;transl_except=(pos:98071..98073%2Caa:TERM)
+NC_007982.1	RefSeq	CDS	97527	98073	.	+	1	ID=cds-YP_588295.1;Parent=gene-ZeamMp033;Dbxref=GenBank:YP_588295.1,GeneID:4055938;Name=YP_588295.1;gbkey=CDS;gene=ccmFC;locus_tag=ZeamMp033;product=cytochrome c biogenesis FC;protein_id=YP_588295.1;transl_except=(pos:98071..98073%2Caa:TERM)
+NC_007982.1	RefSeq	exon	95774	96528	.	+	.	ID=id-ZeamMp033-1;Parent=gene-ZeamMp033;Dbxref=GeneID:4055938;exon_number=1;gbkey=exon;gene=ccmFC;locus_tag=ZeamMp033;number=1
+NC_007982.1	RefSeq	exon	97527	98073	.	+	.	ID=id-ZeamMp033-2;Parent=gene-ZeamMp033;Dbxref=GeneID:4055938;exon_number=2;gbkey=exon;gene=ccmFC;locus_tag=ZeamMp033;number=2
+NC_007982.1	RefSeq	gene	98035	98343	.	-	.	ID=gene-ZeamMp034;Dbxref=GeneID:4055833;Name=orf102-a;gbkey=Gene;gene=orf102-a;gene_biotype=protein_coding;locus_tag=ZeamMp034
+NC_007982.1	RefSeq	CDS	98035	98343	.	-	0	ID=cds-YP_588296.1;Parent=gene-ZeamMp034;Dbxref=GenBank:YP_588296.1,GeneID:4055833;Name=YP_588296.1;gbkey=CDS;gene=orf102-a;locus_tag=ZeamMp034;product=hypothetical protein;protein_id=YP_588296.1
+NC_007982.1	RefSeq	gene	99693	100007	.	+	.	ID=gene-ZeamMp035;Dbxref=GeneID:4055811;Name=orf104-a;gbkey=Gene;gene=orf104-a;gene_biotype=protein_coding;locus_tag=ZeamMp035
+NC_007982.1	RefSeq	CDS	99693	100007	.	+	0	ID=cds-YP_588297.1;Parent=gene-ZeamMp035;Dbxref=GenBank:YP_588297.1,GeneID:4055811;Name=YP_588297.1;gbkey=CDS;gene=orf104-a;locus_tag=ZeamMp035;product=hypothetical protein;protein_id=YP_588297.1
+NC_007982.1	RefSeq	pseudogene	100905	100978	.	+	.	ID=gene-ZeamMt008;Dbxref=GeneID:4055920;Name=trnD;gbkey=Gene;gene=trnD;gene_biotype=tRNA_pseudogene;locus_tag=ZeamMt008;pseudo=true
+NC_007982.1	RefSeq	tRNA	100905	100978	.	+	.	ID=rna-ZeamMt008;Parent=gene-ZeamMt008;Dbxref=GeneID:4055920;gbkey=tRNA;gene=trnD;locus_tag=ZeamMt008;product=tRNA-Asp;pseudo=true
+NC_007982.1	RefSeq	exon	100905	100978	.	+	.	ID=exon-ZeamMt008-1;Parent=rna-ZeamMt008;Dbxref=GeneID:4055920;gbkey=tRNA;gene=trnD;locus_tag=ZeamMt008;product=tRNA-Asp;pseudo=true
+NC_007982.1	RefSeq	gene	101544	102116	.	+	.	ID=gene-ZeamMp036;Dbxref=GeneID:4055894;Name=nad9;gbkey=Gene;gene=nad9;gene_biotype=protein_coding;locus_tag=ZeamMp036
+NC_007982.1	RefSeq	CDS	101544	102116	.	+	0	ID=cds-YP_588298.1;Parent=gene-ZeamMp036;Dbxref=GenBank:YP_588298.1,GeneID:4055894;Name=YP_588298.1;gbkey=CDS;gene=nad9;locus_tag=ZeamMp036;product=NADH dehydrogenase subunit 9;protein_id=YP_588298.1
+NC_007982.1	RefSeq	gene	102895	102977	.	+	.	ID=gene-ZeamMt009;Dbxref=GeneID:4056010;Name=trnY;gbkey=Gene;gene=trnY;gene_biotype=tRNA;locus_tag=ZeamMt009
+NC_007982.1	RefSeq	tRNA	102895	102977	.	+	.	ID=rna-ZeamMt009;Parent=gene-ZeamMt009;Dbxref=GeneID:4056010;gbkey=tRNA;gene=trnY;locus_tag=ZeamMt009;product=tRNA-Tyr
+NC_007982.1	RefSeq	exon	102895	102977	.	+	.	ID=exon-ZeamMt009-1;Parent=rna-ZeamMt009;Dbxref=GeneID:4056010;gbkey=tRNA;gene=trnY;locus_tag=ZeamMt009;product=tRNA-Tyr
+NC_007982.1	RefSeq	gene	105917	106267	.	+	.	ID=gene-ZeamMp037;Dbxref=GeneID:4055974;Name=orf116-b;gbkey=Gene;gene=orf116-b;gene_biotype=protein_coding;locus_tag=ZeamMp037
+NC_007982.1	RefSeq	CDS	105917	106267	.	+	0	ID=cds-YP_588299.1;Parent=gene-ZeamMp037;Dbxref=GenBank:YP_588299.1,GeneID:4055974;Name=YP_588299.1;gbkey=CDS;gene=orf116-b;locus_tag=ZeamMp037;product=hypothetical protein;protein_id=YP_588299.1
+NC_007982.1	RefSeq	gene	107700	108053	.	+	.	ID=gene-ZeamMp038;Dbxref=GeneID:4055943;Name=orf117-a;gbkey=Gene;gene=orf117-a;gene_biotype=protein_coding;locus_tag=ZeamMp038
+NC_007982.1	RefSeq	CDS	107700	108053	.	+	0	ID=cds-YP_588300.1;Parent=gene-ZeamMp038;Dbxref=GenBank:YP_588300.1,GeneID:4055943;Name=YP_588300.1;gbkey=CDS;gene=orf117-a;locus_tag=ZeamMp038;product=hypothetical protein;protein_id=YP_588300.1
+NC_007982.1	RefSeq	gene	108119	108487	.	-	.	ID=gene-ZeamMp039;Dbxref=GeneID:4055940;Name=orf122;gbkey=Gene;gene=orf122;gene_biotype=protein_coding;locus_tag=ZeamMp039
+NC_007982.1	RefSeq	CDS	108119	108487	.	-	0	ID=cds-YP_588301.1;Parent=gene-ZeamMp039;Dbxref=GenBank:YP_588301.1,GeneID:4055940;Name=YP_588301.1;gbkey=CDS;gene=orf122;locus_tag=ZeamMp039;product=hypothetical protein;protein_id=YP_588301.1
+NC_007982.1	RefSeq	gene	108349	108693	.	+	.	ID=gene-ZeamMp040;Dbxref=GeneID:4055936;Name=orf114-a;gbkey=Gene;gene=orf114-a;gene_biotype=protein_coding;locus_tag=ZeamMp040
+NC_007982.1	RefSeq	CDS	108349	108693	.	+	0	ID=cds-YP_588302.1;Parent=gene-ZeamMp040;Dbxref=GenBank:YP_588302.1,GeneID:4055936;Name=YP_588302.1;gbkey=CDS;gene=orf114-a;locus_tag=ZeamMp040;product=hypothetical protein;protein_id=YP_588302.1
+NC_007982.1	RefSeq	gene	111207	111278	.	+	.	ID=gene-ZeamMt010;Dbxref=GeneID:4055969;Name=trnM;gbkey=Gene;gene=trnM;gene_biotype=tRNA;locus_tag=ZeamMt010
+NC_007982.1	RefSeq	tRNA	111207	111278	.	+	.	ID=rna-ZeamMt010;Parent=gene-ZeamMt010;Dbxref=GeneID:4055969;gbkey=tRNA;gene=trnM;locus_tag=ZeamMt010;product=tRNA-Met
+NC_007982.1	RefSeq	exon	111207	111278	.	+	.	ID=exon-ZeamMt010-1;Parent=rna-ZeamMt010;Dbxref=GeneID:4055969;gbkey=tRNA;gene=trnM;locus_tag=ZeamMt010;product=tRNA-Met
+NC_007982.1	RefSeq	gene	112185	112484	.	+	.	ID=gene-ZeamMp041;Dbxref=GeneID:4055955;Name=orf99-c;gbkey=Gene;gene=orf99-c;gene_biotype=protein_coding;locus_tag=ZeamMp041
+NC_007982.1	RefSeq	CDS	112185	112484	.	+	0	ID=cds-YP_588303.1;Parent=gene-ZeamMp041;Dbxref=GenBank:YP_588303.1,GeneID:4055955;Name=YP_588303.1;Note=intronic orf;gbkey=CDS;gene=orf99-c;locus_tag=ZeamMp041;product=hypothetical protein;protein_id=YP_588303.1
+NC_007982.1	RefSeq	gene	112524	112841	.	+	.	ID=gene-ZeamMp042;Dbxref=GeneID:4055991;Name=orf105-a;gbkey=Gene;gene=orf105-a;gene_biotype=protein_coding;locus_tag=ZeamMp042
+NC_007982.1	RefSeq	CDS	112524	112841	.	+	0	ID=cds-YP_588304.1;Parent=gene-ZeamMp042;Dbxref=GenBank:YP_588304.1,GeneID:4055991;Name=YP_588304.1;Note=intronic orf;gbkey=CDS;gene=orf105-a;locus_tag=ZeamMp042;product=hypothetical protein;protein_id=YP_588304.1
+NC_007982.1	RefSeq	gene	112838	113260	.	-	.	ID=gene-ZeamMp043;Dbxref=GeneID:4055987;Name=orf140-a;gbkey=Gene;gene=orf140-a;gene_biotype=protein_coding;locus_tag=ZeamMp043
+NC_007982.1	RefSeq	CDS	112838	113260	.	-	0	ID=cds-YP_588305.1;Parent=gene-ZeamMp043;Dbxref=GenBank:YP_588305.1,GeneID:4055987;Name=YP_588305.1;Note=intronic orf;gbkey=CDS;gene=orf140-a;locus_tag=ZeamMp043;product=hypothetical protein;protein_id=YP_588305.1
+NC_007982.1	RefSeq	gene	113045	113350	.	+	.	ID=gene-ZeamMp044;Dbxref=GeneID:4055904;Name=orf101-a;gbkey=Gene;gene=orf101-a;gene_biotype=protein_coding;locus_tag=ZeamMp044
+NC_007982.1	RefSeq	CDS	113045	113350	.	+	0	ID=cds-YP_588306.1;Parent=gene-ZeamMp044;Dbxref=GenBank:YP_588306.1,GeneID:4055904;Name=YP_588306.1;Note=intronic orf;gbkey=CDS;gene=orf101-a;locus_tag=ZeamMp044;product=hypothetical protein;protein_id=YP_588306.1
+NC_007982.1	RefSeq	gene	114492	114968	.	-	.	ID=gene-ZeamMp045;Dbxref=GeneID:4055884;Name=orf158-a2;gbkey=Gene;gene=orf158-a2;gene_biotype=protein_coding;locus_tag=ZeamMp045
+NC_007982.1	RefSeq	CDS	114492	114968	.	-	0	ID=cds-YP_588307.1;Parent=gene-ZeamMp045;Dbxref=GenBank:YP_588307.1,GeneID:4055884;Name=YP_588307.1;Note=intronic orf;gbkey=CDS;gene=orf158-a2;locus_tag=ZeamMp045;product=hypothetical protein;protein_id=YP_588307.1
+NC_007982.1	RefSeq	gene	115298	115597	.	+	.	ID=gene-ZeamMp046;Dbxref=GeneID:4055825;Name=orf99-b2;gbkey=Gene;gene=orf99-b2;gene_biotype=protein_coding;locus_tag=ZeamMp046
+NC_007982.1	RefSeq	CDS	115298	115597	.	+	0	ID=cds-YP_588308.1;Parent=gene-ZeamMp046;Dbxref=GenBank:YP_588308.1,GeneID:4055825;Name=YP_588308.1;Note=intronic orf;gbkey=CDS;gene=orf99-b2;locus_tag=ZeamMp046;product=hypothetical protein;protein_id=YP_588308.1
+NC_007982.1	RefSeq	gene	120983	121282	.	-	.	ID=gene-ZeamMp047;Dbxref=GeneID:4055796;Name=orf99-a2;gbkey=Gene;gene=orf99-a2;gene_biotype=protein_coding;locus_tag=ZeamMp047
+NC_007982.1	RefSeq	CDS	120983	121282	.	-	0	ID=cds-YP_588309.1;Parent=gene-ZeamMp047;Dbxref=GenBank:YP_588309.1,GeneID:4055796;Name=YP_588309.1;gbkey=CDS;gene=orf99-a2;locus_tag=ZeamMp047;product=hypothetical protein;protein_id=YP_588309.1
+NC_007982.1	RefSeq	gene	122146	122530	.	-	.	ID=gene-ZeamMp017;Dbxref=GeneID:37545003;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=ZeamMp017;part=1
+NC_007982.1	RefSeq	gene	320928	321010	.	+	.	ID=gene-ZeamMp017;Dbxref=GeneID:37545003;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=ZeamMp017;part=2
+NC_007982.1	RefSeq	gene	322404	322595	.	+	.	ID=gene-ZeamMp017;Dbxref=GeneID:37545003;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=ZeamMp017;part=3
+NC_007982.1	RefSeq	gene	548714	548772	.	+	.	ID=gene-ZeamMp017;Dbxref=GeneID:37545003;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=ZeamMp017;part=4
+NC_007982.1	RefSeq	gene	266974	267232	.	-	.	ID=gene-ZeamMp017;Dbxref=GeneID:37545003;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=ZeamMp017;part=5
+NC_007982.1	RefSeq	CDS	122146	122530	.	-	0	ID=cds-YP_588310.1;Parent=gene-ZeamMp017;Dbxref=GenBank:YP_588310.1,GeneID:37545003;Name=YP_588310.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=ZeamMp017;part=1;product=NADH dehydrogenase subunit 1;protein_id=YP_588310.1
+NC_007982.1	RefSeq	CDS	320928	321010	.	+	2	ID=cds-YP_588310.1;Parent=gene-ZeamMp017;Dbxref=GenBank:YP_588310.1,GeneID:37545003;Name=YP_588310.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=ZeamMp017;part=2;product=NADH dehydrogenase subunit 1;protein_id=YP_588310.1
+NC_007982.1	RefSeq	CDS	322404	322595	.	+	0	ID=cds-YP_588310.1;Parent=gene-ZeamMp017;Dbxref=GenBank:YP_588310.1,GeneID:37545003;Name=YP_588310.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=ZeamMp017;part=3;product=NADH dehydrogenase subunit 1;protein_id=YP_588310.1
+NC_007982.1	RefSeq	CDS	548714	548772	.	+	0	ID=cds-YP_588310.1;Parent=gene-ZeamMp017;Dbxref=GenBank:YP_588310.1,GeneID:37545003;Name=YP_588310.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=ZeamMp017;part=4;product=NADH dehydrogenase subunit 1;protein_id=YP_588310.1
+NC_007982.1	RefSeq	CDS	266974	267232	.	-	1	ID=cds-YP_588310.1;Parent=gene-ZeamMp017;Dbxref=GenBank:YP_588310.1,GeneID:37545003;Name=YP_588310.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=ZeamMp017;part=5;product=NADH dehydrogenase subunit 1;protein_id=YP_588310.1
+NC_007982.1	RefSeq	exon	122146	122530	.	-	.	ID=id-ZeamMp017-1;Parent=gene-ZeamMp017;Dbxref=GeneID:37545003;exon_number=1;gbkey=exon;gene=nad1;locus_tag=ZeamMp017;number=1
+NC_007982.1	RefSeq	exon	266974	267232	.	-	.	ID=id-ZeamMp017-5;Parent=gene-ZeamMp017;Dbxref=GeneID:37545003;exon_number=5;gbkey=exon;gene=nad1;locus_tag=ZeamMp017;number=5
+NC_007982.1	RefSeq	exon	320928	321010	.	+	.	ID=id-ZeamMp017-2;Parent=gene-ZeamMp017;Dbxref=GeneID:37545003;exon_number=2;gbkey=exon;gene=nad1;locus_tag=ZeamMp017;number=2
+NC_007982.1	RefSeq	exon	322404	322595	.	+	.	ID=id-ZeamMp017-3;Parent=gene-ZeamMp017;Dbxref=GeneID:37545003;exon_number=3;gbkey=exon;gene=nad1;locus_tag=ZeamMp017;number=3
+NC_007982.1	RefSeq	exon	548714	548772	.	+	.	ID=id-ZeamMp017-4;Parent=gene-ZeamMp017;Dbxref=GeneID:37545003;exon_number=4;gbkey=exon;gene=nad1;locus_tag=ZeamMp017;number=4
+NC_007982.1	RefSeq	gene	123748	123822	.	-	.	ID=gene-ZeamMt011;Dbxref=GeneID:4055800;Name=trnP-a2;gbkey=Gene;gene=trnP-a2;gene_biotype=tRNA;locus_tag=ZeamMt011
+NC_007982.1	RefSeq	tRNA	123748	123822	.	-	.	ID=rna-ZeamMt011;Parent=gene-ZeamMt011;Dbxref=GeneID:4055800;gbkey=tRNA;gene=trnP-a2;locus_tag=ZeamMt011;product=tRNA-Pro
+NC_007982.1	RefSeq	exon	123748	123822	.	-	.	ID=exon-ZeamMt011-1;Parent=rna-ZeamMt011;Dbxref=GeneID:4055800;gbkey=tRNA;gene=trnP-a2;locus_tag=ZeamMt011;product=tRNA-Pro
+NC_007982.1	RefSeq	gene	125872	125943	.	+	.	ID=gene-ZeamMt012;Dbxref=GeneID:4055866;Name=trnE-a2;gbkey=Gene;gene=trnE-a2;gene_biotype=tRNA;locus_tag=ZeamMt012
+NC_007982.1	RefSeq	tRNA	125872	125943	.	+	.	ID=rna-ZeamMt012;Parent=gene-ZeamMt012;Dbxref=GeneID:4055866;gbkey=tRNA;gene=trnE-a2;locus_tag=ZeamMt012;product=tRNA-Glu
+NC_007982.1	RefSeq	exon	125872	125943	.	+	.	ID=exon-ZeamMt012-1;Parent=rna-ZeamMt012;Dbxref=GeneID:4055866;gbkey=tRNA;gene=trnE-a2;locus_tag=ZeamMt012;product=tRNA-Glu
+NC_007982.1	RefSeq	gene	128784	128857	.	-	.	ID=gene-ZeamMt013;Dbxref=GeneID:4055931;Name=trnI-a2;gbkey=Gene;gene=trnI-a2;gene_biotype=tRNA;locus_tag=ZeamMt013
+NC_007982.1	RefSeq	tRNA	128784	128857	.	-	.	ID=rna-ZeamMt013;Parent=gene-ZeamMt013;Dbxref=GeneID:4055931;Note=tRNA-Ileu%3B tRNA with a methionine anticodon post-transcriptionaly modified to have tRNA isoleucine activity;gbkey=tRNA;gene=trnI-a2;locus_tag=ZeamMt013;product=tRNA-Met
+NC_007982.1	RefSeq	exon	128784	128857	.	-	.	ID=exon-ZeamMt013-1;Parent=rna-ZeamMt013;Dbxref=GeneID:4055931;Note=tRNA-Ileu%3B tRNA with a methionine anticodon post-transcriptionaly modified to have tRNA isoleucine activity;gbkey=tRNA;gene=trnI-a2;locus_tag=ZeamMt013;product=tRNA-Met
+NC_007982.1	RefSeq	gene	129585	129658	.	+	.	ID=gene-ZeamMt014;Dbxref=GeneID:4055915;Name=trnD-a2;gbkey=Gene;gene=trnD-a2;gene_biotype=tRNA;locus_tag=ZeamMt014
+NC_007982.1	RefSeq	tRNA	129585	129658	.	+	.	ID=rna-ZeamMt014;Parent=gene-ZeamMt014;Dbxref=GeneID:4055915;gbkey=tRNA;gene=trnD-a2;locus_tag=ZeamMt014;product=tRNA-Asp
+NC_007982.1	RefSeq	exon	129585	129658	.	+	.	ID=exon-ZeamMt014-1;Parent=rna-ZeamMt014;Dbxref=GeneID:4055915;gbkey=tRNA;gene=trnD-a2;locus_tag=ZeamMt014;product=tRNA-Asp
+NC_007982.1	RefSeq	gene	130286	130357	.	-	.	ID=gene-ZeamMt015;Dbxref=GeneID:4055911;Name=trnN-a2-ct;gbkey=Gene;gene=trnN-a2-ct;gene_biotype=tRNA;locus_tag=ZeamMt015
+NC_007982.1	RefSeq	tRNA	130286	130357	.	-	.	ID=rna-ZeamMt015;Parent=gene-ZeamMt015;Dbxref=GeneID:4055911;Note=chloroplast origin;gbkey=tRNA;gene=trnN-a2-ct;locus_tag=ZeamMt015;product=tRNA-Asn
+NC_007982.1	RefSeq	exon	130286	130357	.	-	.	ID=exon-ZeamMt015-1;Parent=rna-ZeamMt015;Dbxref=GeneID:4055911;Note=chloroplast origin;gbkey=tRNA;gene=trnN-a2-ct;locus_tag=ZeamMt015;product=tRNA-Asn
+NC_007982.1	RefSeq	gene	132043	132348	.	-	.	ID=gene-ZeamMp049;Dbxref=GeneID:4055905;Name=orf101-b;gbkey=Gene;gene=orf101-b;gene_biotype=protein_coding;locus_tag=ZeamMp049
+NC_007982.1	RefSeq	CDS	132043	132348	.	-	0	ID=cds-YP_588311.1;Parent=gene-ZeamMp049;Dbxref=GenBank:YP_588311.1,GeneID:4055905;Name=YP_588311.1;gbkey=CDS;gene=orf101-b;locus_tag=ZeamMp049;product=hypothetical protein;protein_id=YP_588311.1
+NC_007982.1	RefSeq	gene	132607	132679	.	-	.	ID=gene-ZeamMt016;Dbxref=GeneID:4055952;Name=trnF-ct;gbkey=Gene;gene=trnF-ct;gene_biotype=tRNA;locus_tag=ZeamMt016
+NC_007982.1	RefSeq	tRNA	132607	132679	.	-	.	ID=rna-ZeamMt016;Parent=gene-ZeamMt016;Dbxref=GeneID:4055952;Note=chloroplast origin;gbkey=tRNA;gene=trnF-ct;locus_tag=ZeamMt016;product=tRNA-Phe
+NC_007982.1	RefSeq	exon	132607	132679	.	-	.	ID=exon-ZeamMt016-1;Parent=rna-ZeamMt016;Dbxref=GeneID:4055952;Note=chloroplast origin;gbkey=tRNA;gene=trnF-ct;locus_tag=ZeamMt016;product=tRNA-Phe
+NC_007982.1	RefSeq	gene	138031	138330	.	-	.	ID=gene-ZeamMp050;Dbxref=GeneID:4055956;Name=orf99-d;gbkey=Gene;gene=orf99-d;gene_biotype=protein_coding;locus_tag=ZeamMp050
+NC_007982.1	RefSeq	CDS	138031	138330	.	-	0	ID=cds-YP_588312.1;Parent=gene-ZeamMp050;Dbxref=GenBank:YP_588312.1,GeneID:4055956;Name=YP_588312.1;gbkey=CDS;gene=orf99-d;locus_tag=ZeamMp050;product=hypothetical protein;protein_id=YP_588312.1
+NC_007982.1	RefSeq	pseudogene	138489	138560	.	-	.	ID=gene-ZeamMt017;Dbxref=GeneID:4055908;Name=trnR-a;gbkey=Gene;gene=trnR-a;gene_biotype=tRNA_pseudogene;locus_tag=ZeamMt017;pseudo=true
+NC_007982.1	RefSeq	tRNA	138489	138560	.	-	.	ID=rna-ZeamMt017;Parent=gene-ZeamMt017;Dbxref=GeneID:4055908;gbkey=tRNA;gene=trnR-a;locus_tag=ZeamMt017;product=tRNA-Arg;pseudo=true
+NC_007982.1	RefSeq	exon	138489	138560	.	-	.	ID=exon-ZeamMt017-1;Parent=rna-ZeamMt017;Dbxref=GeneID:4055908;gbkey=tRNA;gene=trnR-a;locus_tag=ZeamMt017;product=tRNA-Arg;pseudo=true
+NC_007982.1	RefSeq	gene	138553	139212	.	-	.	ID=gene-ZeamMp051;Dbxref=GeneID:4055881;Name=atp4;gbkey=Gene;gene=atp4;gene_biotype=protein_coding;locus_tag=ZeamMp051
+NC_007982.1	RefSeq	CDS	138553	139212	.	-	0	ID=cds-YP_588313.1;Parent=gene-ZeamMp051;Dbxref=GenBank:YP_588313.1,GeneID:4055881;Name=YP_588313.1;Note=orf25;exception=RNA editing;gbkey=CDS;gene=atp4;locus_tag=ZeamMp051;product=ATPase subunit 4;protein_id=YP_588313.1
+NC_007982.1	RefSeq	sequence_feature	138683	138683	.	+	.	ID=id-NC_007982.1:138683..138683;Note=S->F (UCU->UUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	138785	138785	.	+	.	ID=id-NC_007982.1:138785..138785;Note=T->I (ACU->AUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	138806	138806	.	+	.	ID=id-NC_007982.1:138806..138806;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	138853	138853	.	+	.	ID=id-NC_007982.1:138853..138853;Note=C->C (UGC->UGU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	138884	138884	.	+	.	ID=id-NC_007982.1:138884..138884;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	139095	139095	.	+	.	ID=id-NC_007982.1:139095..139095;Note=R->C (CGU->UGU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	139124	139124	.	+	.	ID=id-NC_007982.1:139124..139124;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	139137	139137	.	+	.	ID=id-NC_007982.1:139137..139137;Note=P->S (CCG->UCG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	139142	139142	.	+	.	ID=id-NC_007982.1:139142..139142;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	139154	139154	.	+	.	ID=id-NC_007982.1:139154..139154;Note=S->F (UCU->UUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	139157	139157	.	+	.	ID=id-NC_007982.1:139157..139157;Note=P->L (CCA->CUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	139173	139173	.	+	.	ID=id-NC_007982.1:139173..139173;Note=L->L (CUA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	gene	142490	142849	.	-	.	ID=gene-ZeamMp052;Dbxref=GeneID:4055926;Name=orf119-a;gbkey=Gene;gene=orf119-a;gene_biotype=protein_coding;locus_tag=ZeamMp052
+NC_007982.1	RefSeq	CDS	142490	142849	.	-	0	ID=cds-YP_588314.1;Parent=gene-ZeamMp052;Dbxref=GenBank:YP_588314.1,GeneID:4055926;Name=YP_588314.1;gbkey=CDS;gene=orf119-a;locus_tag=ZeamMp052;product=hypothetical protein;protein_id=YP_588314.1
+NC_007982.1	RefSeq	gene	155608	155940	.	-	.	ID=gene-ZeamMp053;Dbxref=GeneID:4055832;Name=orf110-b;gbkey=Gene;gene=orf110-b;gene_biotype=protein_coding;locus_tag=ZeamMp053
+NC_007982.1	RefSeq	CDS	155608	155940	.	-	0	ID=cds-YP_588315.1;Parent=gene-ZeamMp053;Dbxref=GenBank:YP_588315.1,GeneID:4055832;Name=YP_588315.1;gbkey=CDS;gene=orf110-b;locus_tag=ZeamMp053;product=hypothetical protein;protein_id=YP_588315.1
+NC_007982.1	RefSeq	gene	157640	158260	.	-	.	ID=gene-ZeamMp054;Dbxref=GeneID:4055820;Name=orf206;gbkey=Gene;gene=orf206;gene_biotype=protein_coding;locus_tag=ZeamMp054
+NC_007982.1	RefSeq	CDS	157640	158260	.	-	0	ID=cds-YP_588316.1;Parent=gene-ZeamMp054;Dbxref=GenBank:YP_588316.1,GeneID:4055820;Name=YP_588316.1;gbkey=CDS;gene=orf206;locus_tag=ZeamMp054;product=hypothetical protein;protein_id=YP_588316.1
+NC_007982.1	RefSeq	gene	159926	160279	.	-	.	ID=gene-ZeamMp055;Dbxref=GeneID:4055945;Name=orf117-b;gbkey=Gene;gene=orf117-b;gene_biotype=protein_coding;locus_tag=ZeamMp055
+NC_007982.1	RefSeq	CDS	159926	160279	.	-	0	ID=cds-YP_588317.1;Parent=gene-ZeamMp055;Dbxref=GenBank:YP_588317.1,GeneID:4055945;Name=YP_588317.1;gbkey=CDS;gene=orf117-b;locus_tag=ZeamMp055;product=hypothetical protein;protein_id=YP_588317.1
+NC_007982.1	RefSeq	gene	160378	160698	.	+	.	ID=gene-ZeamMp056;Dbxref=GeneID:4055882;Name=orf106-b;gbkey=Gene;gene=orf106-b;gene_biotype=protein_coding;locus_tag=ZeamMp056
+NC_007982.1	RefSeq	CDS	160378	160698	.	+	0	ID=cds-YP_588318.1;Parent=gene-ZeamMp056;Dbxref=GenBank:YP_588318.1,GeneID:4055882;Name=YP_588318.1;gbkey=CDS;gene=orf106-b;locus_tag=ZeamMp056;product=hypothetical protein;protein_id=YP_588318.1
+NC_007982.1	RefSeq	gene	160734	161291	.	-	.	ID=gene-ZeamMp057;Dbxref=GeneID:4055973;Name=rpl16;gbkey=Gene;gene=rpl16;gene_biotype=protein_coding;locus_tag=ZeamMp057
+NC_007982.1	RefSeq	CDS	160734	161291	.	-	0	ID=cds-YP_588319.1;Parent=gene-ZeamMp057;Dbxref=GenBank:YP_588319.1,GeneID:4055973;Name=YP_588319.1;gbkey=CDS;gene=rpl16;locus_tag=ZeamMp057;product=ribosomal protein L16-like;protein_id=YP_588319.1
+NC_007982.1	RefSeq	gene	161140	164661	.	-	.	ID=gene-ZeamMp024;Dbxref=GeneID:4055860;Name=rps3;gbkey=Gene;gene=rps3;gene_biotype=protein_coding;locus_tag=ZeamMp024
+NC_007982.1	RefSeq	CDS	164588	164661	.	-	0	ID=cds-YP_588320.1;Parent=gene-ZeamMp024;Dbxref=GenBank:YP_588320.1,GeneID:4055860;Name=YP_588320.1;gbkey=CDS;gene=rps3;locus_tag=ZeamMp024;product=ribosomal protein S3;protein_id=YP_588320.1
+NC_007982.1	RefSeq	CDS	161140	162745	.	-	1	ID=cds-YP_588320.1;Parent=gene-ZeamMp024;Dbxref=GenBank:YP_588320.1,GeneID:4055860;Name=YP_588320.1;gbkey=CDS;gene=rps3;locus_tag=ZeamMp024;product=ribosomal protein S3;protein_id=YP_588320.1
+NC_007982.1	RefSeq	exon	164588	164661	.	-	.	ID=id-ZeamMp024-1;Parent=gene-ZeamMp024;Dbxref=GeneID:4055860;exon_number=1;gbkey=exon;gene=rps3;locus_tag=ZeamMp024;number=1
+NC_007982.1	RefSeq	gene	63968	64041	.	-	.	ID=gene-ZeamMp001;Dbxref=GeneID:4055899;Name=rps3;exception=trans-splicing;gbkey=Gene;gene=rps3;gene_biotype=protein_coding;locus_tag=ZeamMp001;part=1
+NC_007982.1	RefSeq	gene	161140	162745	.	-	.	ID=gene-ZeamMp001;Dbxref=GeneID:4055899;Name=rps3;exception=trans-splicing;gbkey=Gene;gene=rps3;gene_biotype=protein_coding;locus_tag=ZeamMp001;part=2
+NC_007982.1	RefSeq	CDS	63968	64041	.	-	0	ID=cds-YP_588265.1;Parent=gene-ZeamMp001;Dbxref=GenBank:YP_588265.1,GeneID:4055899;Name=YP_588265.1;exception=trans-splicing;gbkey=CDS;gene=rps3;locus_tag=ZeamMp001;part=1;product=ribosomal protein S3;protein_id=YP_588265.1
+NC_007982.1	RefSeq	CDS	161140	162745	.	-	1	ID=cds-YP_588265.1;Parent=gene-ZeamMp001;Dbxref=GenBank:YP_588265.1,GeneID:4055899;Name=YP_588265.1;exception=trans-splicing;gbkey=CDS;gene=rps3;locus_tag=ZeamMp001;part=2;product=ribosomal protein S3;protein_id=YP_588265.1
+NC_007982.1	RefSeq	exon	63968	64041	.	-	.	ID=id-ZeamMp001-1;Parent=gene-ZeamMp001;Dbxref=GeneID:4055899;exon_number=1;gbkey=exon;gene=rps3;locus_tag=ZeamMp001;number=1
+NC_007982.1	RefSeq	exon	161140	162745	.	-	.	ID=id-ZeamMp001-2;Parent=gene-ZeamMp001;Dbxref=GeneID:4055899;exon_number=2;gbkey=exon;gene=rps3;locus_tag=ZeamMp001;number=2
+NC_007982.1	RefSeq	gene	163212	163541	.	+	.	ID=gene-ZeamMp058;Dbxref=GeneID:4055947;Name=orf109-a;gbkey=Gene;gene=orf109-a;gene_biotype=protein_coding;locus_tag=ZeamMp058
+NC_007982.1	RefSeq	CDS	163212	163541	.	+	0	ID=cds-YP_588321.1;Parent=gene-ZeamMp058;Dbxref=GenBank:YP_588321.1,GeneID:4055947;Name=YP_588321.1;gbkey=CDS;gene=orf109-a;locus_tag=ZeamMp058;product=hypothetical protein;protein_id=YP_588321.1
+NC_007982.1	RefSeq	gene	165090	165470	.	+	.	ID=gene-ZeamMp059;Dbxref=GeneID:4055976;Name=orf126-b2;gbkey=Gene;gene=orf126-b2;gene_biotype=protein_coding;locus_tag=ZeamMp059
+NC_007982.1	RefSeq	CDS	165090	165470	.	+	0	ID=cds-YP_588322.1;Parent=gene-ZeamMp059;Dbxref=GenBank:YP_588322.1,GeneID:4055976;Name=YP_588322.1;gbkey=CDS;gene=orf126-b2;locus_tag=ZeamMp059;product=hypothetical protein;protein_id=YP_588322.1
+NC_007982.1	RefSeq	gene	165955	166302	.	+	.	ID=gene-ZeamMp060;Dbxref=GeneID:4055923;Name=orf115-c2;gbkey=Gene;gene=orf115-c2;gene_biotype=protein_coding;locus_tag=ZeamMp060
+NC_007982.1	RefSeq	CDS	165955	166302	.	+	0	ID=cds-YP_588323.1;Parent=gene-ZeamMp060;Dbxref=GenBank:YP_588323.1,GeneID:4055923;Name=YP_588323.1;gbkey=CDS;gene=orf115-c2;locus_tag=ZeamMp060;product=hypothetical protein;protein_id=YP_588323.1
+NC_007982.1	RefSeq	gene	168897	169217	.	-	.	ID=gene-ZeamMp061;Dbxref=GeneID:4055918;Name=orf106-a2;gbkey=Gene;gene=orf106-a2;gene_biotype=protein_coding;locus_tag=ZeamMp061
+NC_007982.1	RefSeq	CDS	168897	169217	.	-	0	ID=cds-YP_588324.1;Parent=gene-ZeamMp061;Dbxref=GenBank:YP_588324.1,GeneID:4055918;Name=YP_588324.1;gbkey=CDS;gene=orf106-a2;locus_tag=ZeamMp061;product=hypothetical protein;protein_id=YP_588324.1
+NC_007982.1	RefSeq	gene	171676	172014	.	+	.	ID=gene-ZeamMp062;Dbxref=GeneID:4055868;Name=orf112-a2;gbkey=Gene;gene=orf112-a2;gene_biotype=protein_coding;locus_tag=ZeamMp062
+NC_007982.1	RefSeq	CDS	171676	172014	.	+	0	ID=cds-YP_588325.1;Parent=gene-ZeamMp062;Dbxref=GenBank:YP_588325.1,GeneID:4055868;Name=YP_588325.1;gbkey=CDS;gene=orf112-a2;locus_tag=ZeamMp062;product=hypothetical protein;protein_id=YP_588325.1
+NC_007982.1	RefSeq	gene	174515	174817	.	+	.	ID=gene-ZeamMp063;Dbxref=GeneID:4055846;Name=orf100-a2;gbkey=Gene;gene=orf100-a2;gene_biotype=protein_coding;locus_tag=ZeamMp063
+NC_007982.1	RefSeq	CDS	174515	174817	.	+	0	ID=cds-YP_588326.1;Parent=gene-ZeamMp063;Dbxref=GenBank:YP_588326.1,GeneID:4055846;Name=YP_588326.1;gbkey=CDS;gene=orf100-a2;locus_tag=ZeamMp063;product=hypothetical protein;protein_id=YP_588326.1
+NC_007982.1	RefSeq	pseudogene	179618	179691	.	-	.	ID=gene-ZeamMt018;Dbxref=GeneID:4055863;Name=trnI-ct;gbkey=Gene;gene=trnI-ct;gene_biotype=tRNA_pseudogene;locus_tag=ZeamMt018;pseudo=true
+NC_007982.1	RefSeq	tRNA	179618	179691	.	-	.	ID=rna-ZeamMt018;Parent=gene-ZeamMt018;Dbxref=GeneID:4055863;gbkey=tRNA;gene=trnI-ct;locus_tag=ZeamMt018;product=tRNA-Ile;pseudo=true
+NC_007982.1	RefSeq	exon	179618	179691	.	-	.	ID=exon-ZeamMt018-1;Parent=rna-ZeamMt018;Dbxref=GeneID:4055863;gbkey=tRNA;gene=trnI-ct;locus_tag=ZeamMt018;product=tRNA-Ile;pseudo=true
+NC_007982.1	RefSeq	gene	179996	180679	.	+	.	ID=gene-ZeamMp064;Dbxref=GeneID:4055858;Name=orf227-ct;gbkey=Gene;gene=orf227-ct;gene_biotype=protein_coding;locus_tag=ZeamMp064
+NC_007982.1	RefSeq	CDS	179996	180679	.	+	0	ID=cds-YP_588327.1;Parent=gene-ZeamMp064;Dbxref=GenBank:YP_588327.1,GeneID:4055858;Name=YP_588327.1;Note=chloroplast origin;gbkey=CDS;gene=orf227-ct;locus_tag=ZeamMp064;product=chloroplast hypothetical protein;protein_id=YP_588327.1
+NC_007982.1	RefSeq	gene	185996	186382	.	+	.	ID=gene-ZeamMp065;Dbxref=GeneID:4055951;Name=orf128;gbkey=Gene;gene=orf128;gene_biotype=protein_coding;locus_tag=ZeamMp065
+NC_007982.1	RefSeq	CDS	185996	186382	.	+	0	ID=cds-YP_588328.1;Parent=gene-ZeamMp065;Dbxref=GenBank:YP_588328.1,GeneID:4055951;Name=YP_588328.1;gbkey=CDS;gene=orf128;locus_tag=ZeamMp065;product=hypothetical protein;protein_id=YP_588328.1
+NC_007982.1	RefSeq	gene	191869	192351	.	-	.	ID=gene-ZeamMp066;Dbxref=GeneID:4055817;Name=orf160-a;gbkey=Gene;gene=orf160-a;gene_biotype=protein_coding;locus_tag=ZeamMp066
+NC_007982.1	RefSeq	CDS	191869	192351	.	-	0	ID=cds-YP_588329.1;Parent=gene-ZeamMp066;Dbxref=GenBank:YP_588329.1,GeneID:4055817;Name=YP_588329.1;gbkey=CDS;gene=orf160-a;locus_tag=ZeamMp066;product=hypothetical protein;protein_id=YP_588329.1
+NC_007982.1	RefSeq	gene	194577	194993	.	+	.	ID=gene-ZeamMp067;Dbxref=GeneID:4055906;Name=orf138-a;gbkey=Gene;gene=orf138-a;gene_biotype=protein_coding;locus_tag=ZeamMp067
+NC_007982.1	RefSeq	CDS	194577	194993	.	+	0	ID=cds-YP_588330.1;Parent=gene-ZeamMp067;Dbxref=GenBank:YP_588330.1,GeneID:4055906;Name=YP_588330.1;gbkey=CDS;gene=orf138-a;locus_tag=ZeamMp067;product=hypothetical protein;protein_id=YP_588330.1
+NC_007982.1	RefSeq	gene	199269	199586	.	+	.	ID=gene-ZeamMp068;Dbxref=GeneID:4055994;Name=orf105-b;gbkey=Gene;gene=orf105-b;gene_biotype=protein_coding;locus_tag=ZeamMp068
+NC_007982.1	RefSeq	CDS	199269	199586	.	+	0	ID=cds-YP_588331.1;Parent=gene-ZeamMp068;Dbxref=GenBank:YP_588331.1,GeneID:4055994;Name=YP_588331.1;gbkey=CDS;gene=orf105-b;locus_tag=ZeamMp068;product=hypothetical protein;protein_id=YP_588331.1
+NC_007982.1	RefSeq	gene	200741	201463	.	+	.	ID=gene-ZeamMp069;Dbxref=GeneID:4055993;Name=ccmC;gbkey=Gene;gene=ccmC;gene_biotype=protein_coding;locus_tag=ZeamMp069
+NC_007982.1	RefSeq	CDS	200741	201463	.	+	0	ID=cds-YP_588332.1;Parent=gene-ZeamMp069;Dbxref=GenBank:YP_588332.1,GeneID:4055993;Name=YP_588332.1;gbkey=CDS;gene=ccmC;locus_tag=ZeamMp069;product=cytochrome c biogenesis C;protein_id=YP_588332.1
+NC_007982.1	RefSeq	pseudogene	201500	201584	.	+	.	ID=gene-ZeamMt019;Dbxref=GeneID:4055979;Name=trnL-a;gbkey=Gene;gene=trnL-a;gene_biotype=tRNA_pseudogene;locus_tag=ZeamMt019;pseudo=true
+NC_007982.1	RefSeq	tRNA	201500	201584	.	+	.	ID=rna-ZeamMt019;Parent=gene-ZeamMt019;Dbxref=GeneID:4055979;gbkey=tRNA;gene=trnL-a;locus_tag=ZeamMt019;product=tRNA-Leu;pseudo=true
+NC_007982.1	RefSeq	exon	201500	201534	.	+	.	ID=exon-ZeamMt019-1;Parent=rna-ZeamMt019;Dbxref=GeneID:4055979;gbkey=tRNA;gene=trnL-a;locus_tag=ZeamMt019;product=tRNA-Leu;pseudo=true
+NC_007982.1	RefSeq	exon	201547	201584	.	+	.	ID=exon-ZeamMt019-2;Parent=rna-ZeamMt019;Dbxref=GeneID:4055979;gbkey=tRNA;gene=trnL-a;locus_tag=ZeamMt019;product=tRNA-Leu;pseudo=true
+NC_007982.1	RefSeq	exon	201500	201534	.	+	.	ID=id-ZeamMt019-1;Parent=gene-ZeamMt019;Dbxref=GeneID:4055979;exon_number=1;gbkey=exon;gene=trnL-a;locus_tag=ZeamMt019;number=1;pseudo=true
+NC_007982.1	RefSeq	exon	201547	201584	.	+	.	ID=id-ZeamMt019;Parent=gene-ZeamMt019;Dbxref=GeneID:4055979;gbkey=exon;gene=trnL-a;locus_tag=ZeamMt019;pseudo=true
+NC_007982.1	RefSeq	gene	201993	202316	.	-	.	ID=gene-ZeamMp070;Dbxref=GeneID:4055876;Name=orf107-c;gbkey=Gene;gene=orf107-c;gene_biotype=protein_coding;locus_tag=ZeamMp070
+NC_007982.1	RefSeq	CDS	201993	202316	.	-	0	ID=cds-YP_588333.1;Parent=gene-ZeamMp070;Dbxref=GenBank:YP_588333.1,GeneID:4055876;Name=YP_588333.1;gbkey=CDS;gene=orf107-c;locus_tag=ZeamMp070;product=hypothetical protein;protein_id=YP_588333.1
+NC_007982.1	RefSeq	gene	204632	206947	.	+	.	ID=gene-ZeamMp071;Dbxref=GeneID:4055889;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=ZeamMp071;part=1
+NC_007982.1	RefSeq	gene	266594	266615	.	-	.	ID=gene-ZeamMp071;Dbxref=GeneID:4055889;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=ZeamMp071;part=2
+NC_007982.1	RefSeq	gene	259447	260942	.	-	.	ID=gene-ZeamMp071;Dbxref=GeneID:4055889;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=ZeamMp071;part=3
+NC_007982.1	RefSeq	CDS	204632	204862	.	+	0	ID=cds-YP_588334.1;Parent=gene-ZeamMp071;Dbxref=GenBank:YP_588334.1,GeneID:4055889;Name=YP_588334.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=ZeamMp071;part=1;product=NADH dehydrogenase subunit 5;protein_id=YP_588334.1
+NC_007982.1	RefSeq	CDS	205733	206947	.	+	0	ID=cds-YP_588334.1;Parent=gene-ZeamMp071;Dbxref=GenBank:YP_588334.1,GeneID:4055889;Name=YP_588334.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=ZeamMp071;part=2;product=NADH dehydrogenase subunit 5;protein_id=YP_588334.1
+NC_007982.1	RefSeq	CDS	266594	266615	.	-	0	ID=cds-YP_588334.1;Parent=gene-ZeamMp071;Dbxref=GenBank:YP_588334.1,GeneID:4055889;Name=YP_588334.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=ZeamMp071;part=3;product=NADH dehydrogenase subunit 5;protein_id=YP_588334.1
+NC_007982.1	RefSeq	CDS	260548	260942	.	-	2	ID=cds-YP_588334.1;Parent=gene-ZeamMp071;Dbxref=GenBank:YP_588334.1,GeneID:4055889;Name=YP_588334.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=ZeamMp071;part=4;product=NADH dehydrogenase subunit 5;protein_id=YP_588334.1
+NC_007982.1	RefSeq	CDS	259447	259596	.	-	0	ID=cds-YP_588334.1;Parent=gene-ZeamMp071;Dbxref=GenBank:YP_588334.1,GeneID:4055889;Name=YP_588334.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=ZeamMp071;part=5;product=NADH dehydrogenase subunit 5;protein_id=YP_588334.1
+NC_007982.1	RefSeq	exon	204632	204862	.	+	.	ID=id-ZeamMp071-1;Parent=gene-ZeamMp071;Dbxref=GeneID:4055889;exon_number=1;gbkey=exon;gene=nad5;locus_tag=ZeamMp071;number=1
+NC_007982.1	RefSeq	exon	205733	206947	.	+	.	ID=id-ZeamMp071-2;Parent=gene-ZeamMp071;Dbxref=GeneID:4055889;exon_number=2;gbkey=exon;gene=nad5;locus_tag=ZeamMp071;number=2
+NC_007982.1	RefSeq	exon	259447	259596	.	-	.	ID=id-ZeamMp071-5;Parent=gene-ZeamMp071;Dbxref=GeneID:4055889;exon_number=5;gbkey=exon;gene=nad5;locus_tag=ZeamMp071;number=5
+NC_007982.1	RefSeq	exon	260548	260942	.	-	.	ID=id-ZeamMp071-4;Parent=gene-ZeamMp071;Dbxref=GeneID:4055889;exon_number=4;gbkey=exon;gene=nad5;locus_tag=ZeamMp071;number=4
+NC_007982.1	RefSeq	exon	266594	266615	.	-	.	ID=id-ZeamMp071-3;Parent=gene-ZeamMp071;Dbxref=GeneID:4055889;exon_number=3;gbkey=exon;gene=nad5;locus_tag=ZeamMp071;number=3
+NC_007982.1	RefSeq	gene	204827	205144	.	-	.	ID=gene-ZeamMp073;Dbxref=GeneID:4055997;Name=orf105-c;gbkey=Gene;gene=orf105-c;gene_biotype=protein_coding;locus_tag=ZeamMp073
+NC_007982.1	RefSeq	CDS	204827	205144	.	-	0	ID=cds-YP_588335.1;Parent=gene-ZeamMp073;Dbxref=GenBank:YP_588335.1,GeneID:4055997;Name=YP_588335.1;gbkey=CDS;gene=orf105-c;locus_tag=ZeamMp073;product=hypothetical protein;protein_id=YP_588335.1
+NC_007982.1	RefSeq	gene	210666	211163	.	-	.	ID=gene-ZeamMp074;Dbxref=GeneID:4055980;Name=orf165;gbkey=Gene;gene=orf165;gene_biotype=protein_coding;locus_tag=ZeamMp074
+NC_007982.1	RefSeq	CDS	210666	211163	.	-	0	ID=cds-YP_588336.1;Parent=gene-ZeamMp074;Dbxref=GenBank:YP_588336.1,GeneID:4055980;Name=YP_588336.1;gbkey=CDS;gene=orf165;locus_tag=ZeamMp074;product=hypothetical protein;protein_id=YP_588336.1
+NC_007982.1	RefSeq	gene	211244	211624	.	-	.	ID=gene-ZeamMp075;Dbxref=GeneID:4055959;Name=orf126-c;gbkey=Gene;gene=orf126-c;gene_biotype=protein_coding;locus_tag=ZeamMp075
+NC_007982.1	RefSeq	CDS	211244	211624	.	-	0	ID=cds-YP_588337.1;Parent=gene-ZeamMp075;Dbxref=GenBank:YP_588337.1,GeneID:4055959;Name=YP_588337.1;gbkey=CDS;gene=orf126-c;locus_tag=ZeamMp075;product=hypothetical protein;protein_id=YP_588337.1
+NC_007982.1	RefSeq	gene	214706	215020	.	-	.	ID=gene-ZeamMp076;Dbxref=GeneID:4055813;Name=orf104-b;gbkey=Gene;gene=orf104-b;gene_biotype=protein_coding;locus_tag=ZeamMp076
+NC_007982.1	RefSeq	CDS	214706	215020	.	-	0	ID=cds-YP_588338.1;Parent=gene-ZeamMp076;Dbxref=GenBank:YP_588338.1,GeneID:4055813;Name=YP_588338.1;gbkey=CDS;gene=orf104-b;locus_tag=ZeamMp076;product=hypothetical protein;protein_id=YP_588338.1
+NC_007982.1	RefSeq	gene	222181	222597	.	-	.	ID=gene-ZeamMp077;Dbxref=GeneID:4055910;Name=orf138-b;gbkey=Gene;gene=orf138-b;gene_biotype=protein_coding;locus_tag=ZeamMp077
+NC_007982.1	RefSeq	CDS	222181	222597	.	-	0	ID=cds-YP_588339.1;Parent=gene-ZeamMp077;Dbxref=GenBank:YP_588339.1,GeneID:4055910;Name=YP_588339.1;gbkey=CDS;gene=orf138-b;locus_tag=ZeamMp077;product=hypothetical protein;protein_id=YP_588339.1
+NC_007982.1	RefSeq	gene	222801	223196	.	-	.	ID=gene-ZeamMp078;Dbxref=GeneID:4055869;Name=orf131-a;gbkey=Gene;gene=orf131-a;gene_biotype=protein_coding;locus_tag=ZeamMp078
+NC_007982.1	RefSeq	CDS	222801	223196	.	-	0	ID=cds-YP_588340.1;Parent=gene-ZeamMp078;Dbxref=GenBank:YP_588340.1,GeneID:4055869;Name=YP_588340.1;gbkey=CDS;gene=orf131-a;locus_tag=ZeamMp078;product=hypothetical protein;protein_id=YP_588340.1
+NC_007982.1	RefSeq	gene	224213	225121	.	-	.	ID=gene-ZeamMp079;Dbxref=GeneID:4056005;Name=orf302;gbkey=Gene;gene=orf302;gene_biotype=protein_coding;locus_tag=ZeamMp079
+NC_007982.1	RefSeq	CDS	224213	225121	.	-	0	ID=cds-YP_588341.1;Parent=gene-ZeamMp079;Dbxref=GenBank:YP_588341.1,GeneID:4056005;Name=YP_588341.1;gbkey=CDS;gene=orf302;locus_tag=ZeamMp079;product=hypothetical protein;protein_id=YP_588341.1
+NC_007982.1	RefSeq	gene	226253	226645	.	+	.	ID=gene-ZeamMp080;Dbxref=GeneID:4055816;Name=orf130;gbkey=Gene;gene=orf130;gene_biotype=protein_coding;locus_tag=ZeamMp080
+NC_007982.1	RefSeq	CDS	226253	226645	.	+	0	ID=cds-YP_588342.1;Parent=gene-ZeamMp080;Dbxref=GenBank:YP_588342.1,GeneID:4055816;Name=YP_588342.1;gbkey=CDS;gene=orf130;locus_tag=ZeamMp080;product=hypothetical protein;protein_id=YP_588342.1
+NC_007982.1	RefSeq	gene	232739	233200	.	-	.	ID=gene-ZeamMp081;Dbxref=GeneID:4055890;Name=atp8;gbkey=Gene;gene=atp8;gene_biotype=protein_coding;locus_tag=ZeamMp081
+NC_007982.1	RefSeq	CDS	232739	233200	.	-	0	ID=cds-YP_588343.1;Parent=gene-ZeamMp081;Dbxref=GenBank:YP_588343.1,GeneID:4055890;Name=YP_588343.1;Note=synonym: orfB;gbkey=CDS;gene=atp8;locus_tag=ZeamMp081;product=ATPase subunit 8;protein_id=YP_588343.1
+NC_007982.1	RefSeq	gene	233670	234005	.	-	.	ID=gene-ZeamMp082;Dbxref=GeneID:4055853;Name=orf111-a;gbkey=Gene;gene=orf111-a;gene_biotype=protein_coding;locus_tag=ZeamMp082
+NC_007982.1	RefSeq	CDS	233670	234005	.	-	0	ID=cds-YP_588344.1;Parent=gene-ZeamMp082;Dbxref=GenBank:YP_588344.1,GeneID:4055853;Name=YP_588344.1;gbkey=CDS;gene=orf111-a;locus_tag=ZeamMp082;product=hypothetical protein;protein_id=YP_588344.1
+NC_007982.1	RefSeq	gene	234411	234776	.	+	.	ID=gene-ZeamMp083;Dbxref=GeneID:4055964;Name=orf121-b;gbkey=Gene;gene=orf121-b;gene_biotype=protein_coding;locus_tag=ZeamMp083
+NC_007982.1	RefSeq	CDS	234411	234776	.	+	0	ID=cds-YP_588345.1;Parent=gene-ZeamMp083;Dbxref=GenBank:YP_588345.1,GeneID:4055964;Name=YP_588345.1;gbkey=CDS;gene=orf121-b;locus_tag=ZeamMp083;product=hypothetical protein;protein_id=YP_588345.1
+NC_007982.1	RefSeq	gene	236902	237477	.	-	.	ID=gene-ZeamMp084;Dbxref=GeneID:4055907;Name=orf191;gbkey=Gene;gene=orf191;gene_biotype=protein_coding;locus_tag=ZeamMp084
+NC_007982.1	RefSeq	CDS	236902	237477	.	-	0	ID=cds-YP_588346.1;Parent=gene-ZeamMp084;Dbxref=GenBank:YP_588346.1,GeneID:4055907;Name=YP_588346.1;gbkey=CDS;gene=orf191;locus_tag=ZeamMp084;product=hypothetical protein;protein_id=YP_588346.1
+NC_007982.1	RefSeq	pseudogene	236960	237351	.	+	.	ID=gene-ZeamMp085;Dbxref=GeneID:4055827;Name=orf130;gbkey=Gene;gene=orf130;gene_biotype=pseudogene;locus_tag=ZeamMp085;pseudo=true
+NC_007982.1	RefSeq	gene	237577	243574	.	-	.	ID=gene-ZeamMp086;Dbxref=GeneID:4055893;Name=nad7;gbkey=Gene;gene=nad7;gene_biotype=protein_coding;locus_tag=ZeamMp086
+NC_007982.1	RefSeq	CDS	243432	243574	.	-	0	ID=cds-YP_588347.1;Parent=gene-ZeamMp086;Dbxref=GenBank:YP_588347.1,GeneID:4055893;Name=YP_588347.1;gbkey=CDS;gene=nad7;locus_tag=ZeamMp086;product=NADH dehydrogenase subunit 7;protein_id=YP_588347.1
+NC_007982.1	RefSeq	CDS	242526	242594	.	-	1	ID=cds-YP_588347.1;Parent=gene-ZeamMp086;Dbxref=GenBank:YP_588347.1,GeneID:4055893;Name=YP_588347.1;gbkey=CDS;gene=nad7;locus_tag=ZeamMp086;product=NADH dehydrogenase subunit 7;protein_id=YP_588347.1
+NC_007982.1	RefSeq	CDS	240762	241228	.	-	1	ID=cds-YP_588347.1;Parent=gene-ZeamMp086;Dbxref=GenBank:YP_588347.1,GeneID:4055893;Name=YP_588347.1;gbkey=CDS;gene=nad7;locus_tag=ZeamMp086;product=NADH dehydrogenase subunit 7;protein_id=YP_588347.1
+NC_007982.1	RefSeq	CDS	239530	239773	.	-	2	ID=cds-YP_588347.1;Parent=gene-ZeamMp086;Dbxref=GenBank:YP_588347.1,GeneID:4055893;Name=YP_588347.1;gbkey=CDS;gene=nad7;locus_tag=ZeamMp086;product=NADH dehydrogenase subunit 7;protein_id=YP_588347.1
+NC_007982.1	RefSeq	CDS	237577	237838	.	-	1	ID=cds-YP_588347.1;Parent=gene-ZeamMp086;Dbxref=GenBank:YP_588347.1,GeneID:4055893;Name=YP_588347.1;gbkey=CDS;gene=nad7;locus_tag=ZeamMp086;product=NADH dehydrogenase subunit 7;protein_id=YP_588347.1
+NC_007982.1	RefSeq	exon	237577	237838	.	-	.	ID=id-ZeamMp086-5;Parent=gene-ZeamMp086;Dbxref=GeneID:4055893;exon_number=5;gbkey=exon;gene=nad7;locus_tag=ZeamMp086;number=5
+NC_007982.1	RefSeq	exon	239530	239773	.	-	.	ID=id-ZeamMp086-4;Parent=gene-ZeamMp086;Dbxref=GeneID:4055893;exon_number=4;gbkey=exon;gene=nad7;locus_tag=ZeamMp086;number=4
+NC_007982.1	RefSeq	exon	240762	241228	.	-	.	ID=id-ZeamMp086-3;Parent=gene-ZeamMp086;Dbxref=GeneID:4055893;exon_number=3;gbkey=exon;gene=nad7;locus_tag=ZeamMp086;number=3
+NC_007982.1	RefSeq	exon	242526	242594	.	-	.	ID=id-ZeamMp086-2;Parent=gene-ZeamMp086;Dbxref=GeneID:4055893;exon_number=2;gbkey=exon;gene=nad7;locus_tag=ZeamMp086;number=2
+NC_007982.1	RefSeq	exon	243432	243574	.	-	.	ID=id-ZeamMp086-1;Parent=gene-ZeamMp086;Dbxref=GeneID:4055893;exon_number=1;gbkey=exon;gene=nad7;locus_tag=ZeamMp086;number=1
+NC_007982.1	RefSeq	gene	249901	250248	.	+	.	ID=gene-ZeamMp087;Dbxref=GeneID:4055999;Name=orf115-a2;gbkey=Gene;gene=orf115-a2;gene_biotype=protein_coding;locus_tag=ZeamMp087
+NC_007982.1	RefSeq	CDS	249901	250248	.	+	0	ID=cds-YP_588348.1;Parent=gene-ZeamMp087;Dbxref=GenBank:YP_588348.1,GeneID:4055999;Name=YP_588348.1;gbkey=CDS;gene=orf115-a2;locus_tag=ZeamMp087;product=hypothetical protein;protein_id=YP_588348.1
+NC_007982.1	RefSeq	sequence_feature	250148	255275	.	+	.	ID=id-NC_007982.1:250148..255275;Note=S2;gbkey=misc_feature
+NC_007982.1	RefSeq	gene	250363	253842	.	+	.	ID=gene-ZeamMp088;Dbxref=GeneID:4055861;Name=orf1159;gbkey=Gene;gene=orf1159;gene_biotype=protein_coding;locus_tag=ZeamMp088
+NC_007982.1	RefSeq	CDS	250363	253842	.	+	0	ID=cds-YP_588349.1;Parent=gene-ZeamMp088;Dbxref=GenBank:YP_588349.1,GeneID:4055861;Name=YP_588349.1;Note=orf1 in S2 plasmid;gbkey=CDS;gene=orf1159;locus_tag=ZeamMp088;product=hypothetical protein;protein_id=YP_588349.1
+NC_007982.1	RefSeq	gene	253784	254131	.	+	.	ID=gene-ZeamMp089;Dbxref=GeneID:4055874;Name=orf115-d;gbkey=Gene;gene=orf115-d;gene_biotype=protein_coding;locus_tag=ZeamMp089
+NC_007982.1	RefSeq	CDS	253784	254131	.	+	0	ID=cds-YP_588350.1;Parent=gene-ZeamMp089;Dbxref=GenBank:YP_588350.1,GeneID:4055874;Name=YP_588350.1;gbkey=CDS;gene=orf115-d;locus_tag=ZeamMp089;product=hypothetical protein;protein_id=YP_588350.1
+NC_007982.1	RefSeq	gene	254397	255221	.	-	.	ID=gene-ZeamMp090;Dbxref=GeneID:4055806;Name=orf275;gbkey=Gene;gene=orf275;gene_biotype=protein_coding;locus_tag=ZeamMp090
+NC_007982.1	RefSeq	CDS	254397	255221	.	-	0	ID=cds-YP_588351.1;Parent=gene-ZeamMp090;Dbxref=GenBank:YP_588351.1,GeneID:4055806;Name=YP_588351.1;gbkey=CDS;gene=orf275;locus_tag=ZeamMp090;product=hypothetical protein;protein_id=YP_588351.1
+NC_007982.1	RefSeq	gene	259284	259354	.	-	.	ID=gene-ZeamMt020;Dbxref=GeneID:4055865;Name=trnC-ct;gbkey=Gene;gene=trnC-ct;gene_biotype=tRNA;locus_tag=ZeamMt020
+NC_007982.1	RefSeq	tRNA	259284	259354	.	-	.	ID=rna-ZeamMt020;Parent=gene-ZeamMt020;Dbxref=GeneID:4055865;Note=chloroplast origin;gbkey=tRNA;gene=trnC-ct;locus_tag=ZeamMt020;product=tRNA-Cys
+NC_007982.1	RefSeq	exon	259284	259354	.	-	.	ID=exon-ZeamMt020-1;Parent=rna-ZeamMt020;Dbxref=GeneID:4055865;Note=chloroplast origin;gbkey=tRNA;gene=trnC-ct;locus_tag=ZeamMt020;product=tRNA-Cys
+NC_007982.1	RefSeq	sequence_feature	259502	259502	.	+	.	ID=id-NC_007982.1:259502..259502;Note=S->L (UCG->UUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	259542	259542	.	+	.	ID=id-NC_007982.1:259542..259542;Note=R->C (CGU->UGU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	259544	259544	.	+	.	ID=id-NC_007982.1:259544..259544;Note=S->F (UCU->UUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	259559	259559	.	+	.	ID=id-NC_007982.1:259559..259559;Note=P->L (CCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	259560	259560	.	+	.	ID=id-NC_007982.1:259560..259560;Note=P->L (CCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	259565	259565	.	+	.	ID=id-NC_007982.1:259565..259565;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	260552	260552	.	+	.	ID=id-NC_007982.1:260552..260552;Note=S->F (UCU->UUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	260822	260822	.	+	.	ID=id-NC_007982.1:260822..260822;Note=S->F (UCU->UUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	260831	260831	.	+	.	ID=id-NC_007982.1:260831..260831;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	260861	260861	.	+	.	ID=id-NC_007982.1:260861..260861;Note=T->I (ACA->AUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	260921	260921	.	+	.	ID=id-NC_007982.1:260921..260921;Note=P->L (CCC->CUC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	gene	261340	261879	.	-	.	ID=gene-ZeamMp091;Dbxref=GeneID:4055855;Name=orf179;gbkey=Gene;gene=orf179;gene_biotype=protein_coding;locus_tag=ZeamMp091
+NC_007982.1	RefSeq	CDS	261340	261879	.	-	0	ID=cds-YP_588352.1;Parent=gene-ZeamMp091;Dbxref=GenBank:YP_588352.1,GeneID:4055855;Name=YP_588352.1;gbkey=CDS;gene=orf179;locus_tag=ZeamMp091;product=hypothetical protein;protein_id=YP_588352.1
+NC_007982.1	RefSeq	gene	262384	262761	.	-	.	ID=gene-ZeamMp092;Dbxref=GeneID:4055837;Name=rps12;gbkey=Gene;gene=rps12;gene_biotype=protein_coding;locus_tag=ZeamMp092
+NC_007982.1	RefSeq	CDS	262384	262761	.	-	0	ID=cds-YP_588353.1;Parent=gene-ZeamMp092;Dbxref=GenBank:YP_588353.1,GeneID:4055837;Name=YP_588353.1;exception=RNA editing;gbkey=CDS;gene=rps12;locus_tag=ZeamMp092;product=ribosomal protein S12;protein_id=YP_588353.1
+NC_007982.1	RefSeq	sequence_feature	262473	262473	.	+	.	ID=id-NC_007982.1:262473..262473;Note=R->C (CGU->UGU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262478	262478	.	+	.	ID=id-NC_007982.1:262478..262478;Note=S->F (UCC->UUC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262493	262493	.	+	.	ID=id-NC_007982.1:262493..262493;Note=S->L (UCG->UUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262541	262541	.	+	.	ID=id-NC_007982.1:262541..262541;Note=S->L (UCG->UUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262566	262566	.	+	.	ID=id-NC_007982.1:262566..262566;Note=H->Y (CAC->UAC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262691	262691	.	+	.	ID=id-NC_007982.1:262691..262691;Note=S->L (UCG->UUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	gene	262806	263162	.	-	.	ID=gene-ZeamMp093;Dbxref=GeneID:4055886;Name=nad3;gbkey=Gene;gene=nad3;gene_biotype=protein_coding;locus_tag=ZeamMp093
+NC_007982.1	RefSeq	CDS	262806	263162	.	-	0	ID=cds-YP_588354.1;Parent=gene-ZeamMp093;Dbxref=GenBank:YP_588354.1,GeneID:4055886;Name=YP_588354.1;exception=RNA editing;gbkey=CDS;gene=nad3;locus_tag=ZeamMp093;product=NADH dehydrogenase subunit 3;protein_id=YP_588354.1
+NC_007982.1	RefSeq	sequence_feature	262814	262814	.	+	.	ID=id-NC_007982.1:262814..262814;Note=R->W (CGG->UGG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262819	262819	.	+	.	ID=id-NC_007982.1:262819..262819;Note=S->L (UCG->UUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262855	262855	.	+	.	ID=id-NC_007982.1:262855..262855;Note=T->M (ACG->AUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262888	262888	.	+	.	ID=id-NC_007982.1:262888..262888;Note=S->F (UCU->UUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262898	262898	.	+	.	ID=id-NC_007982.1:262898..262898;Note=L->L (CUG->UUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262912	262912	.	+	.	ID=id-NC_007982.1:262912..262912;Note=P->L (CCU->CUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262916	262916	.	+	.	ID=id-NC_007982.1:262916..262916;Note=P->S (CCU->UCU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262933	262933	.	+	.	ID=id-NC_007982.1:262933..262933;Note=S->F (UCU->UUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262948	262948	.	+	.	ID=id-NC_007982.1:262948..262948;Note=P->L (CCG->CUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262954	262954	.	+	.	ID=id-NC_007982.1:262954..262954;Note=P->F (CCU->UUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262955	262955	.	+	.	ID=id-NC_007982.1:262955..262955;Note=P->F (CCU->UUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262973	262973	.	+	.	ID=id-NC_007982.1:262973..262973;Note=P->S (CCU->UCU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	262978	262978	.	+	.	ID=id-NC_007982.1:262978..262978;Note=P->L (CCG->CUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	263017	263017	.	+	.	ID=id-NC_007982.1:263017..263017;Note=S->F (UCC->UUC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	263026	263026	.	+	.	ID=id-NC_007982.1:263026..263026;Note=S->F (UCC->UUC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	263083	263083	.	+	.	ID=id-NC_007982.1:263083..263083;Note=P->L (CCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	263084	263084	.	+	.	ID=id-NC_007982.1:263084..263084;Note=P->L (CCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	263101	263101	.	+	.	ID=id-NC_007982.1:263101..263101;Note=P->L (CCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	263102	263102	.	+	.	ID=id-NC_007982.1:263102..263102;Note=P->L (CCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	263119	263119	.	+	.	ID=id-NC_007982.1:263119..263119;Note=P->L (CCG->CUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	263136	263136	.	+	.	ID=id-NC_007982.1:263136..263136;Note=I->I (AUC->AUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	263158	263158	.	+	.	ID=id-NC_007982.1:263158..263158;Note=S->L (UCG->UUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	pseudogene	263239	263356	.	-	.	ID=gene-ZeamMt021;Dbxref=GeneID:4055924;Name=trnL-b;gbkey=Gene;gene=trnL-b;gene_biotype=tRNA_pseudogene;locus_tag=ZeamMt021;pseudo=true
+NC_007982.1	RefSeq	tRNA	263239	263356	.	-	.	ID=rna-ZeamMt021;Parent=gene-ZeamMt021;Dbxref=GeneID:4055924;gbkey=tRNA;gene=trnL-b;locus_tag=ZeamMt021;product=tRNA-Leu;pseudo=true
+NC_007982.1	RefSeq	exon	263320	263356	.	-	.	ID=exon-ZeamMt021-1;Parent=rna-ZeamMt021;Dbxref=GeneID:4055924;gbkey=tRNA;gene=trnL-b;locus_tag=ZeamMt021;product=tRNA-Leu;pseudo=true
+NC_007982.1	RefSeq	exon	263239	263271	.	-	.	ID=exon-ZeamMt021-2;Parent=rna-ZeamMt021;Dbxref=GeneID:4055924;gbkey=tRNA;gene=trnL-b;locus_tag=ZeamMt021;product=tRNA-Leu;pseudo=true
+NC_007982.1	RefSeq	exon	263239	263271	.	-	.	ID=id-ZeamMt021-2;Parent=gene-ZeamMt021;Dbxref=GeneID:4055924;exon_number=2;gbkey=exon;gene=trnL-b;locus_tag=ZeamMt021;number=2;pseudo=true
+NC_007982.1	RefSeq	exon	263320	263356	.	-	.	ID=id-ZeamMt021-1;Parent=gene-ZeamMt021;Dbxref=GeneID:4055924;exon_number=1;gbkey=exon;gene=trnL-b;locus_tag=ZeamMt021;number=1;pseudo=true
+NC_007982.1	RefSeq	gene	263607	263694	.	-	.	ID=gene-ZeamMt022;Dbxref=GeneID:4055828;Name=trnS-a;gbkey=Gene;gene=trnS-a;gene_biotype=tRNA;locus_tag=ZeamMt022
+NC_007982.1	RefSeq	tRNA	263607	263694	.	-	.	ID=rna-ZeamMt022;Parent=gene-ZeamMt022;Dbxref=GeneID:4055828;gbkey=tRNA;gene=trnS-a;locus_tag=ZeamMt022;product=tRNA-Ser
+NC_007982.1	RefSeq	exon	263607	263694	.	-	.	ID=exon-ZeamMt022-1;Parent=rna-ZeamMt022;Dbxref=GeneID:4055828;gbkey=tRNA;gene=trnS-a;locus_tag=ZeamMt022;product=tRNA-Ser
+NC_007982.1	RefSeq	gene	265988	266410	.	-	.	ID=gene-ZeamMp094;Dbxref=GeneID:4055988;Name=orf140-b;gbkey=Gene;gene=orf140-b;gene_biotype=protein_coding;locus_tag=ZeamMp094
+NC_007982.1	RefSeq	CDS	265988	266410	.	-	0	ID=cds-YP_588355.1;Parent=gene-ZeamMp094;Dbxref=GenBank:YP_588355.1,GeneID:4055988;Name=YP_588355.1;gbkey=CDS;gene=orf140-b;locus_tag=ZeamMp094;product=hypothetical protein;protein_id=YP_588355.1
+NC_007982.1	RefSeq	gene	267745	269766	.	-	.	ID=gene-ZeamMp095;Dbxref=GeneID:4055986;Name=mat-r;gbkey=Gene;gene=mat-r;gene_biotype=protein_coding;locus_tag=ZeamMp095
+NC_007982.1	RefSeq	CDS	267745	269766	.	-	0	ID=cds-YP_588356.1;Parent=gene-ZeamMp095;Dbxref=GenBank:YP_588356.1,GeneID:4055986;Name=YP_588356.1;exception=RNA editing;gbkey=CDS;gene=mat-r;locus_tag=ZeamMp095;product=maturase;protein_id=YP_588356.1
+NC_007982.1	RefSeq	sequence_feature	267862	267862	.	+	.	ID=id-NC_007982.1:267862..267862;Note=V->V (GUC->GUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	267872	267872	.	+	.	ID=id-NC_007982.1:267872..267872;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	267882	267882	.	+	.	ID=id-NC_007982.1:267882..267882;Note=P->S (CCC->UCC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	267890	267890	.	+	.	ID=id-NC_007982.1:267890..267890;Note=P->L (CCA->CUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	267982	267982	.	+	.	ID=id-NC_007982.1:267982..267982;Note=Y->Y (UAC->UAU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	268016	268016	.	+	.	ID=id-NC_007982.1:268016..268016;Note=P->L (CCU->CUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	268037	268037	.	+	.	ID=id-NC_007982.1:268037..268037;Note=S->F (UCC->UUC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	268642	268642	.	+	.	ID=id-NC_007982.1:268642..268642;Note=P->L (CCC->CUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	268643	268643	.	+	.	ID=id-NC_007982.1:268643..268643;Note=P->L (CCC->CUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	269471	269471	.	+	.	ID=id-NC_007982.1:269471..269471;Note=P->F (CCC->UUC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	269472	269472	.	+	.	ID=id-NC_007982.1:269472..269472;Note=P->F (CCC->UUC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	269675	269675	.	+	.	ID=id-NC_007982.1:269675..269675;Note=S->F (UCC->UUC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	269681	269681	.	+	.	ID=id-NC_007982.1:269681..269681;Note=P->L (CCC->CUC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	269734	269734	.	+	.	ID=id-NC_007982.1:269734..269734;Note=L->L (CUC->CUU)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	269750	269750	.	+	.	ID=id-NC_007982.1:269750..269750;Note=S->L (UCG->UUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	gene	271154	271498	.	-	.	ID=gene-ZeamMp096;Dbxref=GeneID:4055937;Name=orf114-b;gbkey=Gene;gene=orf114-b;gene_biotype=protein_coding;locus_tag=ZeamMp096
+NC_007982.1	RefSeq	CDS	271154	271498	.	-	0	ID=cds-YP_588357.1;Parent=gene-ZeamMp096;Dbxref=GenBank:YP_588357.1,GeneID:4055937;Name=YP_588357.1;gbkey=CDS;gene=orf114-b;locus_tag=ZeamMp096;product=hypothetical protein;protein_id=YP_588357.1
+NC_007982.1	RefSeq	gene	273328	273846	.	-	.	ID=gene-ZeamMp097;Dbxref=GeneID:4055857;Name=rps1;gbkey=Gene;gene=rps1;gene_biotype=protein_coding;locus_tag=ZeamMp097
+NC_007982.1	RefSeq	CDS	273328	273846	.	-	0	ID=cds-YP_588358.1;Parent=gene-ZeamMp097;Dbxref=GenBank:YP_588358.1,GeneID:4055857;Name=YP_588358.1;gbkey=CDS;gene=rps1;locus_tag=ZeamMp097;product=ribosomal protein S1;protein_id=YP_588358.1
+NC_007982.1	RefSeq	gene	273987	275849	.	-	.	ID=gene-ZeamMp098;Dbxref=GeneID:4055896;Name=ccmFN;gbkey=Gene;gene=ccmFN;gene_biotype=protein_coding;locus_tag=ZeamMp098
+NC_007982.1	RefSeq	CDS	273987	275849	.	-	0	ID=cds-YP_588359.1;Parent=gene-ZeamMp098;Dbxref=GenBank:YP_588359.1,GeneID:4055896;Name=YP_588359.1;gbkey=CDS;gene=ccmFN;locus_tag=ZeamMp098;product=cytochrome c biogenesis FN;protein_id=YP_588359.1
+NC_007982.1	RefSeq	gene	277988	278428	.	+	.	ID=gene-ZeamMp101;Dbxref=GeneID:4055902;Name=orf146-a;gbkey=Gene;gene=orf146-a;gene_biotype=protein_coding;locus_tag=ZeamMp101
+NC_007982.1	RefSeq	CDS	277988	278428	.	+	0	ID=cds-YP_588362.1;Parent=gene-ZeamMp101;Dbxref=GenBank:YP_588362.1,GeneID:4055902;Name=YP_588362.1;gbkey=CDS;gene=orf146-a;locus_tag=ZeamMp101;product=hypothetical protein;protein_id=YP_588362.1
+NC_007982.1	RefSeq	gene	277993	278064	.	-	.	ID=gene-ZeamMt023;Dbxref=GeneID:4056000;Name=trnQ;gbkey=Gene;gene=trnQ;gene_biotype=tRNA;locus_tag=ZeamMt023
+NC_007982.1	RefSeq	tRNA	277993	278064	.	-	.	ID=rna-ZeamMt023;Parent=gene-ZeamMt023;Dbxref=GeneID:4056000;gbkey=tRNA;gene=trnQ;locus_tag=ZeamMt023;product=tRNA-Gln
+NC_007982.1	RefSeq	exon	277993	278064	.	-	.	ID=exon-ZeamMt023-1;Parent=rna-ZeamMt023;Dbxref=GeneID:4056000;gbkey=tRNA;gene=trnQ;locus_tag=ZeamMt023;product=tRNA-Gln
+NC_007982.1	RefSeq	pseudogene	281727	282037	.	-	.	ID=gene-ZeamMp102;Dbxref=GeneID:4055932;Name=orf100-a;gbkey=Gene;gene=orf100-a;gene_biotype=pseudogene;locus_tag=ZeamMp102;pseudo=true
+NC_007982.1	RefSeq	gene	284756	285205	.	+	.	ID=gene-ZeamMp103;Dbxref=GeneID:4055812;Name=orf149-b;gbkey=Gene;gene=orf149-b;gene_biotype=protein_coding;locus_tag=ZeamMp103
+NC_007982.1	RefSeq	CDS	284756	285205	.	+	0	ID=cds-YP_588363.1;Parent=gene-ZeamMp103;Dbxref=GenBank:YP_588363.1,GeneID:4055812;Name=YP_588363.1;gbkey=CDS;gene=orf149-b;locus_tag=ZeamMp103;product=hypothetical protein;protein_id=YP_588363.1
+NC_007982.1	RefSeq	gene	287309	287710	.	+	.	ID=gene-ZeamMp104;Dbxref=GeneID:4055921;Name=orf133-a;gbkey=Gene;gene=orf133-a;gene_biotype=protein_coding;locus_tag=ZeamMp104
+NC_007982.1	RefSeq	CDS	287309	287710	.	+	0	ID=cds-YP_588364.1;Parent=gene-ZeamMp104;Dbxref=GenBank:YP_588364.1,GeneID:4055921;Name=YP_588364.1;gbkey=CDS;gene=orf133-a;locus_tag=ZeamMp104;product=hypothetical protein;protein_id=YP_588364.1
+NC_007982.1	RefSeq	gene	288627	289007	.	-	.	ID=gene-ZeamMp105;Dbxref=GeneID:4055960;Name=orf126-d;gbkey=Gene;gene=orf126-d;gene_biotype=protein_coding;locus_tag=ZeamMp105
+NC_007982.1	RefSeq	CDS	288627	289007	.	-	0	ID=cds-YP_588365.1;Parent=gene-ZeamMp105;Dbxref=GenBank:YP_588365.1,GeneID:4055960;Name=YP_588365.1;gbkey=CDS;gene=orf126-d;locus_tag=ZeamMp105;product=hypothetical protein;protein_id=YP_588365.1
+NC_007982.1	RefSeq	gene	293481	293798	.	+	.	ID=gene-ZeamMp106;Dbxref=GeneID:4056002;Name=orf105-f;gbkey=Gene;gene=orf105-f;gene_biotype=protein_coding;locus_tag=ZeamMp106
+NC_007982.1	RefSeq	CDS	293481	293798	.	+	0	ID=cds-YP_588366.1;Parent=gene-ZeamMp106;Dbxref=GenBank:YP_588366.1,GeneID:4056002;Name=YP_588366.1;gbkey=CDS;gene=orf105-f;locus_tag=ZeamMp106;product=hypothetical protein;protein_id=YP_588366.1
+NC_007982.1	RefSeq	gene	295310	295627	.	+	.	ID=gene-ZeamMp107;Dbxref=GeneID:4056003;Name=orf105-g;gbkey=Gene;gene=orf105-g;gene_biotype=protein_coding;locus_tag=ZeamMp107
+NC_007982.1	RefSeq	CDS	295310	295627	.	+	0	ID=cds-YP_588367.1;Parent=gene-ZeamMp107;Dbxref=GenBank:YP_588367.1,GeneID:4056003;Name=YP_588367.1;gbkey=CDS;gene=orf105-g;locus_tag=ZeamMp107;product=hypothetical protein;protein_id=YP_588367.1
+NC_007982.1	RefSeq	gene	299238	299462	.	-	.	ID=gene-ZeamMp108;Dbxref=GeneID:4055891;Name=atp9;gbkey=Gene;gene=atp9;gene_biotype=protein_coding;locus_tag=ZeamMp108
+NC_007982.1	RefSeq	CDS	299238	299462	.	-	0	ID=cds-YP_588368.1;Parent=gene-ZeamMp108;Dbxref=GenBank:YP_588368.1,GeneID:4055891;Name=YP_588368.1;exception=RNA editing;gbkey=CDS;gene=atp9;locus_tag=ZeamMp108;product=ATPase subunit 9;protein_id=YP_588368.1
+NC_007982.1	RefSeq	sequence_feature	299251	299251	.	+	.	ID=id-NC_007982.1:299251..299251;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	299272	299272	.	+	.	ID=id-NC_007982.1:299272..299272;Note=P->L (CCA->CUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	299281	299281	.	+	.	ID=id-NC_007982.1:299281..299281;Note=S->L (UCG->UUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	299329	299329	.	+	.	ID=id-NC_007982.1:299329..299329;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	299371	299371	.	+	.	ID=id-NC_007982.1:299371..299371;Note=S->L (UCG->UUG)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	299381	299381	.	+	.	ID=id-NC_007982.1:299381..299381;Note=L->F (CUC->UUC)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	sequence_feature	299443	299443	.	+	.	ID=id-NC_007982.1:299443..299443;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature
+NC_007982.1	RefSeq	gene	306309	306650	.	-	.	ID=gene-ZeamMp109;Dbxref=GeneID:4055967;Name=orf113-a;gbkey=Gene;gene=orf113-a;gene_biotype=protein_coding;locus_tag=ZeamMp109
+NC_007982.1	RefSeq	CDS	306309	306650	.	-	0	ID=cds-YP_588369.1;Parent=gene-ZeamMp109;Dbxref=GenBank:YP_588369.1,GeneID:4055967;Name=YP_588369.1;gbkey=CDS;gene=orf113-a;locus_tag=ZeamMp109;product=hypothetical protein;protein_id=YP_588369.1
+NC_007982.1	RefSeq	gene	307593	308036	.	+	.	ID=gene-ZeamMp110;Dbxref=GeneID:4055831;Name=orf147-a;gbkey=Gene;gene=orf147-a;gene_biotype=protein_coding;locus_tag=ZeamMp110
+NC_007982.1	RefSeq	CDS	307593	308036	.	+	0	ID=cds-YP_588370.1;Parent=gene-ZeamMp110;Dbxref=GenBank:YP_588370.1,GeneID:4055831;Name=YP_588370.1;gbkey=CDS;gene=orf147-a;locus_tag=ZeamMp110;product=hypothetical protein;protein_id=YP_588370.1
+NC_007982.1	RefSeq	gene	307857	308156	.	-	.	ID=gene-ZeamMp111;Dbxref=GeneID:4055803;Name=orf99-e;gbkey=Gene;gene=orf99-e;gene_biotype=protein_coding;locus_tag=ZeamMp111
+NC_007982.1	RefSeq	CDS	307857	308156	.	-	0	ID=cds-YP_588371.1;Parent=gene-ZeamMp111;Dbxref=GenBank:YP_588371.1,GeneID:4055803;Name=YP_588371.1;gbkey=CDS;gene=orf99-e;locus_tag=ZeamMp111;product=hypothetical protein;protein_id=YP_588371.1
+NC_007982.1	RefSeq	gene	308155	308514	.	+	.	ID=gene-ZeamMp112;Dbxref=GeneID:4055927;Name=orf119-b;gbkey=Gene;gene=orf119-b;gene_biotype=protein_coding;locus_tag=ZeamMp112
+NC_007982.1	RefSeq	CDS	308155	308514	.	+	0	ID=cds-YP_588372.1;Parent=gene-ZeamMp112;Dbxref=GenBank:YP_588372.1,GeneID:4055927;Name=YP_588372.1;gbkey=CDS;gene=orf119-b;locus_tag=ZeamMp112;product=hypothetical protein;protein_id=YP_588372.1
+NC_007982.1	RefSeq	gene	310906	312072	.	+	.	ID=gene-ZeamMp113;Dbxref=GeneID:4055802;Name=cob;gbkey=Gene;gene=cob;gene_biotype=protein_coding;locus_tag=ZeamMp113
+NC_007982.1	RefSeq	CDS	310906	312072	.	+	0	ID=cds-YP_588373.1;Parent=gene-ZeamMp113;Dbxref=GenBank:YP_588373.1,GeneID:4055802;Name=YP_588373.1;gbkey=CDS;gene=cob;locus_tag=ZeamMp113;product=apocytochrome b;protein_id=YP_588373.1
+NC_007982.1	RefSeq	gene	313450	313773	.	-	.	ID=gene-ZeamMp114;Dbxref=GeneID:4055872;Name=orf107-a;gbkey=Gene;gene=orf107-a;gene_biotype=protein_coding;locus_tag=ZeamMp114
+NC_007982.1	RefSeq	CDS	313450	313773	.	-	0	ID=cds-YP_588374.1;Parent=gene-ZeamMp114;Dbxref=GenBank:YP_588374.1,GeneID:4055872;Name=YP_588374.1;gbkey=CDS;gene=orf107-a;locus_tag=ZeamMp114;product=hypothetical protein;protein_id=YP_588374.1
+NC_007982.1	RefSeq	gene	318974	319047	.	+	.	ID=gene-ZeamMt024;Dbxref=GeneID:4055989;Name=trnfM;gbkey=Gene;gene=trnfM;gene_biotype=tRNA;locus_tag=ZeamMt024
+NC_007982.1	RefSeq	tRNA	318974	319047	.	+	.	ID=rna-ZeamMt024;Parent=gene-ZeamMt024;Dbxref=GeneID:4055989;Note=fMet;gbkey=tRNA;gene=trnfM;locus_tag=ZeamMt024;product=tRNA-Met
+NC_007982.1	RefSeq	exon	318974	319047	.	+	.	ID=exon-ZeamMt024-1;Parent=rna-ZeamMt024;Dbxref=GeneID:4055989;Note=fMet;gbkey=tRNA;gene=trnfM;locus_tag=ZeamMt024;product=tRNA-Met
+NC_007982.1	RefSeq	gene	319613	319963	.	+	.	ID=gene-ZeamMp115;Dbxref=GeneID:4055839;Name=rps13;gbkey=Gene;gene=rps13;gene_biotype=protein_coding;locus_tag=ZeamMp115
+NC_007982.1	RefSeq	CDS	319613	319963	.	+	0	ID=cds-YP_588375.1;Parent=gene-ZeamMp115;Dbxref=GenBank:YP_588375.1,GeneID:4055839;Name=YP_588375.1;exception=RNA editing;gbkey=CDS;gene=rps13;locus_tag=ZeamMp115;product=ribosomal protein S13;protein_id=YP_588375.1
+NC_007982.1	RefSeq	sequence_feature	319617	319617	.	+	.	ID=id-ZeamMp115;Dbxref=GeneID:4055839;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature;gene=rps13;locus_tag=ZeamMp115
+NC_007982.1	RefSeq	sequence_feature	319638	319638	.	+	.	ID=id-ZeamMp115-2;Dbxref=GeneID:4055839;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature;gene=rps13;locus_tag=ZeamMp115
+NC_007982.1	RefSeq	sequence_feature	319668	319668	.	+	.	ID=id-ZeamMp115-3;Dbxref=GeneID:4055839;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature;gene=rps13;locus_tag=ZeamMp115
+NC_007982.1	RefSeq	sequence_feature	319712	319712	.	+	.	ID=id-ZeamMp115-4;Dbxref=GeneID:4055839;Note=R->C (CGU->UGU)%3B C to U RNA editing;gbkey=misc_feature;gene=rps13;locus_tag=ZeamMp115
+NC_007982.1	RefSeq	sequence_feature	319868	319868	.	+	.	ID=id-ZeamMp115-5;Dbxref=GeneID:4055839;Note=R->C (CGU->UGU)%3B C to U RNA editing;gbkey=misc_feature;gene=rps13;locus_tag=ZeamMp115
+NC_007982.1	RefSeq	sequence_feature	319899	319899	.	+	.	ID=id-ZeamMp115-6;Dbxref=GeneID:4055839;Note=S->L (UCG->UUG)%3B C to U RNA editing;gbkey=misc_feature;gene=rps13;locus_tag=ZeamMp115
+NC_007982.1	RefSeq	gene	326704	327726	.	-	.	ID=gene-ZeamMt025;Dbxref=GeneID:4055840;Name=trnI-ct;gbkey=Gene;gene=trnI-ct;gene_biotype=tRNA;locus_tag=ZeamMt025
+NC_007982.1	RefSeq	tRNA	326704	327726	.	-	.	ID=rna-ZeamMt025;Parent=gene-ZeamMt025;Dbxref=GeneID:4055840;Note=chloroplast origin;gbkey=tRNA;gene=trnI-ct;locus_tag=ZeamMt025;product=tRNA-Ile
+NC_007982.1	RefSeq	exon	327690	327726	.	-	.	ID=exon-ZeamMt025-1;Parent=rna-ZeamMt025;Dbxref=GeneID:4055840;Note=chloroplast origin;gbkey=tRNA;gene=trnI-ct;locus_tag=ZeamMt025;product=tRNA-Ile
+NC_007982.1	RefSeq	exon	326704	326738	.	-	.	ID=exon-ZeamMt025-2;Parent=rna-ZeamMt025;Dbxref=GeneID:4055840;Note=chloroplast origin;gbkey=tRNA;gene=trnI-ct;locus_tag=ZeamMt025;product=tRNA-Ile
+NC_007982.1	RefSeq	exon	326704	326738	.	-	.	ID=id-ZeamMt025-2;Parent=gene-ZeamMt025;Dbxref=GeneID:4055840;exon_number=2;gbkey=exon;gene=trnI-ct;locus_tag=ZeamMt025;number=2
+NC_007982.1	RefSeq	exon	327690	327726	.	-	.	ID=id-ZeamMt025-1;Parent=gene-ZeamMt025;Dbxref=GeneID:4055840;exon_number=1;gbkey=exon;gene=trnI-ct;locus_tag=ZeamMt025;number=1
+NC_007982.1	RefSeq	gene	327181	327585	.	-	.	ID=gene-ZeamMp116;Dbxref=GeneID:4055838;Name=orf134-a-ct;gbkey=Gene;gene=orf134-a-ct;gene_biotype=protein_coding;locus_tag=ZeamMp116
+NC_007982.1	RefSeq	CDS	327181	327585	.	-	0	ID=cds-YP_588376.1;Parent=gene-ZeamMp116;Dbxref=GenBank:YP_588376.1,GeneID:4055838;Name=YP_588376.1;Note=chloroplast origin;gbkey=CDS;gene=orf134-a-ct;locus_tag=ZeamMp116;product=hypothetical protein;protein_id=YP_588376.1
+NC_007982.1	RefSeq	gene	328030	329520	.	-	.	ID=gene-ZeamMr001;Dbxref=GeneID:4055942;Name=rrn16-ct;gbkey=Gene;gene=rrn16-ct;gene_biotype=rRNA;locus_tag=ZeamMr001
+NC_007982.1	RefSeq	rRNA	328030	329520	.	-	.	ID=rna-ZeamMr001;Parent=gene-ZeamMr001;Dbxref=GeneID:4055942;Note=chloroplast origin;gbkey=rRNA;gene=rrn16-ct;locus_tag=ZeamMr001;product=16S ribosomal RNA
+NC_007982.1	RefSeq	exon	328030	329520	.	-	.	ID=exon-ZeamMr001-1;Parent=rna-ZeamMr001;Dbxref=GeneID:4055942;Note=chloroplast origin;gbkey=rRNA;gene=rrn16-ct;locus_tag=ZeamMr001;product=16S ribosomal RNA
+NC_007982.1	RefSeq	pseudogene	329751	329822	.	-	.	ID=gene-ZeamMt026;Dbxref=GeneID:4055851;Name=trnV-ct;gbkey=Gene;gene=trnV-ct;gene_biotype=tRNA_pseudogene;locus_tag=ZeamMt026;pseudo=true
+NC_007982.1	RefSeq	tRNA	329751	329822	.	-	.	ID=rna-ZeamMt026;Parent=gene-ZeamMt026;Dbxref=GeneID:4055851;Note=chloroplast origin;gbkey=tRNA;gene=trnV-ct;locus_tag=ZeamMt026;product=tRNA-Val;pseudo=true
+NC_007982.1	RefSeq	exon	329751	329822	.	-	.	ID=exon-ZeamMt026-1;Parent=rna-ZeamMt026;Dbxref=GeneID:4055851;Note=chloroplast origin;gbkey=tRNA;gene=trnV-ct;locus_tag=ZeamMt026;product=tRNA-Val;pseudo=true
+NC_007982.1	RefSeq	pseudogene	330558	330998	.	-	.	ID=gene-ZeamMp117;Dbxref=GeneID:4055841;Name=orf146-ct;gbkey=Gene;gene=orf146-ct;gene_biotype=pseudogene;locus_tag=ZeamMp117;pseudo=true
+NC_007982.1	RefSeq	pseudogene	331579	332379	.	+	.	ID=gene-ZeamMp118;Dbxref=GeneID:4055957;Name=rps12-ct;gbkey=Gene;gene=rps12-ct;gene_biotype=pseudogene;locus_tag=ZeamMp118;pseudo=true
+NC_007982.1	RefSeq	exon	331579	331810	.	+	.	ID=id-ZeamMp118-1;Parent=gene-ZeamMp118;Dbxref=GeneID:4055957;exon_number=1;gbkey=exon;gene=rps12-ct;locus_tag=ZeamMp118;number=1;pseudo=true
+NC_007982.1	RefSeq	exon	332350	332379	.	+	.	ID=id-ZeamMp118-2;Parent=gene-ZeamMp118;Dbxref=GeneID:4055957;exon_number=2;gbkey=exon;gene=rps12-ct;locus_tag=ZeamMp118;number=2;pseudo=true
+NC_007982.1	RefSeq	gene	332438	332908	.	+	.	ID=gene-ZeamMp119;Dbxref=GeneID:4055928;Name=rps7-ct;gbkey=Gene;gene=rps7-ct;gene_biotype=protein_coding;locus_tag=ZeamMp119
+NC_007982.1	RefSeq	CDS	332438	332908	.	+	0	ID=cds-YP_588377.1;Parent=gene-ZeamMp119;Dbxref=GenBank:YP_588377.1,GeneID:4055928;Name=YP_588377.1;Note=chloroplast origin;gbkey=CDS;gene=rps7-ct;locus_tag=ZeamMp119;product=ribosomal protein S7;protein_id=YP_588377.1
+NC_007982.1	RefSeq	pseudogene	333208	335444	.	+	.	ID=gene-ZeamMp120;Dbxref=GeneID:4055877;Name=ndhB-ct;gbkey=Gene;gene=ndhB-ct;gene_biotype=pseudogene;locus_tag=ZeamMp120;pseudo=true
+NC_007982.1	RefSeq	pseudogene	336020	336100	.	+	.	ID=gene-ZeamMt027;Dbxref=GeneID:4055808;Name=trnL-c-ct;gbkey=Gene;gene=trnL-c-ct;gene_biotype=tRNA_pseudogene;locus_tag=ZeamMt027;pseudo=true
+NC_007982.1	RefSeq	tRNA	336020	336100	.	+	.	ID=rna-ZeamMt027;Parent=gene-ZeamMt027;Dbxref=GeneID:4055808;Note=chloroplast origin;gbkey=tRNA;gene=trnL-c-ct;locus_tag=ZeamMt027;product=tRNA-Leu;pseudo=true
+NC_007982.1	RefSeq	exon	336020	336100	.	+	.	ID=exon-ZeamMt027-1;Parent=rna-ZeamMt027;Dbxref=GeneID:4055808;Note=chloroplast origin;gbkey=tRNA;gene=trnL-c-ct;locus_tag=ZeamMt027;product=tRNA-Leu;pseudo=true
+NC_007982.1	RefSeq	gene	336423	336818	.	-	.	ID=gene-ZeamMp121;Dbxref=GeneID:4055848;Name=orf131-b-ct;gbkey=Gene;gene=orf131-b-ct;gene_biotype=protein_coding;locus_tag=ZeamMp121
+NC_007982.1	RefSeq	CDS	336423	336818	.	-	0	ID=cds-YP_588378.1;Parent=gene-ZeamMp121;Dbxref=GenBank:YP_588378.1,GeneID:4055848;Name=YP_588378.1;Note=chloroplast origin;gbkey=CDS;gene=orf131-b-ct;locus_tag=ZeamMp121;product=hypothetical protein;protein_id=YP_588378.1
+NC_007982.1	RefSeq	pseudogene	336884	337187	.	-	.	ID=gene-ZeamMp122;Dbxref=GeneID:4055821;Name=orf100-b-ct;gbkey=Gene;gene=orf100-b-ct;gene_biotype=pseudogene;locus_tag=ZeamMp122;pseudo=true
+NC_007982.1	RefSeq	pseudogene	337987	338411	.	-	.	ID=gene-ZeamMp123;Dbxref=GeneID:4055922;Name=orf140-ct;gbkey=Gene;gene=orf140-ct;gene_biotype=pseudogene;locus_tag=ZeamMp123;pseudo=true
+NC_007982.1	RefSeq	gene	339779	340135	.	+	.	ID=gene-ZeamMp124;Dbxref=GeneID:4055895;Name=orf118;gbkey=Gene;gene=orf118;gene_biotype=protein_coding;locus_tag=ZeamMp124
+NC_007982.1	RefSeq	CDS	339779	340135	.	+	0	ID=cds-YP_588379.1;Parent=gene-ZeamMp124;Dbxref=GenBank:YP_588379.1,GeneID:4055895;Name=YP_588379.1;gbkey=CDS;gene=orf118;locus_tag=ZeamMp124;product=hypothetical protein;protein_id=YP_588379.1
+NC_007982.1	RefSeq	gene	342957	343355	.	-	.	ID=gene-ZeamMp125;Dbxref=GeneID:4055818;Name=orf132;gbkey=Gene;gene=orf132;gene_biotype=protein_coding;locus_tag=ZeamMp125
+NC_007982.1	RefSeq	CDS	342957	343355	.	-	0	ID=cds-YP_588380.1;Parent=gene-ZeamMp125;Dbxref=GenBank:YP_588380.1,GeneID:4055818;Name=YP_588380.1;gbkey=CDS;gene=orf132;locus_tag=ZeamMp125;product=hypothetical protein;protein_id=YP_588380.1
+NC_007982.1	RefSeq	pseudogene	344034	344405	.	+	.	ID=gene-ZeamMp126;Dbxref=GeneID:4055798;Name=orf120;gbkey=Gene;gene=orf120;gene_biotype=pseudogene;locus_tag=ZeamMp126;pseudo=true
+NC_007982.1	RefSeq	gene	344813	345433	.	+	.	ID=gene-ZeamMp127;Dbxref=GeneID:4055992;Name=ccmB;gbkey=Gene;gene=ccmB;gene_biotype=protein_coding;locus_tag=ZeamMp127
+NC_007982.1	RefSeq	CDS	344813	345433	.	+	0	ID=cds-YP_588381.1;Parent=gene-ZeamMp127;Dbxref=GenBank:YP_588381.1,GeneID:4055992;Name=YP_588381.1;gbkey=CDS;gene=ccmB;locus_tag=ZeamMp127;product=cytochrome c biogenesis B;protein_id=YP_588381.1
+NC_007982.1	RefSeq	pseudogene	346550	346739	.	-	.	ID=gene-ZeamMp128;Dbxref=GeneID:4055925;Name=rps19-ct;gbkey=Gene;gene=rps19-ct;gene_biotype=pseudogene;locus_tag=ZeamMp128;pseudo=true
+NC_007982.1	RefSeq	gene	346758	347501	.	-	.	ID=gene-ZeamMp129;Dbxref=GeneID:4055878;Name=orf247-ct;gbkey=Gene;gene=orf247-ct;gene_biotype=protein_coding;locus_tag=ZeamMp129
+NC_007982.1	RefSeq	CDS	346758	347501	.	-	0	ID=cds-YP_588382.1;Parent=gene-ZeamMp129;Dbxref=GenBank:YP_588382.1,GeneID:4055878;Name=YP_588382.1;Note=chloroplast origin;gbkey=CDS;gene=orf247-ct;locus_tag=ZeamMp129;product=hypothetical protein;protein_id=YP_588382.1
+NC_007982.1	RefSeq	gene	346870	346943	.	+	.	ID=gene-ZeamMt028;Dbxref=GeneID:4055984;Name=trnH-ct;gbkey=Gene;gene=trnH-ct;gene_biotype=tRNA;locus_tag=ZeamMt028
+NC_007982.1	RefSeq	tRNA	346870	346943	.	+	.	ID=rna-ZeamMt028;Parent=gene-ZeamMt028;Dbxref=GeneID:4055984;Note=chloroplast origin;gbkey=tRNA;gene=trnH-ct;locus_tag=ZeamMt028;product=tRNA-His
+NC_007982.1	RefSeq	exon	346870	346943	.	+	.	ID=exon-ZeamMt028-1;Parent=rna-ZeamMt028;Dbxref=GeneID:4055984;Note=chloroplast origin;gbkey=tRNA;gene=trnH-ct;locus_tag=ZeamMt028;product=tRNA-His
+NC_007982.1	RefSeq	pseudogene	347007	348473	.	-	.	ID=gene-ZeamMp130;Dbxref=GeneID:4055995;Name=rpl2-ct;gbkey=Gene;gene=rpl2-ct;gene_biotype=pseudogene;locus_tag=ZeamMp130;pseudo=true
+NC_007982.1	RefSeq	gene	347110	347523	.	+	.	ID=gene-ZeamMp131;Dbxref=GeneID:4055946;Name=orf137-a-ct;gbkey=Gene;gene=orf137-a-ct;gene_biotype=protein_coding;locus_tag=ZeamMp131
+NC_007982.1	RefSeq	CDS	347110	347523	.	+	0	ID=cds-YP_588383.1;Parent=gene-ZeamMp131;Dbxref=GenBank:YP_588383.1,GeneID:4055946;Name=YP_588383.1;Note=chloroplast origin;gbkey=CDS;gene=orf137-a-ct;locus_tag=ZeamMp131;product=hypothetical protein;protein_id=YP_588383.1
+NC_007982.1	RefSeq	gene	348199	348528	.	+	.	ID=gene-ZeamMp132;Dbxref=GeneID:4055970;Name=orf109-b-ct;gbkey=Gene;gene=orf109-b-ct;gene_biotype=protein_coding;locus_tag=ZeamMp132
+NC_007982.1	RefSeq	CDS	348199	348528	.	+	0	ID=cds-YP_588384.1;Parent=gene-ZeamMp132;Dbxref=GenBank:YP_588384.1,GeneID:4055970;Name=YP_588384.1;Note=chloroplast origin;gbkey=CDS;gene=orf109-b-ct;locus_tag=ZeamMp132;product=hypothetical protein;protein_id=YP_588384.1
+NC_007982.1	RefSeq	pseudogene	348494	348769	.	-	.	ID=gene-ZeamMp133;Dbxref=GeneID:4055822;Name=rpl23-ct;gbkey=Gene;gene=rpl23-ct;gene_biotype=pseudogene;locus_tag=ZeamMp133;pseudo=true
+NC_007982.1	RefSeq	pseudogene	349025	350442	.	-	.	ID=gene-ZeamMp134;Dbxref=GeneID:4055845;Name=rbcL-ct;gbkey=Gene;gene=rbcL-ct;gene_biotype=pseudogene;locus_tag=ZeamMp134;pseudo=true
+NC_007982.1	RefSeq	gene	351309	351713	.	-	.	ID=gene-ZeamMp135;Dbxref=GeneID:4055847;Name=orf134-b;gbkey=Gene;gene=orf134-b;gene_biotype=protein_coding;locus_tag=ZeamMp135
+NC_007982.1	RefSeq	CDS	351309	351713	.	-	0	ID=cds-YP_588385.1;Parent=gene-ZeamMp135;Dbxref=GenBank:YP_588385.1,GeneID:4055847;Name=YP_588385.1;gbkey=CDS;gene=orf134-b;locus_tag=ZeamMp135;product=hypothetical protein;protein_id=YP_588385.1
+NC_007982.1	RefSeq	gene	354865	356451	.	+	.	ID=gene-ZeamMp136;Dbxref=GeneID:4056004;Name=cox1;gbkey=Gene;gene=cox1;gene_biotype=protein_coding;locus_tag=ZeamMp136
+NC_007982.1	RefSeq	CDS	354865	356451	.	+	0	ID=cds-YP_588386.1;Parent=gene-ZeamMp136;Dbxref=GenBank:YP_588386.1,GeneID:4056004;Name=YP_588386.1;gbkey=CDS;gene=cox1;locus_tag=ZeamMp136;product=cytochrome c oxidase subunit 1;protein_id=YP_588386.1
+NC_007982.1	RefSeq	gene	356474	356917	.	-	.	ID=gene-ZeamMp137;Dbxref=GeneID:4055834;Name=orf147-b;gbkey=Gene;gene=orf147-b;gene_biotype=protein_coding;locus_tag=ZeamMp137
+NC_007982.1	RefSeq	CDS	356474	356917	.	-	0	ID=cds-YP_588387.1;Parent=gene-ZeamMp137;Dbxref=GenBank:YP_588387.1,GeneID:4055834;Name=YP_588387.1;gbkey=CDS;gene=orf147-b;locus_tag=ZeamMp137;product=hypothetical protein;protein_id=YP_588387.1
+NC_007982.1	RefSeq	gene	360534	361787	.	-	.	ID=gene-ZeamMp138;Dbxref=GeneID:4055954;Name=orf417;gbkey=Gene;gene=orf417;gene_biotype=protein_coding;locus_tag=ZeamMp138
+NC_007982.1	RefSeq	CDS	360534	361787	.	-	0	ID=cds-YP_588388.1;Parent=gene-ZeamMp138;Dbxref=GenBank:YP_588388.1,GeneID:4055954;Name=YP_588388.1;gbkey=CDS;gene=orf417;locus_tag=ZeamMp138;product=hypothetical protein;protein_id=YP_588388.1
+NC_007982.1	RefSeq	pseudogene	360558	360878	.	+	.	ID=gene-ZeamMp139;Dbxref=GeneID:4055897;Name=orf106;gbkey=Gene;gene=orf106;gene_biotype=pseudogene;locus_tag=ZeamMp139;pseudo=true
+NC_007982.1	RefSeq	gene	361927	362250	.	-	.	ID=gene-ZeamMp140;Dbxref=GeneID:4055879;Name=orf107-d;gbkey=Gene;gene=orf107-d;gene_biotype=protein_coding;locus_tag=ZeamMp140
+NC_007982.1	RefSeq	CDS	361927	362250	.	-	0	ID=cds-YP_588389.1;Parent=gene-ZeamMp140;Dbxref=GenBank:YP_588389.1,GeneID:4055879;Name=YP_588389.1;gbkey=CDS;gene=orf107-d;locus_tag=ZeamMp140;product=hypothetical protein;protein_id=YP_588389.1
+NC_007982.1	RefSeq	gene	362802	363197	.	-	.	ID=gene-ZeamMp141;Dbxref=GeneID:4055870;Name=orf131-c;gbkey=Gene;gene=orf131-c;gene_biotype=protein_coding;locus_tag=ZeamMp141
+NC_007982.1	RefSeq	CDS	362802	363197	.	-	0	ID=cds-YP_588390.1;Parent=gene-ZeamMp141;Dbxref=GenBank:YP_588390.1,GeneID:4055870;Name=YP_588390.1;gbkey=CDS;gene=orf131-c;locus_tag=ZeamMp141;product=hypothetical protein;protein_id=YP_588390.1
+NC_007982.1	RefSeq	gene	369060	369413	.	+	.	ID=gene-ZeamMp142;Dbxref=GeneID:4055949;Name=orf117-d;gbkey=Gene;gene=orf117-d;gene_biotype=protein_coding;locus_tag=ZeamMp142
+NC_007982.1	RefSeq	CDS	369060	369413	.	+	0	ID=cds-YP_588391.1;Parent=gene-ZeamMp142;Dbxref=GenBank:YP_588391.1,GeneID:4055949;Name=YP_588391.1;gbkey=CDS;gene=orf117-d;locus_tag=ZeamMp142;product=hypothetical protein;protein_id=YP_588391.1
+NC_007982.1	RefSeq	gene	372870	373193	.	-	.	ID=gene-ZeamMp143;Dbxref=GeneID:4055873;Name=orf107-b;gbkey=Gene;gene=orf107-b;gene_biotype=protein_coding;locus_tag=ZeamMp143
+NC_007982.1	RefSeq	CDS	372870	373193	.	-	0	ID=cds-YP_588392.1;Parent=gene-ZeamMp143;Dbxref=GenBank:YP_588392.1,GeneID:4055873;Name=YP_588392.1;gbkey=CDS;gene=orf107-b;locus_tag=ZeamMp143;product=hypothetical protein;protein_id=YP_588392.1
+NC_007982.1	RefSeq	gene	374935	375234	.	+	.	ID=gene-ZeamMp144;Dbxref=GeneID:4055805;Name=orf99-f;gbkey=Gene;gene=orf99-f;gene_biotype=protein_coding;locus_tag=ZeamMp144
+NC_007982.1	RefSeq	CDS	374935	375234	.	+	0	ID=cds-YP_588393.1;Parent=gene-ZeamMp144;Dbxref=GenBank:YP_588393.1,GeneID:4055805;Name=YP_588393.1;gbkey=CDS;gene=orf99-f;locus_tag=ZeamMp144;product=hypothetical protein;protein_id=YP_588393.1
+NC_007982.1	RefSeq	gene	376214	376603	.	-	.	ID=gene-ZeamMp145;Dbxref=GeneID:4055982;Name=orf129-a;gbkey=Gene;gene=orf129-a;gene_biotype=protein_coding;locus_tag=ZeamMp145
+NC_007982.1	RefSeq	CDS	376214	376603	.	-	0	ID=cds-YP_588394.1;Parent=gene-ZeamMp145;Dbxref=GenBank:YP_588394.1,GeneID:4055982;Name=YP_588394.1;gbkey=CDS;gene=orf129-a;locus_tag=ZeamMp145;product=hypothetical protein;protein_id=YP_588394.1
+NC_007982.1	RefSeq	gene	377949	378035	.	-	.	ID=gene-ZeamMt029;Dbxref=GeneID:4055829;Name=trnS-b;gbkey=Gene;gene=trnS-b;gene_biotype=tRNA;locus_tag=ZeamMt029
+NC_007982.1	RefSeq	tRNA	377949	378035	.	-	.	ID=rna-ZeamMt029;Parent=gene-ZeamMt029;Dbxref=GeneID:4055829;gbkey=tRNA;gene=trnS-b;locus_tag=ZeamMt029;product=tRNA-Ser
+NC_007982.1	RefSeq	exon	377949	378035	.	-	.	ID=exon-ZeamMt029-1;Parent=rna-ZeamMt029;Dbxref=GeneID:4055829;gbkey=tRNA;gene=trnS-b;locus_tag=ZeamMt029;product=tRNA-Ser
+NC_007982.1	RefSeq	pseudogene	380144	380454	.	-	.	ID=gene-ZeamMp146;Dbxref=GeneID:4055933;Name=orf100-c;gbkey=Gene;gene=orf100-c;gene_biotype=pseudogene;locus_tag=ZeamMp146;pseudo=true
+NC_007982.1	RefSeq	pseudogene	383186	383510	.	-	.	ID=gene-ZeamMp147;Dbxref=GeneID:4055903;Name=orf109;gbkey=Gene;gene=orf109;gene_biotype=pseudogene;locus_tag=ZeamMp147;pseudo=true
+NC_007982.1	RefSeq	gene	385083	385424	.	+	.	ID=gene-ZeamMp148;Dbxref=GeneID:4055968;Name=orf113-b;gbkey=Gene;gene=orf113-b;gene_biotype=protein_coding;locus_tag=ZeamMp148
+NC_007982.1	RefSeq	CDS	385083	385424	.	+	0	ID=cds-YP_588395.1;Parent=gene-ZeamMp148;Dbxref=GenBank:YP_588395.1,GeneID:4055968;Name=YP_588395.1;gbkey=CDS;gene=orf113-b;locus_tag=ZeamMp148;product=hypothetical protein;protein_id=YP_588395.1
+NC_007982.1	RefSeq	gene	388671	389072	.	-	.	ID=gene-ZeamMp149;Dbxref=GeneID:4055941;Name=orf133-b;gbkey=Gene;gene=orf133-b;gene_biotype=protein_coding;locus_tag=ZeamMp149
+NC_007982.1	RefSeq	CDS	388671	389072	.	-	0	ID=cds-YP_588396.1;Parent=gene-ZeamMp149;Dbxref=GenBank:YP_588396.1,GeneID:4055941;Name=YP_588396.1;gbkey=CDS;gene=orf133-b;locus_tag=ZeamMp149;product=hypothetical protein;protein_id=YP_588396.1
+NC_007982.1	RefSeq	gene	393955	394392	.	-	.	ID=gene-ZeamMp150;Dbxref=GeneID:4055826;Name=orf145;gbkey=Gene;gene=orf145;gene_biotype=protein_coding;locus_tag=ZeamMp150
+NC_007982.1	RefSeq	CDS	393955	394392	.	-	0	ID=cds-YP_588397.1;Parent=gene-ZeamMp150;Dbxref=GenBank:YP_588397.1,GeneID:4055826;Name=YP_588397.1;gbkey=CDS;gene=orf145;locus_tag=ZeamMp150;product=hypothetical protein;protein_id=YP_588397.1
+NC_007982.1	RefSeq	gene	394346	394831	.	-	.	ID=gene-ZeamMp151;Dbxref=GeneID:4055977;Name=orf161;gbkey=Gene;gene=orf161;gene_biotype=protein_coding;locus_tag=ZeamMp151
+NC_007982.1	RefSeq	CDS	394346	394831	.	-	0	ID=cds-YP_588398.1;Parent=gene-ZeamMp151;Dbxref=GenBank:YP_588398.1,GeneID:4055977;Name=YP_588398.1;gbkey=CDS;gene=orf161;locus_tag=ZeamMp151;product=hypothetical protein;protein_id=YP_588398.1
+NC_007982.1	RefSeq	gene	394828	395136	.	-	.	ID=gene-ZeamMp152;Dbxref=GeneID:4055836;Name=orf102-b;gbkey=Gene;gene=orf102-b;gene_biotype=protein_coding;locus_tag=ZeamMp152
+NC_007982.1	RefSeq	CDS	394828	395136	.	-	0	ID=cds-YP_588399.1;Parent=gene-ZeamMp152;Dbxref=GenBank:YP_588399.1,GeneID:4055836;Name=YP_588399.1;gbkey=CDS;gene=orf102-b;locus_tag=ZeamMp152;product=hypothetical protein;protein_id=YP_588399.1
+NC_007982.1	RefSeq	gene	400215	403766	.	+	.	ID=gene-ZeamMr002;Dbxref=GeneID:4055804;Name=rrn26;gbkey=Gene;gene=rrn26;gene_biotype=rRNA;locus_tag=ZeamMr002
+NC_007982.1	RefSeq	rRNA	400215	403766	.	+	.	ID=rna-ZeamMr002;Parent=gene-ZeamMr002;Dbxref=GeneID:4055804;gbkey=rRNA;gene=rrn26;locus_tag=ZeamMr002;product=26S ribosomal RNA
+NC_007982.1	RefSeq	exon	400215	403766	.	+	.	ID=exon-ZeamMr002-1;Parent=rna-ZeamMr002;Dbxref=GeneID:4055804;gbkey=rRNA;gene=rrn26;locus_tag=ZeamMr002;product=26S ribosomal RNA
+NC_007982.1	RefSeq	gene	406845	407144	.	-	.	ID=gene-ZeamMp153;Dbxref=GeneID:4055807;Name=orf99-g;gbkey=Gene;gene=orf99-g;gene_biotype=protein_coding;locus_tag=ZeamMp153
+NC_007982.1	RefSeq	CDS	406845	407144	.	-	0	ID=cds-YP_588400.1;Parent=gene-ZeamMp153;Dbxref=GenBank:YP_588400.1,GeneID:4055807;Name=YP_588400.1;gbkey=CDS;gene=orf99-g;locus_tag=ZeamMp153;product=hypothetical protein;protein_id=YP_588400.1
+NC_007982.1	RefSeq	gene	411137	411628	.	-	.	ID=gene-ZeamMp154;Dbxref=GeneID:4055978;Name=orf163;gbkey=Gene;gene=orf163;gene_biotype=protein_coding;locus_tag=ZeamMp154
+NC_007982.1	RefSeq	CDS	411137	411628	.	-	0	ID=cds-YP_588401.1;Parent=gene-ZeamMp154;Dbxref=GenBank:YP_588401.1,GeneID:4055978;Name=YP_588401.1;gbkey=CDS;gene=orf163;locus_tag=ZeamMp154;product=hypothetical protein;protein_id=YP_588401.1
+NC_007982.1	RefSeq	pseudogene	417407	418191	.	-	.	ID=gene-ZeamMp155;Dbxref=GeneID:4055809;Name=orf261;gbkey=Gene;gene=orf261;gene_biotype=pseudogene;locus_tag=ZeamMp155;pseudo=true
+NC_007982.1	RefSeq	pseudogene	417407	417820	.	-	.	ID=gene-ZeamMp156;Dbxref=GeneID:4055981;Name=orf137-b;gbkey=Gene;gene=orf137-b;gene_biotype=pseudogene;locus_tag=ZeamMp156;pseudo=true
+NC_007982.1	RefSeq	gene	418064	419314	.	-	.	ID=gene-ZeamMp157;Dbxref=GeneID:4056008;Name=rps2B;gbkey=Gene;gene=rps2B;gene_biotype=protein_coding;locus_tag=ZeamMp157
+NC_007982.1	RefSeq	CDS	418064	419314	.	-	0	ID=cds-YP_588402.1;Parent=gene-ZeamMp157;Dbxref=GenBank:YP_588402.1,GeneID:4056008;Name=YP_588402.1;gbkey=CDS;gene=rps2B;locus_tag=ZeamMp157;product=ribosomal protein S2;protein_id=YP_588402.1
+NC_007982.1	RefSeq	gene	419383	419508	.	-	.	ID=gene-ZeamMr003;Dbxref=GeneID:4055935;Name=rrn5;gbkey=Gene;gene=rrn5;gene_biotype=rRNA;locus_tag=ZeamMr003
+NC_007982.1	RefSeq	rRNA	419383	419508	.	-	.	ID=rna-ZeamMr003;Parent=gene-ZeamMr003;Dbxref=GeneID:4055935;gbkey=rRNA;gene=rrn5;locus_tag=ZeamMr003;product=5S ribosomal RNA
+NC_007982.1	RefSeq	exon	419383	419508	.	-	.	ID=exon-ZeamMr003-1;Parent=rna-ZeamMr003;Dbxref=GeneID:4055935;gbkey=rRNA;gene=rrn5;locus_tag=ZeamMr003;product=5S ribosomal RNA
+NC_007982.1	RefSeq	gene	419620	421587	.	-	.	ID=gene-ZeamMr004;Dbxref=GeneID:4055912;Name=rrn18;gbkey=Gene;gene=rrn18;gene_biotype=rRNA;locus_tag=ZeamMr004
+NC_007982.1	RefSeq	rRNA	419620	421587	.	-	.	ID=rna-ZeamMr004;Parent=gene-ZeamMr004;Dbxref=GeneID:4055912;gbkey=rRNA;gene=rrn18;locus_tag=ZeamMr004;product=18S ribosomal RNA
+NC_007982.1	RefSeq	exon	419620	421587	.	-	.	ID=exon-ZeamMr004-1;Parent=rna-ZeamMr004;Dbxref=GeneID:4055912;gbkey=rRNA;gene=rrn18;locus_tag=ZeamMr004;product=18S ribosomal RNA
+NC_007982.1	RefSeq	gene	419869	420204	.	-	.	ID=gene-ZeamMp158;Dbxref=GeneID:4055854;Name=orf111-b;gbkey=Gene;gene=orf111-b;gene_biotype=protein_coding;locus_tag=ZeamMp158
+NC_007982.1	RefSeq	CDS	419869	420204	.	-	0	ID=cds-YP_588403.1;Parent=gene-ZeamMp158;Dbxref=GenBank:YP_588403.1,GeneID:4055854;Name=YP_588403.1;gbkey=CDS;gene=orf111-b;locus_tag=ZeamMp158;product=hypothetical protein;protein_id=YP_588403.1
+NC_007982.1	RefSeq	gene	433538	433984	.	+	.	ID=gene-ZeamMp159;Dbxref=GeneID:4055794;Name=rps7;gbkey=Gene;gene=rps7;gene_biotype=protein_coding;locus_tag=ZeamMp159
+NC_007982.1	RefSeq	CDS	433538	433984	.	+	0	ID=cds-YP_588404.1;Parent=gene-ZeamMp159;Dbxref=GenBank:YP_588404.1,GeneID:4055794;Name=YP_588404.1;gbkey=CDS;gene=rps7;locus_tag=ZeamMp159;product=ribosomal protein S7;protein_id=YP_588404.1
+NC_007982.1	RefSeq	gene	438523	438930	.	+	.	ID=gene-ZeamMp160;Dbxref=GeneID:4055797;Name=orf135;gbkey=Gene;gene=orf135;gene_biotype=protein_coding;locus_tag=ZeamMp160
+NC_007982.1	RefSeq	CDS	438523	438930	.	+	0	ID=cds-YP_588405.1;Parent=gene-ZeamMp160;Dbxref=GenBank:YP_588405.1,GeneID:4055797;Name=YP_588405.1;gbkey=CDS;gene=orf135;locus_tag=ZeamMp160;product=hypothetical protein;protein_id=YP_588405.1
+NC_007982.1	RefSeq	gene	441570	442367	.	-	.	ID=gene-ZeamMp161;Dbxref=GeneID:4056009;Name=cox3;gbkey=Gene;gene=cox3;gene_biotype=protein_coding;locus_tag=ZeamMp161
+NC_007982.1	RefSeq	CDS	441570	442367	.	-	0	ID=cds-YP_588406.1;Parent=gene-ZeamMp161;Dbxref=GenBank:YP_588406.1,GeneID:4056009;Name=YP_588406.1;gbkey=CDS;gene=cox3;locus_tag=ZeamMp161;product=cytochrome c oxidase subunit 3;protein_id=YP_588406.1
+NC_007982.1	RefSeq	gene	448356	448778	.	+	.	ID=gene-ZeamMp162;Dbxref=GeneID:4055990;Name=orf140-c;gbkey=Gene;gene=orf140-c;gene_biotype=protein_coding;locus_tag=ZeamMp162
+NC_007982.1	RefSeq	CDS	448356	448778	.	+	0	ID=cds-YP_588407.1;Parent=gene-ZeamMp162;Dbxref=GenBank:YP_588407.1,GeneID:4055990;Name=YP_588407.1;gbkey=CDS;gene=orf140-c;locus_tag=ZeamMp162;product=hypothetical protein;protein_id=YP_588407.1
+NC_007982.1	RefSeq	gene	454351	455877	.	-	.	ID=gene-ZeamMp163;Dbxref=GeneID:4055842;Name=atp1-a1;gbkey=Gene;gene=atp1-a1;gene_biotype=protein_coding;locus_tag=ZeamMp163
+NC_007982.1	RefSeq	CDS	454351	455877	.	-	0	ID=cds-YP_588408.1;Parent=gene-ZeamMp163;Dbxref=GenBank:YP_588408.1,GeneID:4055842;Name=YP_588408.1;gbkey=CDS;gene=atp1-a1;locus_tag=ZeamMp163;product=ATPase subunit 1;protein_id=YP_588408.1
+NC_007982.1	RefSeq	gene	456802	457383	.	+	.	ID=gene-ZeamMp164;Dbxref=GeneID:4055814;Name=orf193-a1;gbkey=Gene;gene=orf193-a1;gene_biotype=protein_coding;locus_tag=ZeamMp164
+NC_007982.1	RefSeq	CDS	456802	457383	.	+	0	ID=cds-YP_588409.1;Parent=gene-ZeamMp164;Dbxref=GenBank:YP_588409.1,GeneID:4055814;Name=YP_588409.1;gbkey=CDS;gene=orf193-a1;locus_tag=ZeamMp164;product=hypothetical protein;protein_id=YP_588409.1
+NC_007982.1	RefSeq	gene	468544	468861	.	+	.	ID=gene-ZeamMp165;Dbxref=GeneID:4055998;Name=orf105-d;gbkey=Gene;gene=orf105-d;gene_biotype=protein_coding;locus_tag=ZeamMp165
+NC_007982.1	RefSeq	CDS	468544	468861	.	+	0	ID=cds-YP_588410.1;Parent=gene-ZeamMp165;Dbxref=GenBank:YP_588410.1,GeneID:4055998;Name=YP_588410.1;gbkey=CDS;gene=orf105-d;locus_tag=ZeamMp165;product=hypothetical protein;protein_id=YP_588410.1
+NC_007982.1	RefSeq	gene	472552	472941	.	-	.	ID=gene-ZeamMp166;Dbxref=GeneID:4055983;Name=orf129-b;gbkey=Gene;gene=orf129-b;gene_biotype=protein_coding;locus_tag=ZeamMp166
+NC_007982.1	RefSeq	CDS	472552	472941	.	-	0	ID=cds-YP_588411.1;Parent=gene-ZeamMp166;Dbxref=GenBank:YP_588411.1,GeneID:4055983;Name=YP_588411.1;gbkey=CDS;gene=orf129-b;locus_tag=ZeamMp166;product=hypothetical protein;protein_id=YP_588411.1
+NC_007982.1	RefSeq	pseudogene	473369	473442	.	-	.	ID=gene-ZeamMt030;Dbxref=GeneID:4055856;Name=trnR-b-ct;gbkey=Gene;gene=trnR-b-ct;gene_biotype=tRNA_pseudogene;locus_tag=ZeamMt030;pseudo=true
+NC_007982.1	RefSeq	tRNA	473369	473442	.	-	.	ID=rna-ZeamMt030;Parent=gene-ZeamMt030;Dbxref=GeneID:4055856;Note=chloroplast origin;gbkey=tRNA;gene=trnR-b-ct;locus_tag=ZeamMt030;product=tRNA-Arg;pseudo=true
+NC_007982.1	RefSeq	exon	473369	473442	.	-	.	ID=exon-ZeamMt030-1;Parent=rna-ZeamMt030;Dbxref=GeneID:4055856;Note=chloroplast origin;gbkey=tRNA;gene=trnR-b-ct;locus_tag=ZeamMt030;product=tRNA-Arg;pseudo=true
+NC_007982.1	RefSeq	gene	479553	481148	.	-	.	ID=gene-ZeamMp167;Dbxref=GeneID:4056007;Name=rps2A;gbkey=Gene;gene=rps2A;gene_biotype=protein_coding;locus_tag=ZeamMp167
+NC_007982.1	RefSeq	CDS	479553	481148	.	-	0	ID=cds-YP_588412.1;Parent=gene-ZeamMp167;Dbxref=GenBank:YP_588412.1,GeneID:4056007;Name=YP_588412.1;gbkey=CDS;gene=rps2A;locus_tag=ZeamMp167;product=ribosomal protein S2;protein_id=YP_588412.1
+NC_007982.1	RefSeq	gene	486574	486894	.	+	.	ID=gene-ZeamMp168;Dbxref=GeneID:4055885;Name=orf106-c;gbkey=Gene;gene=orf106-c;gene_biotype=protein_coding;locus_tag=ZeamMp168
+NC_007982.1	RefSeq	CDS	486574	486894	.	+	0	ID=cds-YP_588413.1;Parent=gene-ZeamMp168;Dbxref=GenBank:YP_588413.1,GeneID:4055885;Name=YP_588413.1;gbkey=CDS;gene=orf106-c;locus_tag=ZeamMp168;product=hypothetical protein;protein_id=YP_588413.1
+NC_007982.1	RefSeq	gene	487871	488230	.	+	.	ID=gene-ZeamMp169;Dbxref=GeneID:4055930;Name=orf119-c;gbkey=Gene;gene=orf119-c;gene_biotype=protein_coding;locus_tag=ZeamMp169
+NC_007982.1	RefSeq	CDS	487871	488230	.	+	0	ID=cds-YP_588414.1;Parent=gene-ZeamMp169;Dbxref=GenBank:YP_588414.1,GeneID:4055930;Name=YP_588414.1;gbkey=CDS;gene=orf119-c;locus_tag=ZeamMp169;product=hypothetical protein;protein_id=YP_588414.1
+NC_007982.1	RefSeq	gene	496997	497812	.	-	.	ID=gene-ZeamMp170;Dbxref=GeneID:4055971;Name=orfX;gbkey=Gene;gene=orfX;gene_biotype=protein_coding;locus_tag=ZeamMp170
+NC_007982.1	RefSeq	CDS	496997	497812	.	-	0	ID=cds-YP_588415.1;Parent=gene-ZeamMp170;Dbxref=GenBank:YP_588415.1,GeneID:4055971;Name=YP_588415.1;Note=similar to mtt gene;gbkey=CDS;gene=orfX;locus_tag=ZeamMp170;product=hypothetical protein X;protein_id=YP_588415.1
+NC_007982.1	RefSeq	gene	501949	502296	.	-	.	ID=gene-ZeamMp171;Dbxref=GeneID:4055875;Name=orf115-e;gbkey=Gene;gene=orf115-e;gene_biotype=protein_coding;locus_tag=ZeamMp171
+NC_007982.1	RefSeq	CDS	501949	502296	.	-	0	ID=cds-YP_588416.1;Parent=gene-ZeamMp171;Dbxref=GenBank:YP_588416.1,GeneID:4055875;Name=YP_588416.1;gbkey=CDS;gene=orf115-e;locus_tag=ZeamMp171;product=hypothetical protein;protein_id=YP_588416.1
+NC_007982.1	RefSeq	gene	504158	504475	.	-	.	ID=gene-ZeamMp172;Dbxref=GeneID:4056001;Name=orf105-e;gbkey=Gene;gene=orf105-e;gene_biotype=protein_coding;locus_tag=ZeamMp172
+NC_007982.1	RefSeq	CDS	504158	504475	.	-	0	ID=cds-YP_588417.1;Parent=gene-ZeamMp172;Dbxref=GenBank:YP_588417.1,GeneID:4056001;Name=YP_588417.1;gbkey=CDS;gene=orf105-e;locus_tag=ZeamMp172;product=hypothetical protein;protein_id=YP_588417.1
+NC_007982.1	RefSeq	gene	510018	511384	.	-	.	ID=gene-ZeamMp016;Dbxref=GeneID:4055901;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=ZeamMp016;part=1
+NC_007982.1	RefSeq	gene	111614	115826	.	+	.	ID=gene-ZeamMp016;Dbxref=GeneID:4055901;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=ZeamMp016;part=2
+NC_007982.1	RefSeq	CDS	511232	511384	.	-	0	ID=cds-YP_588266.1;Parent=gene-ZeamMp016;Dbxref=GenBank:YP_588266.1,GeneID:4055901;Name=YP_588266.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=ZeamMp016;part=1;product=NADH dehydrogenase subunit 2;protein_id=YP_588266.1
+NC_007982.1	RefSeq	CDS	510018	510409	.	-	0	ID=cds-YP_588266.1;Parent=gene-ZeamMp016;Dbxref=GenBank:YP_588266.1,GeneID:4055901;Name=YP_588266.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=ZeamMp016;part=2;product=NADH dehydrogenase subunit 2;protein_id=YP_588266.1
+NC_007982.1	RefSeq	CDS	111614	111774	.	+	1	ID=cds-YP_588266.1;Parent=gene-ZeamMp016;Dbxref=GenBank:YP_588266.1,GeneID:4055901;Name=YP_588266.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=ZeamMp016;part=3;product=NADH dehydrogenase subunit 2;protein_id=YP_588266.1
+NC_007982.1	RefSeq	CDS	113680	114252	.	+	2	ID=cds-YP_588266.1;Parent=gene-ZeamMp016;Dbxref=GenBank:YP_588266.1,GeneID:4055901;Name=YP_588266.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=ZeamMp016;part=4;product=NADH dehydrogenase subunit 2;protein_id=YP_588266.1
+NC_007982.1	RefSeq	CDS	115639	115826	.	+	2	ID=cds-YP_588266.1;Parent=gene-ZeamMp016;Dbxref=GenBank:YP_588266.1,GeneID:4055901;Name=YP_588266.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=ZeamMp016;part=5;product=NADH dehydrogenase subunit 2;protein_id=YP_588266.1
+NC_007982.1	RefSeq	exon	113680	114252	.	+	.	ID=id-ZeamMp016-4;Parent=gene-ZeamMp016;Dbxref=GeneID:4055901;exon_number=4;gbkey=exon;gene=nad2;locus_tag=ZeamMp016;number=4
+NC_007982.1	RefSeq	exon	115639	115826	.	+	.	ID=id-ZeamMp016-5;Parent=gene-ZeamMp016;Dbxref=GeneID:4055901;exon_number=5;gbkey=exon;gene=nad2;locus_tag=ZeamMp016;number=5
+NC_007982.1	RefSeq	gene	510018	511384	.	-	.	ID=gene-ZeamMp019;Dbxref=GeneID:4055883;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=ZeamMp019;part=1
+NC_007982.1	RefSeq	gene	111614	111774	.	+	.	ID=gene-ZeamMp019;Dbxref=GeneID:4055883;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=ZeamMp019;part=2
+NC_007982.1	RefSeq	gene	57194	59340	.	-	.	ID=gene-ZeamMp019;Dbxref=GeneID:4055883;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=ZeamMp019;part=3
+NC_007982.1	RefSeq	CDS	511232	511384	.	-	0	ID=cds-YP_588267.1;Parent=gene-ZeamMp019;Dbxref=GenBank:YP_588267.1,GeneID:4055883;Name=YP_588267.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=ZeamMp019;part=1;product=NADH dehydrogenase subunit 2;protein_id=YP_588267.1
+NC_007982.1	RefSeq	CDS	510018	510409	.	-	0	ID=cds-YP_588267.1;Parent=gene-ZeamMp019;Dbxref=GenBank:YP_588267.1,GeneID:4055883;Name=YP_588267.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=ZeamMp019;part=2;product=NADH dehydrogenase subunit 2;protein_id=YP_588267.1
+NC_007982.1	RefSeq	CDS	111614	111774	.	+	1	ID=cds-YP_588267.1;Parent=gene-ZeamMp019;Dbxref=GenBank:YP_588267.1,GeneID:4055883;Name=YP_588267.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=ZeamMp019;part=3;product=NADH dehydrogenase subunit 2;protein_id=YP_588267.1
+NC_007982.1	RefSeq	CDS	58768	59340	.	-	2	ID=cds-YP_588267.1;Parent=gene-ZeamMp019;Dbxref=GenBank:YP_588267.1,GeneID:4055883;Name=YP_588267.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=ZeamMp019;part=4;product=NADH dehydrogenase subunit 2;protein_id=YP_588267.1
+NC_007982.1	RefSeq	CDS	57194	57381	.	-	2	ID=cds-YP_588267.1;Parent=gene-ZeamMp019;Dbxref=GenBank:YP_588267.1,GeneID:4055883;Name=YP_588267.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=ZeamMp019;part=5;product=NADH dehydrogenase subunit 2;protein_id=YP_588267.1
+NC_007982.1	RefSeq	exon	57194	57381	.	-	.	ID=id-ZeamMp019-5;Parent=gene-ZeamMp019;Dbxref=GeneID:4055883;exon_number=5;gbkey=exon;gene=nad2;locus_tag=ZeamMp019;number=5
+NC_007982.1	RefSeq	exon	58768	59340	.	-	.	ID=id-ZeamMp019-4;Parent=gene-ZeamMp019;Dbxref=GeneID:4055883;exon_number=4;gbkey=exon;gene=nad2;locus_tag=ZeamMp019;number=4
+NC_007982.1	RefSeq	exon	111614	111774	.	+	.	ID=id-ZeamMp019-3;Parent=gene-ZeamMp019;Dbxref=GeneID:4055883;exon_number=3;gbkey=exon;gene=nad2;locus_tag=ZeamMp019;number=3
+NC_007982.1	RefSeq	exon	510018	510409	.	-	.	ID=id-ZeamMp019-2;Parent=gene-ZeamMp019;Dbxref=GeneID:4055883;exon_number=2;gbkey=exon;gene=nad2;locus_tag=ZeamMp019;number=2
+NC_007982.1	RefSeq	exon	511232	511384	.	-	.	ID=id-ZeamMp019-1;Parent=gene-ZeamMp019;Dbxref=GeneID:4055883;exon_number=1;gbkey=exon;gene=nad2;locus_tag=ZeamMp019;number=1
+NC_007982.1	RefSeq	gene	510534	510887	.	+	.	ID=gene-ZeamMp173;Dbxref=GeneID:4055948;Name=orf117-c;gbkey=Gene;gene=orf117-c;gene_biotype=protein_coding;locus_tag=ZeamMp173
+NC_007982.1	RefSeq	CDS	510534	510887	.	+	0	ID=cds-YP_588418.1;Parent=gene-ZeamMp173;Dbxref=GenBank:YP_588418.1,GeneID:4055948;Name=YP_588418.1;gbkey=CDS;gene=orf117-c;locus_tag=ZeamMp173;product=hypothetical protein;protein_id=YP_588418.1
+NC_007982.1	RefSeq	gene	511894	512199	.	+	.	ID=gene-ZeamMp174;Dbxref=GeneID:4055909;Name=orf101-c;gbkey=Gene;gene=orf101-c;gene_biotype=protein_coding;locus_tag=ZeamMp174
+NC_007982.1	RefSeq	CDS	511894	512199	.	+	0	ID=cds-YP_588419.1;Parent=gene-ZeamMp174;Dbxref=GenBank:YP_588419.1,GeneID:4055909;Name=YP_588419.1;gbkey=CDS;gene=orf101-c;locus_tag=ZeamMp174;product=hypothetical protein;protein_id=YP_588419.1
+NC_007982.1	RefSeq	gene	512175	512735	.	-	.	ID=gene-ZeamMp175;Dbxref=GeneID:4055934;Name=orf186;gbkey=Gene;gene=orf186;gene_biotype=protein_coding;locus_tag=ZeamMp175
+NC_007982.1	RefSeq	CDS	512175	512735	.	-	0	ID=cds-YP_588420.1;Parent=gene-ZeamMp175;Dbxref=GenBank:YP_588420.1,GeneID:4055934;Name=YP_588420.1;gbkey=CDS;gene=orf186;locus_tag=ZeamMp175;product=hypothetical protein;protein_id=YP_588420.1
+NC_007982.1	RefSeq	gene	523288	524814	.	-	.	ID=gene-ZeamMp176;Dbxref=GeneID:4055843;Name=atp1-a2;gbkey=Gene;gene=atp1-a2;gene_biotype=protein_coding;locus_tag=ZeamMp176
+NC_007982.1	RefSeq	CDS	523288	524814	.	-	0	ID=cds-YP_588421.1;Parent=gene-ZeamMp176;Dbxref=GenBank:YP_588421.1,GeneID:4055843;Name=YP_588421.1;gbkey=CDS;gene=atp1-a2;locus_tag=ZeamMp176;product=ATPase subunit 1;protein_id=YP_588421.1
+NC_007982.1	RefSeq	gene	525739	526320	.	+	.	ID=gene-ZeamMp177;Dbxref=GeneID:4055815;Name=orf193-a2;gbkey=Gene;gene=orf193-a2;gene_biotype=protein_coding;locus_tag=ZeamMp177
+NC_007982.1	RefSeq	CDS	525739	526320	.	+	0	ID=cds-YP_588422.1;Parent=gene-ZeamMp177;Dbxref=GenBank:YP_588422.1,GeneID:4055815;Name=YP_588422.1;gbkey=CDS;gene=orf193-a2;locus_tag=ZeamMp177;product=hypothetical protein;protein_id=YP_588422.1
+NC_007982.1	RefSeq	pseudogene	540883	541363	.	+	.	ID=gene-ZeamMp178;Dbxref=GeneID:4055852;Name=orf161;gbkey=Gene;gene=orf161;gene_biotype=pseudogene;locus_tag=ZeamMp178;pseudo=true
+NC_007982.1	RefSeq	gene	541960	543536	.	+	.	ID=gene-ZeamMp179;Dbxref=GeneID:4056006;Name=cox2;gbkey=Gene;gene=cox2;gene_biotype=protein_coding;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	CDS	541960	542347	.	+	0	ID=cds-YP_588423.1;Parent=gene-ZeamMp179;Dbxref=GenBank:YP_588423.1,GeneID:4056006;Name=YP_588423.1;exception=RNA editing;gbkey=CDS;gene=cox2;locus_tag=ZeamMp179;product=cytochrome c oxidase subunit 2;protein_id=YP_588423.1
+NC_007982.1	RefSeq	CDS	543142	543536	.	+	2	ID=cds-YP_588423.1;Parent=gene-ZeamMp179;Dbxref=GenBank:YP_588423.1,GeneID:4056006;Name=YP_588423.1;exception=RNA editing;gbkey=CDS;gene=cox2;locus_tag=ZeamMp179;product=cytochrome c oxidase subunit 2;protein_id=YP_588423.1
+NC_007982.1	RefSeq	exon	541960	542347	.	+	.	ID=id-ZeamMp179-1;Parent=gene-ZeamMp179;Dbxref=GeneID:4056006;exon_number=1;gbkey=exon;gene=cox2;locus_tag=ZeamMp179;number=1
+NC_007982.1	RefSeq	exon	543142	543536	.	+	.	ID=id-ZeamMp179-2;Parent=gene-ZeamMp179;Dbxref=GeneID:4056006;exon_number=2;gbkey=exon;gene=cox2;locus_tag=ZeamMp179;number=2
+NC_007982.1	RefSeq	sequence_feature	541973	541973	.	+	.	ID=id-ZeamMp179;Dbxref=GeneID:4056006;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	541990	541990	.	+	.	ID=id-ZeamMp179-3;Dbxref=GeneID:4056006;Note=L->F (CUC->UUC)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	542036	542036	.	+	.	ID=id-ZeamMp179-4;Dbxref=GeneID:4056006;Note=S->F (UCU->UUU)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	542126	542126	.	+	.	ID=id-ZeamMp179-5;Dbxref=GeneID:4056006;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	542128	542128	.	+	.	ID=id-ZeamMp179-6;Dbxref=GeneID:4056006;Note=R->W (CGG->UGG)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	542218	542218	.	+	.	ID=id-ZeamMp179-7;Dbxref=GeneID:4056006;Note=R->W (CGG->UGG)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	542243	542243	.	+	.	ID=id-ZeamMp179-8;Dbxref=GeneID:4056006;Note=P->L (CCA->CUA)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	542344	542344	.	+	.	ID=id-ZeamMp179-9;Dbxref=GeneID:4056006;Note=R->W (CGG->UGG)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	543202	543202	.	+	.	ID=id-ZeamMp179-10;Dbxref=GeneID:4056006;Note=T->M (ACG->AUG)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	543219	543219	.	+	.	ID=id-ZeamMp179-11;Dbxref=GeneID:4056006;Note=P->L (CCA->UUA)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	543220	543220	.	+	.	ID=id-ZeamMp179-12;Dbxref=GeneID:4056006;Note=P->L (CCA->UUA)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	543235	543235	.	+	.	ID=id-ZeamMp179-13;Dbxref=GeneID:4056006;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	543303	543303	.	+	.	ID=id-ZeamMp179-14;Dbxref=GeneID:4056006;Note=P->S (CCC->UCC)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	543316	543316	.	+	.	ID=id-ZeamMp179-15;Dbxref=GeneID:4056006;Note=P->L (CCU->CUU)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	543340	543340	.	+	.	ID=id-ZeamMp179-16;Dbxref=GeneID:4056006;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	543373	543373	.	+	.	ID=id-ZeamMp179-17;Dbxref=GeneID:4056006;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	543391	543391	.	+	.	ID=id-ZeamMp179-18;Dbxref=GeneID:4056006;Note=S->L (UCG->UUG)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	sequence_feature	543457	543457	.	+	.	ID=id-ZeamMp179-19;Dbxref=GeneID:4056006;Note=T->M (ACG->AUG)%3B C to U RNA editing;gbkey=misc_feature;gene=cox2;locus_tag=ZeamMp179
+NC_007982.1	RefSeq	gene	548916	549248	.	+	.	ID=gene-ZeamMp180;Dbxref=GeneID:4055835;Name=orf110-c;gbkey=Gene;gene=orf110-c;gene_biotype=protein_coding;locus_tag=ZeamMp180
+NC_007982.1	RefSeq	CDS	548916	549248	.	+	0	ID=cds-YP_588424.1;Parent=gene-ZeamMp180;Dbxref=GenBank:YP_588424.1,GeneID:4055835;Name=YP_588424.1;gbkey=CDS;gene=orf110-c;locus_tag=ZeamMp180;product=hypothetical protein;protein_id=YP_588424.1
+NC_007982.1	RefSeq	gene	550608	550973	.	+	.	ID=gene-ZeamMp181;Dbxref=GeneID:4055966;Name=orf121-c;gbkey=Gene;gene=orf121-c;gene_biotype=protein_coding;locus_tag=ZeamMp181
+NC_007982.1	RefSeq	CDS	550608	550973	.	+	0	ID=cds-YP_588425.1;Parent=gene-ZeamMp181;Dbxref=GenBank:YP_588425.1,GeneID:4055966;Name=YP_588425.1;gbkey=CDS;gene=orf121-c;locus_tag=ZeamMp181;product=hypothetical protein;protein_id=YP_588425.1
+NC_007982.1	RefSeq	gene	562726	563958	.	+	.	ID=gene-ZeamMp182;Dbxref=GeneID:4055887;Name=atp6;gbkey=Gene;gene=atp6;gene_biotype=protein_coding;locus_tag=ZeamMp182
+NC_007982.1	RefSeq	CDS	562726	563958	.	+	0	ID=cds-YP_588426.1;Parent=gene-ZeamMp182;Dbxref=GenBank:YP_588426.1,GeneID:4055887;Name=YP_588426.1;gbkey=CDS;gene=atp6;locus_tag=ZeamMp182;product=ATPase subunit 6;protein_id=YP_588426.1
+NC_007982.1	RefSeq	gene	564155	564517	.	-	.	ID=gene-ZeamMp183;Dbxref=GeneID:4055919;Name=orf120;gbkey=Gene;gene=orf120;gene_biotype=protein_coding;locus_tag=ZeamMp183
+NC_007982.1	RefSeq	CDS	564155	564517	.	-	0	ID=cds-YP_588427.1;Parent=gene-ZeamMp183;Dbxref=GenBank:YP_588427.1,GeneID:4055919;Name=YP_588427.1;gbkey=CDS;gene=orf120;locus_tag=ZeamMp183;product=hypothetical protein;protein_id=YP_588427.1
+NC_007982.1	RefSeq	gene	564497	564946	.	+	.	ID=gene-ZeamMp184;Dbxref=GeneID:4055810;Name=orf149-a;gbkey=Gene;gene=orf149-a;gene_biotype=protein_coding;locus_tag=ZeamMp184
+NC_007982.1	RefSeq	CDS	564497	564946	.	+	0	ID=cds-YP_588428.1;Parent=gene-ZeamMp184;Dbxref=GenBank:YP_588428.1,GeneID:4055810;Name=YP_588428.1;gbkey=CDS;gene=orf149-a;locus_tag=ZeamMp184;product=hypothetical protein;protein_id=YP_588428.1
+NC_007982.1	RefSeq	gene	565003	565665	.	+	.	ID=gene-ZeamMp185;Dbxref=GeneID:4055892;Name=nad6;gbkey=Gene;gene=nad6;gene_biotype=protein_coding;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	CDS	565003	565665	.	+	0	ID=cds-YP_588429.1;Parent=gene-ZeamMp185;Dbxref=GenBank:YP_588429.1,GeneID:4055892;Name=YP_588429.1;exception=RNA editing;gbkey=CDS;gene=nad6;locus_tag=ZeamMp185;product=NADH dehydrogenase subunit 6;protein_id=YP_588429.1
+NC_007982.1	RefSeq	sequence_feature	565027	565027	.	+	.	ID=id-ZeamMp185;Dbxref=GeneID:4055892;Note=P->F (CCU->UUU)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	sequence_feature	565028	565028	.	+	.	ID=id-ZeamMp185-2;Dbxref=GeneID:4055892;Note=P->F (CCU->UUU)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	sequence_feature	565090	565090	.	+	.	ID=id-ZeamMp185-3;Dbxref=GeneID:4055892;Note=P->F (CCC->UUC)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	sequence_feature	565091	565091	.	+	.	ID=id-ZeamMp185-4;Dbxref=GeneID:4055892;Note=P->F (CCC->UUC)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	sequence_feature	565140	565140	.	+	.	ID=id-ZeamMp185-5;Dbxref=GeneID:4055892;Note=L->L (CUC->CUU)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	sequence_feature	565148	565148	.	+	.	ID=id-ZeamMp185-6;Dbxref=GeneID:4055892;Note=S->F (UCC->UUC)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	sequence_feature	565161	565161	.	+	.	ID=id-ZeamMp185-7;Dbxref=GeneID:4055892;Note=F->F (UUC->UUU)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	sequence_feature	565163	565163	.	+	.	ID=id-ZeamMp185-8;Dbxref=GeneID:4055892;Note=P->L (CCA->CUA)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	sequence_feature	565171	565171	.	+	.	ID=id-ZeamMp185-9;Dbxref=GeneID:4055892;Note=H->Y (CAU->UAU)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	sequence_feature	565193	565193	.	+	.	ID=id-ZeamMp185-10;Dbxref=GeneID:4055892;Note=S->L (UCA->UUA)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	sequence_feature	565448	565448	.	+	.	ID=id-ZeamMp185-11;Dbxref=GeneID:4055892;Note=S->F (UCC->UUC)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+NC_007982.1	RefSeq	sequence_feature	565571	565571	.	+	.	ID=id-ZeamMp185-12;Dbxref=GeneID:4055892;Note=S->F (UCU->UUU)%3B C to U RNA editing;gbkey=misc_feature;gene=nad6;locus_tag=ZeamMp185
+

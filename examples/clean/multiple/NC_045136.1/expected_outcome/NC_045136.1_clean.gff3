@@ -1,0 +1,61 @@
+##gff-version 3
+#!gff-spec-version 1.26
+#!processor TIGRE clean.py
+##sequence-region NC_045136.1 1 682840
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=3983
+NC_045136.1	RefSeq	region	1	682840	.	+	.	ID=NC_045136.1:1..682840;Dbxref=taxon:3983;Is_circular=true;Name=MT;gbkey=Src;genome=mitochondrion;mol_type=genomic DNA
+NC_045136.1	RefSeq	gene	2696	4492	.	-	.	name=MIT-ND2;source=NC_045136.1|gene|2696|4492|-|gene-GH804_mgp01;
+NC_045136.1	RefSeq	gene	8104	10940	.	+	.	name=MIT-CO2;source=NC_045136.1|gene|8104|10940|+|gene-GH804_mgp02;
+NC_045136.1	RefSeq	gene	11786	12556	.	+	.	name=MIT-MTTB;source=NC_045136.1|gene|11786|12556|+|gene-GH804_mgp03;
+NC_045136.1	RefSeq	gene	12989	13010	.	+	.	name=MIT-ND5;source=NC_045136.1|gene|12989|13010|+|gene-GH804_mgp04;
+NC_045136.1	RefSeq	gene	17393	18085	.	+	.	name=MIT-RPS1;source=NC_045136.1|gene|17393|18085|+|gene-GH804_mgp05;
+NC_045136.1	RefSeq	gene	28697	35146	.	-	.	name=MIT-ND7;source=NC_045136.1|gene|28697|35146|-|gene-GH804_mgp06;
+NC_045136.1	RefSeq	gene	43521	44699	.	-	.	name=MIT-COB;source=NC_045136.1|gene|43521|44699|-|gene-GH804_mgp07;
+NC_045136.1	RefSeq	overlapping_feature_set	53482	56525	.	+	.	name_left=MIT-RNRL;source_left=NC_045136.1|gene|53482|56525|+|gene-GH804_mgr01;name_right=MIT-RNRL;source_right=NC_045136.1|gene|53482|56525|+|gene-GH804_mgr01;
+NC_045136.1	RefSeq	overlapping_feature_set	98712	98830	.	-	.	name_left=MIT-RNR5;source_left=NC_045136.1|gene|98712|98830|-|gene-GH804_mgr02;name_right=MIT-RNR5;source_right=NC_045136.1|gene|98712|98830|-|gene-GH804_mgr02;
+NC_045136.1	RefSeq	overlapping_feature_set	99421	101357	.	-	.	name_left=MIT-RNRS;source_left=NC_045136.1|gene|99421|101357|-|gene-GH804_mgr03;name_right=MIT-RNRS;source_right=NC_045136.1|gene|99421|101357|-|gene-GH804_mgr03;
+NC_045136.1	RefSeq	gene	127352	136326	.	+	.	name=MIT-ND4;source=NC_045136.1|gene|127352|136326|+|gene-GH804_mgp32;
+NC_045136.1	RefSeq	gene	149879	150235	.	+	.	name=MIT-SDH3;source=NC_045136.1|gene|149879|150235|+|gene-GH804_mgp31;
+NC_045136.1	RefSeq	gene	150373	150663	.	+	.	name=MIT-ND4L;source=NC_045136.1|gene|150373|150663|+|gene-GH804_mgp30;
+NC_045136.1	RefSeq	gene	150858	151454	.	+	.	name=MIT-ATP4;source=NC_045136.1|gene|150858|151454|+|gene-GH804_mgp29;
+NC_045136.1	RefSeq	gene	161266	161751	.	+	.	name=MIT-ATP8;source=NC_045136.1|gene|161266|161751|+|gene-GH804_mgp28;
+NC_045136.1	RefSeq	overlapping_feature_set	162402	163513	.	+	.	name_left=MIT-CO3;source_left=NC_045136.1|gene|162402|163199|+|gene-GH804_mgp27;name_right=MIT-SDH4;source_right=NC_045136.1|gene|163127|163513|+|gene-GH804_mgp26;
+NC_045136.1	RefSeq	gene	193906	196210	.	+	.	name=MIT-CCMFC;source=NC_045136.1|gene|193906|196210|+|gene-GH804_mgp25;
+NC_045136.1	RefSeq	gene	200503	200889	.	+	.	name=MIT-ND1;source=NC_045136.1|gene|200503|200889|+|gene-GH804_mgp24;
+NC_045136.1	RefSeq	gene	204922	205542	.	-	.	name=MIT-CCMB;source=NC_045136.1|gene|204922|205542|-|gene-GH804_mgp23;
+NC_045136.1	RefSeq	gene	212607	213371	.	+	.	name=MIT-ATP6;source=NC_045136.1|gene|212607|213371|+|gene-GH804_mgp22;
+NC_045136.1	RefSeq	gene	223341	223691	.	+	.	name=MIT-RPS13;source=NC_045136.1|gene|223341|223691|+|gene-GH804_mgp21;
+NC_045136.1	RefSeq	gene	224582	226327	.	+	.	name=MIT-ND1;source=NC_045136.1|gene|224582|226327|+|gene-GH804_mgp24;
+NC_045136.1	RefSeq	gene	227978	228550	.	+	.	name=MIT-ND9;source=NC_045136.1|gene|227978|228550|+|gene-GH804_mgp20;
+NC_045136.1	RefSeq	overlapping_feature_set	229553	229626	.	+	.	name_left=MIT-TW;source_left=NC_045136.1|gene|229553|229626|+|gene-GH804_mgt01;name_right=MIT-TW;source_right=NC_045136.1|gene|229553|229626|+|gene-GH804_mgt01;
+NC_045136.1	RefSeq	gene	242151	247093	.	-	.	name=MIT-ND2;source=NC_045136.1|gene|242151|247093|-|gene-GH804_mgp01;
+NC_045136.1	RefSeq	overlapping_feature_set	248539	248609	.	-	.	name_left=MIT-TN;source_left=NC_045136.1|gene|248539|248609|-|gene-GH804_mgt02;name_right=MIT-TN;source_right=NC_045136.1|gene|248539|248609|-|gene-GH804_mgt02;
+NC_045136.1	RefSeq	overlapping_feature_set	249243	249313	.	-	.	name_left=MIT-TC;source_left=NC_045136.1|gene|249243|249313|-|gene-GH804_mgt03;name_right=MIT-TC;source_right=NC_045136.1|gene|249243|249313|-|gene-GH804_mgt03;
+NC_045136.1	RefSeq	gene	258840	260343	.	-	.	name=MIT-ND5;source=NC_045136.1|gene|258840|260343|-|gene-GH804_mgp04;
+NC_045136.1	RefSeq	gene	274794	276323	.	+	.	name=MIT-ATP1;source=NC_045136.1|gene|274794|276323|+|gene-GH804_mgp19;
+NC_045136.1	RefSeq	overlapping_feature_set	287115	287186	.	-	.	name_left=MIT-TQ;source_left=NC_045136.1|gene|287115|287186|-|gene-GH804_mgt04;name_right=MIT-TQ;source_right=NC_045136.1|gene|287115|287186|-|gene-GH804_mgt04;
+NC_045136.1	RefSeq	overlapping_feature_set	291362	291433	.	-	.	name_left=MIT-TG;source_left=NC_045136.1|gene|291362|291433|-|gene-GH804_mgt05;name_right=MIT-TG;source_right=NC_045136.1|gene|291362|291433|-|gene-GH804_mgt05;
+NC_045136.1	RefSeq	gene	298495	299247	.	+	.	name=MIT-CCMC;source=NC_045136.1|gene|298495|299247|+|gene-GH804_mgp18;
+NC_045136.1	RefSeq	overlapping_feature_set	314676	314749	.	-	.	name_left=MIT-TM;source_left=NC_045136.1|gene|314676|314749|-|gene-GH804_mgt06;name_right=MIT-TM;source_right=NC_045136.1|gene|314676|314749|-|gene-GH804_mgt06;
+NC_045136.1	RefSeq	overlapping_feature_set	316023	316093	.	-	.	name_left=MIT-TK;source_left=NC_045136.1|gene|316023|316093|-|gene-GH804_mgt07;name_right=MIT-TK;source_right=NC_045136.1|gene|316023|316093|-|gene-GH804_mgt07;
+NC_045136.1	RefSeq	overlapping_feature_set	336338	336413	.	-	.	name_left=MIT-TH;source_left=NC_045136.1|gene|336338|336413|-|gene-GH804_mgt08;name_right=MIT-TH;source_right=NC_045136.1|gene|336338|336413|-|gene-GH804_mgt08;
+NC_045136.1	RefSeq	overlapping_feature_set	338710	338781	.	+	.	name_left=MIT-TE;source_left=NC_045136.1|gene|338710|338781|+|gene-GH804_mgt09;name_right=MIT-TE;source_right=NC_045136.1|gene|338710|338781|+|gene-GH804_mgt09;
+NC_045136.1	RefSeq	gene	388477	388833	.	+	.	name=MIT-ND3;source=NC_045136.1|gene|388477|388833|+|gene-GH804_mgp17;
+NC_045136.1	RefSeq	gene	388882	389259	.	+	.	name=MIT-RPS12;source=NC_045136.1|gene|388882|389259|+|gene-GH804_mgp16;
+NC_045136.1	RefSeq	overlapping_feature_set	420446	420533	.	+	.	name_left=MIT-TS1|2;source_left=NC_045136.1|gene|420446|420533|+|gene-GH804_mgt10;name_right=MIT-TS1|2;source_right=NC_045136.1|gene|420446|420533|+|gene-GH804_mgt10;
+NC_045136.1	RefSeq	overlapping_feature_set	420938	421011	.	+	.	name_left=MIT-TF;source_left=NC_045136.1|gene|420938|421011|+|gene-GH804_mgt11;name_right=MIT-TF;source_right=NC_045136.1|gene|420938|421011|+|gene-GH804_mgt11;
+NC_045136.1	RefSeq	overlapping_feature_set	421281	421355	.	+	.	name_left=MIT-TP;source_left=NC_045136.1|gene|421281|421355|+|gene-GH804_mgt12;name_right=MIT-TP;source_right=NC_045136.1|gene|421281|421355|+|gene-GH804_mgt12;
+NC_045136.1	RefSeq	gene	438926	439150	.	+	.	name=MIT-ATP9;source=NC_045136.1|gene|438926|439150|+|gene-GH804_mgp15;
+NC_045136.1	RefSeq	overlapping_feature_set	452654	456401	.	+	.	name_left=MIT-ND1;source_left=NC_045136.1|gene|452654|456401|+|gene-GH804_mgp24;name_right=MIT-ND1;source_right=NC_045136.1|gene|452654|456401|+|gene-GH804_mgp24;
+NC_045136.1	RefSeq	overlapping_feature_set	457373	457446	.	+	.	name_left=MIT-TM;source_left=NC_045136.1|gene|457373|457446|+|gene-GH804_mgt13;name_right=MIT-TM;source_right=NC_045136.1|gene|457373|457446|+|gene-GH804_mgt13;
+NC_045136.1	RefSeq	gene	463063	463515	.	-	.	name=MIT-RPL10;source=NC_045136.1|gene|463063|463515|-|gene-GH804_mgp13;
+NC_045136.1	RefSeq	gene	491225	493512	.	-	.	name=MIT-ND5;source=NC_045136.1|gene|491225|493512|-|gene-GH804_mgp04;
+NC_045136.1	RefSeq	gene	535853	536413	.	-	.	name=MIT-RPL5;source=NC_045136.1|gene|535853|536413|-|gene-GH804_mgp12;
+NC_045136.1	RefSeq	gene	586863	587921	.	+	.	name=MIT-RPS4;source=NC_045136.1|gene|586863|587921|+|gene-GH804_mgp11;
+NC_045136.1	RefSeq	gene	588570	589187	.	+	.	name=MIT-ND6;source=NC_045136.1|gene|588570|589187|+|gene-GH804_mgp10;
+NC_045136.1	RefSeq	overlapping_feature_set	618516	618602	.	+	.	name_left=MIT-TS1|2;source_left=NC_045136.1|gene|618516|618602|+|gene-GH804_mgt14;name_right=MIT-TS1|2;source_right=NC_045136.1|gene|618516|618602|+|gene-GH804_mgt14;
+NC_045136.1	RefSeq	overlapping_feature_set	627505	627578	.	-	.	name_left=MIT-TD;source_left=NC_045136.1|gene|627505|627578|-|gene-GH804_mgt15;name_right=MIT-TD;source_right=NC_045136.1|gene|627505|627578|-|gene-GH804_mgt15;
+NC_045136.1	RefSeq	overlapping_feature_set	628561	628641	.	+	.	name_left=MIT-TI;source_left=NC_045136.1|gene|628561|628641|+|gene-GH804_mgt16;name_right=MIT-TI;source_right=NC_045136.1|gene|628561|628641|+|gene-GH804_mgt16;
+NC_045136.1	RefSeq	overlapping_feature_set	630981	631053	.	+	.	name_left=MIT-TM;source_left=NC_045136.1|gene|630981|631053|+|gene-GH804_mgt17;name_right=MIT-TM;source_right=NC_045136.1|gene|630981|631053|+|gene-GH804_mgt17;
+NC_045136.1	RefSeq	gene	637968	639701	.	-	.	name=MIT-CCMFN;source=NC_045136.1|gene|637968|639701|-|gene-GH804_mgp09;
+NC_045136.1	RefSeq	gene	674801	675316	.	-	.	name=MIT-RPL16;source=NC_045136.1|gene|674801|675316|-|gene-GH804_mgp08;

@@ -1,0 +1,163 @@
+##gff-version 3
+#!gff-spec-version 1.21
+#!processor NCBI annotwriter
+##sequence-region NC_068105.1 1 290285
+##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=3879
+NC_068105.1	RefSeq	region	1	290285	.	+	.	ID=NC_068105.1:1..290285;Dbxref=taxon:3879;Is_circular=true;Name=MT;country=China: Qinghai;gbkey=Src;genome=mitochondrion;mol_type=genomic DNA;tissue-type=leaf
+NC_068105.1	RefSeq	gene	8963	9036	.	-	.	ID=gene-OQ193_mgt01;Dbxref=GeneID:76364193;Name=trnfM-CAU;gbkey=Gene;gene=trnfM-CAU;gene_biotype=tRNA;locus_tag=OQ193_mgt01
+NC_068105.1	RefSeq	tRNA	8963	9036	.	-	.	ID=rna-OQ193_mgt01;Parent=gene-OQ193_mgt01;Dbxref=GeneID:76364193;gbkey=tRNA;gene=trnfM-CAU;locus_tag=OQ193_mgt01;product=tRNA-Met
+NC_068105.1	RefSeq	exon	8963	9036	.	-	.	ID=exon-OQ193_mgt01-1;Parent=rna-OQ193_mgt01;Dbxref=GeneID:76364193;gbkey=tRNA;gene=trnfM-CAU;locus_tag=OQ193_mgt01;product=tRNA-Met
+NC_068105.1	RefSeq	gene	9442	12193	.	-	.	ID=gene-OQ193_mgr03;Dbxref=GeneID:76364194;Name=rrn26;gbkey=Gene;gene=rrn26;gene_biotype=rRNA;locus_tag=OQ193_mgr03
+NC_068105.1	RefSeq	rRNA	9442	12193	.	-	.	ID=rna-OQ193_mgr03;Parent=gene-OQ193_mgr03;Dbxref=GeneID:76364194;gbkey=rRNA;gene=rrn26;locus_tag=OQ193_mgr03;product=26S ribosomal RNA
+NC_068105.1	RefSeq	exon	9442	12193	.	-	.	ID=exon-OQ193_mgr03-1;Parent=rna-OQ193_mgr03;Dbxref=GeneID:76364194;gbkey=rRNA;gene=rrn26;locus_tag=OQ193_mgr03;product=26S ribosomal RNA
+NC_068105.1	RefSeq	gene	21348	21968	.	-	.	ID=gene-OQ193_mgp33;Dbxref=GeneID:76364195;Name=ccmB;gbkey=Gene;gene=ccmB;gene_biotype=protein_coding;locus_tag=OQ193_mgp33
+NC_068105.1	RefSeq	CDS	21348	21968	.	-	0	ID=cds-YP_010547232.1;Parent=gene-OQ193_mgp33;Dbxref=GenBank:YP_010547232.1,GeneID:76364195;Name=YP_010547232.1;gbkey=CDS;gene=ccmB;locus_tag=OQ193_mgp33;product=cytochrome c biogenesis B;protein_id=YP_010547232.1
+NC_068105.1	RefSeq	gene	24901	25389	.	+	.	ID=gene-OQ193_mgp32;Dbxref=GeneID:76364196;Name=atp8;gbkey=Gene;gene=atp8;gene_biotype=protein_coding;locus_tag=OQ193_mgp32
+NC_068105.1	RefSeq	CDS	24901	25389	.	+	0	ID=cds-YP_010547233.1;Parent=gene-OQ193_mgp32;Dbxref=GenBank:YP_010547233.1,GeneID:76364196;Name=YP_010547233.1;gbkey=CDS;gene=atp8;locus_tag=OQ193_mgp32;product=ATPase subunit 8;protein_id=YP_010547233.1
+NC_068105.1	RefSeq	gene	26006	26674	.	+	.	ID=gene-OQ193_mgp31;Dbxref=GeneID:76364197;Name=atp6;gbkey=Gene;gene=atp6;gene_biotype=protein_coding;locus_tag=OQ193_mgp31
+NC_068105.1	RefSeq	CDS	26006	26674	.	+	0	ID=cds-YP_010547234.1;Parent=gene-OQ193_mgp31;Dbxref=GenBank:YP_010547234.1,GeneID:76364197;Name=YP_010547234.1;gbkey=CDS;gene=atp6;locus_tag=OQ193_mgp31;product=ATPase subunit 6;protein_id=YP_010547234.1
+NC_068105.1	RefSeq	gene	41168	42217	.	-	.	ID=gene-OQ193_mgp30;Dbxref=GeneID:76364198;Name=rps4;gbkey=Gene;gene=rps4;gene_biotype=protein_coding;locus_tag=OQ193_mgp30
+NC_068105.1	RefSeq	CDS	41168	42217	.	-	0	ID=cds-YP_010547235.1;Parent=gene-OQ193_mgp30;Dbxref=GenBank:YP_010547235.1,GeneID:76364198;Name=YP_010547235.1;gbkey=CDS;gene=rps4;locus_tag=OQ193_mgp30;product=ribosomal protein S4;protein_id=YP_010547235.1
+NC_068105.1	RefSeq	gene	42954	43331	.	-	.	ID=gene-OQ193_mgp29;Dbxref=GeneID:76364199;Name=rps12;gbkey=Gene;gene=rps12;gene_biotype=protein_coding;locus_tag=OQ193_mgp29
+NC_068105.1	RefSeq	CDS	42954	43331	.	-	0	ID=cds-YP_010547236.1;Parent=gene-OQ193_mgp29;Dbxref=GenBank:YP_010547236.1,GeneID:76364199;Name=YP_010547236.1;gbkey=CDS;gene=rps12;locus_tag=OQ193_mgp29;product=ribosomal protein S12;protein_id=YP_010547236.1
+NC_068105.1	RefSeq	gene	43380	43736	.	-	.	ID=gene-OQ193_mgp28;Dbxref=GeneID:76364200;Name=nad3;gbkey=Gene;gene=nad3;gene_biotype=protein_coding;locus_tag=OQ193_mgp28
+NC_068105.1	RefSeq	CDS	43380	43736	.	-	0	ID=cds-YP_010547237.1;Parent=gene-OQ193_mgp28;Dbxref=GenBank:YP_010547237.1,GeneID:76364200;Name=YP_010547237.1;gbkey=CDS;gene=nad3;locus_tag=OQ193_mgp28;product=NADH dehydrogenase subunit 3;protein_id=YP_010547237.1
+NC_068105.1	RefSeq	gene	45878	54533	.	-	.	ID=gene-OQ193_mgp27;Dbxref=GeneID:76364201;Name=nad4;gbkey=Gene;gene=nad4;gene_biotype=protein_coding;locus_tag=OQ193_mgp27
+NC_068105.1	RefSeq	CDS	54073	54533	.	-	0	ID=cds-YP_010547238.1;Parent=gene-OQ193_mgp27;Dbxref=GenBank:YP_010547238.1,GeneID:76364201;Name=YP_010547238.1;gbkey=CDS;gene=nad4;locus_tag=OQ193_mgp27;product=NADH dehydrogenase subunit 4;protein_id=YP_010547238.1
+NC_068105.1	RefSeq	CDS	52152	52666	.	-	1	ID=cds-YP_010547238.1;Parent=gene-OQ193_mgp27;Dbxref=GenBank:YP_010547238.1,GeneID:76364201;Name=YP_010547238.1;gbkey=CDS;gene=nad4;locus_tag=OQ193_mgp27;product=NADH dehydrogenase subunit 4;protein_id=YP_010547238.1
+NC_068105.1	RefSeq	CDS	48545	48967	.	-	2	ID=cds-YP_010547238.1;Parent=gene-OQ193_mgp27;Dbxref=GenBank:YP_010547238.1,GeneID:76364201;Name=YP_010547238.1;gbkey=CDS;gene=nad4;locus_tag=OQ193_mgp27;product=NADH dehydrogenase subunit 4;protein_id=YP_010547238.1
+NC_068105.1	RefSeq	CDS	45878	45966	.	-	2	ID=cds-YP_010547238.1;Parent=gene-OQ193_mgp27;Dbxref=GenBank:YP_010547238.1,GeneID:76364201;Name=YP_010547238.1;gbkey=CDS;gene=nad4;locus_tag=OQ193_mgp27;product=NADH dehydrogenase subunit 4;protein_id=YP_010547238.1
+NC_068105.1	RefSeq	gene	55948	56021	.	+	.	ID=gene-OQ193_mgt02;Dbxref=GeneID:76364202;Name=trnD-GUC;gbkey=Gene;gene=trnD-GUC;gene_biotype=tRNA;locus_tag=OQ193_mgt02
+NC_068105.1	RefSeq	tRNA	55948	56021	.	+	.	ID=rna-OQ193_mgt02;Parent=gene-OQ193_mgt02;Dbxref=GeneID:76364202;gbkey=tRNA;gene=trnD-GUC;locus_tag=OQ193_mgt02;product=tRNA-Asp
+NC_068105.1	RefSeq	exon	55948	56021	.	+	.	ID=exon-OQ193_mgt02-1;Parent=rna-OQ193_mgt02;Dbxref=GeneID:76364202;gbkey=tRNA;gene=trnD-GUC;locus_tag=OQ193_mgt02;product=tRNA-Asp
+NC_068105.1	RefSeq	gene	63003	63749	.	+	.	ID=gene-OQ193_mgp26;Dbxref=GeneID:76364203;Name=ccmC;gbkey=Gene;gene=ccmC;gene_biotype=protein_coding;locus_tag=OQ193_mgp26
+NC_068105.1	RefSeq	CDS	63003	63749	.	+	0	ID=cds-YP_010547239.1;Parent=gene-OQ193_mgp26;Dbxref=GenBank:YP_010547239.1,GeneID:76364203;Name=YP_010547239.1;gbkey=CDS;gene=ccmC;locus_tag=OQ193_mgp26;product=cytochrome c biogenesis C;protein_id=YP_010547239.1
+NC_068105.1	RefSeq	gene	71340	71413	.	+	.	ID=gene-OQ193_mgt03;Dbxref=GeneID:76364204;Name=trnF-GAA;gbkey=Gene;gene=trnF-GAA;gene_biotype=tRNA;locus_tag=OQ193_mgt03
+NC_068105.1	RefSeq	tRNA	71340	71413	.	+	.	ID=rna-OQ193_mgt03;Parent=gene-OQ193_mgt03;Dbxref=GeneID:76364204;gbkey=tRNA;gene=trnF-GAA;locus_tag=OQ193_mgt03;product=tRNA-Phe
+NC_068105.1	RefSeq	exon	71340	71413	.	+	.	ID=exon-OQ193_mgt03-1;Parent=rna-OQ193_mgt03;Dbxref=GeneID:76364204;gbkey=tRNA;gene=trnF-GAA;locus_tag=OQ193_mgt03;product=tRNA-Phe
+NC_068105.1	RefSeq	gene	71676	71750	.	+	.	ID=gene-OQ193_mgt04;Dbxref=GeneID:76364205;Name=trnP-UGG;gbkey=Gene;gene=trnP-UGG;gene_biotype=tRNA;locus_tag=OQ193_mgt04
+NC_068105.1	RefSeq	tRNA	71676	71750	.	+	.	ID=rna-OQ193_mgt04;Parent=gene-OQ193_mgt04;Dbxref=GeneID:76364205;gbkey=tRNA;gene=trnP-UGG;locus_tag=OQ193_mgt04;product=tRNA-Pro
+NC_068105.1	RefSeq	exon	71676	71750	.	+	.	ID=exon-OQ193_mgt04-1;Parent=rna-OQ193_mgt04;Dbxref=GeneID:76364205;gbkey=tRNA;gene=trnP-UGG;locus_tag=OQ193_mgt04;product=tRNA-Pro
+NC_068105.1	RefSeq	gene	72666	73004	.	+	.	ID=gene-OQ193_mgp25;Dbxref=GeneID:76364206;Name=rps1;gbkey=Gene;gene=rps1;gene_biotype=protein_coding;locus_tag=OQ193_mgp25
+NC_068105.1	RefSeq	CDS	72666	73004	.	+	0	ID=cds-YP_010547240.1;Parent=gene-OQ193_mgp25;Dbxref=GenBank:YP_010547240.1,GeneID:76364206;Name=YP_010547240.1;gbkey=CDS;gene=rps1;locus_tag=OQ193_mgp25;product=ribosomal protein S1;protein_id=YP_010547240.1
+NC_068105.1	RefSeq	gene	73371	75717	.	+	.	ID=gene-OQ193_mgp24;Dbxref=GeneID:76364244;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=OQ193_mgp24;part=1
+NC_068105.1	RefSeq	gene	198143	198317	.	+	.	ID=gene-OQ193_mgp24;Dbxref=GeneID:76364244;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=OQ193_mgp24;part=2
+NC_068105.1	RefSeq	gene	169503	170858	.	+	.	ID=gene-OQ193_mgp24;Dbxref=GeneID:76364244;Name=nad5;exception=trans-splicing;gbkey=Gene;gene=nad5;gene_biotype=protein_coding;locus_tag=OQ193_mgp24;part=3
+NC_068105.1	RefSeq	CDS	73371	73594	.	+	0	ID=cds-YP_010547241.1;Parent=gene-OQ193_mgp24;Dbxref=GenBank:YP_010547241.1,GeneID:76364244;Name=YP_010547241.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=OQ193_mgp24;part=1;product=NADH dehydrogenase subunit 5;protein_id=YP_010547241.1
+NC_068105.1	RefSeq	CDS	74499	75717	.	+	1	ID=cds-YP_010547241.1;Parent=gene-OQ193_mgp24;Dbxref=GenBank:YP_010547241.1,GeneID:76364244;Name=YP_010547241.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=OQ193_mgp24;part=2;product=NADH dehydrogenase subunit 5;protein_id=YP_010547241.1
+NC_068105.1	RefSeq	CDS	198143	198317	.	+	0	ID=cds-YP_010547241.1;Parent=gene-OQ193_mgp24;Dbxref=GenBank:YP_010547241.1,GeneID:76364244;Name=YP_010547241.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=OQ193_mgp24;part=3;product=NADH dehydrogenase subunit 5;protein_id=YP_010547241.1
+NC_068105.1	RefSeq	CDS	169503	169897	.	+	2	ID=cds-YP_010547241.1;Parent=gene-OQ193_mgp24;Dbxref=GenBank:YP_010547241.1,GeneID:76364244;Name=YP_010547241.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=OQ193_mgp24;part=4;product=NADH dehydrogenase subunit 5;protein_id=YP_010547241.1
+NC_068105.1	RefSeq	CDS	170820	170858	.	+	0	ID=cds-YP_010547241.1;Parent=gene-OQ193_mgp24;Dbxref=GenBank:YP_010547241.1,GeneID:76364244;Name=YP_010547241.1;exception=trans-splicing;gbkey=CDS;gene=nad5;locus_tag=OQ193_mgp24;part=5;product=NADH dehydrogenase subunit 5;protein_id=YP_010547241.1
+NC_068105.1	RefSeq	gene	82066	82138	.	-	.	ID=gene-OQ193_mgt05;Dbxref=GeneID:76364208;Name=trnK-UUU;gbkey=Gene;gene=trnK-UUU;gene_biotype=tRNA;locus_tag=OQ193_mgt05
+NC_068105.1	RefSeq	tRNA	82066	82138	.	-	.	ID=rna-OQ193_mgt05;Parent=gene-OQ193_mgt05;Dbxref=GeneID:76364208;gbkey=tRNA;gene=trnK-UUU;locus_tag=OQ193_mgt05;product=tRNA-Lys
+NC_068105.1	RefSeq	exon	82066	82138	.	-	.	ID=exon-OQ193_mgt05-1;Parent=rna-OQ193_mgt05;Dbxref=GeneID:76364208;gbkey=tRNA;gene=trnK-UUU;locus_tag=OQ193_mgt05;product=tRNA-Lys
+NC_068105.1	RefSeq	gene	92430	93047	.	+	.	ID=gene-OQ193_mgp23;Dbxref=GeneID:76364209;Name=nad6;gbkey=Gene;gene=nad6;gene_biotype=protein_coding;locus_tag=OQ193_mgp23
+NC_068105.1	RefSeq	CDS	92430	93047	.	+	0	ID=cds-YP_010547242.1;Parent=gene-OQ193_mgp23;Dbxref=GenBank:YP_010547242.1,GeneID:76364209;Name=YP_010547242.1;gbkey=CDS;gene=nad6;locus_tag=OQ193_mgp23;product=NADH dehydrogenase subunit 6;protein_id=YP_010547242.1
+NC_068105.1	RefSeq	gene	100063	100126	.	+	.	ID=gene-OQ193_mgt06;Dbxref=GeneID:76364210;Name=trnF-GAA;gbkey=Gene;gene=trnF-GAA;gene_biotype=tRNA;locus_tag=OQ193_mgt06
+NC_068105.1	RefSeq	tRNA	100063	100126	.	+	.	ID=rna-OQ193_mgt06;Parent=gene-OQ193_mgt06;Dbxref=GeneID:76364210;gbkey=tRNA;gene=trnF-GAA;locus_tag=OQ193_mgt06;product=tRNA-Phe
+NC_068105.1	RefSeq	exon	100063	100126	.	+	.	ID=exon-OQ193_mgt06-1;Parent=rna-OQ193_mgt06;Dbxref=GeneID:76364210;gbkey=tRNA;gene=trnF-GAA;locus_tag=OQ193_mgt06;product=tRNA-Phe
+NC_068105.1	RefSeq	gene	102474	103064	.	-	.	ID=gene-OQ193_mgp22;Dbxref=GeneID:76364211;Name=nad9;gbkey=Gene;gene=nad9;gene_biotype=protein_coding;locus_tag=OQ193_mgp22
+NC_068105.1	RefSeq	CDS	102474	103064	.	-	0	ID=cds-YP_010547243.1;Parent=gene-OQ193_mgp22;Dbxref=GenBank:YP_010547243.1,GeneID:76364211;Name=YP_010547243.1;gbkey=CDS;gene=nad9;locus_tag=OQ193_mgp22;product=NADH dehydrogenase subunit 9;protein_id=YP_010547243.1
+NC_068105.1	RefSeq	gene	115432	116952	.	+	.	ID=gene-OQ193_mgp21;Dbxref=GeneID:76364212;Name=atp1;gbkey=Gene;gene=atp1;gene_biotype=protein_coding;locus_tag=OQ193_mgp21
+NC_068105.1	RefSeq	CDS	115432	116952	.	+	0	ID=cds-YP_010547244.1;Parent=gene-OQ193_mgp21;Dbxref=GenBank:YP_010547244.1,GeneID:76364212;Name=YP_010547244.1;gbkey=CDS;gene=atp1;locus_tag=OQ193_mgp21;product=ATPase subunit 1;protein_id=YP_010547244.1
+NC_068105.1	RefSeq	gene	117496	118317	.	+	.	ID=gene-OQ193_mgp20;Dbxref=GeneID:76364213;Name=cox2;gbkey=Gene;gene=cox2;gene_biotype=protein_coding;locus_tag=OQ193_mgp20
+NC_068105.1	RefSeq	CDS	117496	118317	.	+	0	ID=cds-YP_010547245.1;Parent=gene-OQ193_mgp20;Dbxref=GenBank:YP_010547245.1,GeneID:76364213;Name=YP_010547245.1;gbkey=CDS;gene=cox2;locus_tag=OQ193_mgp20;product=cytochrome c oxidase subunit 2;protein_id=YP_010547245.1
+NC_068105.1	RefSeq	gene	125996	126511	.	-	.	ID=gene-OQ193_mgp19;Dbxref=GeneID:76364214;Name=rpl16;gbkey=Gene;gene=rpl16;gene_biotype=protein_coding;locus_tag=OQ193_mgp19
+NC_068105.1	RefSeq	CDS	125996	126511	.	-	0	ID=cds-YP_010547246.1;Parent=gene-OQ193_mgp19;Dbxref=GenBank:YP_010547246.1,GeneID:76364214;Name=YP_010547246.1;gbkey=CDS;gene=rpl16;locus_tag=OQ193_mgp19;product=ribosomal protein L16;protein_id=YP_010547246.1
+NC_068105.1	RefSeq	gene	126402	129861	.	-	.	ID=gene-OQ193_mgp18;Dbxref=GeneID:76364215;Name=rps3;gbkey=Gene;gene=rps3;gene_biotype=protein_coding;locus_tag=OQ193_mgp18
+NC_068105.1	RefSeq	CDS	129788	129861	.	-	0	ID=cds-YP_010547247.1;Parent=gene-OQ193_mgp18;Dbxref=GenBank:YP_010547247.1,GeneID:76364215;Name=YP_010547247.1;gbkey=CDS;gene=rps3;locus_tag=OQ193_mgp18;product=ribosomal protein S3;protein_id=YP_010547247.1
+NC_068105.1	RefSeq	CDS	126402	128004	.	-	1	ID=cds-YP_010547247.1;Parent=gene-OQ193_mgp18;Dbxref=GenBank:YP_010547247.1,GeneID:76364215;Name=YP_010547247.1;gbkey=CDS;gene=rps3;locus_tag=OQ193_mgp18;product=ribosomal protein S3;protein_id=YP_010547247.1
+NC_068105.1	RefSeq	gene	130551	130623	.	-	.	ID=gene-OQ193_mgt07;Dbxref=GeneID:76364216;Name=trnM-CAU;gbkey=Gene;gene=trnM-CAU;gene_biotype=tRNA;locus_tag=OQ193_mgt07
+NC_068105.1	RefSeq	tRNA	130551	130623	.	-	.	ID=rna-OQ193_mgt07;Parent=gene-OQ193_mgt07;Dbxref=GeneID:76364216;gbkey=tRNA;gene=trnM-CAU;locus_tag=OQ193_mgt07;product=tRNA-Met
+NC_068105.1	RefSeq	exon	130551	130623	.	-	.	ID=exon-OQ193_mgt07-1;Parent=rna-OQ193_mgt07;Dbxref=GeneID:76364216;gbkey=tRNA;gene=trnM-CAU;locus_tag=OQ193_mgt07;product=tRNA-Met
+NC_068105.1	RefSeq	gene	131501	131572	.	-	.	ID=gene-OQ193_mgt08;Dbxref=GeneID:76364217;Name=trnE-UUC;gbkey=Gene;gene=trnE-UUC;gene_biotype=tRNA;locus_tag=OQ193_mgt08
+NC_068105.1	RefSeq	tRNA	131501	131572	.	-	.	ID=rna-OQ193_mgt08;Parent=gene-OQ193_mgt08;Dbxref=GeneID:76364217;gbkey=tRNA;gene=trnE-UUC;locus_tag=OQ193_mgt08;product=tRNA-Glu
+NC_068105.1	RefSeq	exon	131501	131572	.	-	.	ID=exon-OQ193_mgt08-1;Parent=rna-OQ193_mgt08;Dbxref=GeneID:76364217;gbkey=tRNA;gene=trnE-UUC;locus_tag=OQ193_mgt08;product=tRNA-Glu
+NC_068105.1	RefSeq	gene	150054	150611	.	+	.	ID=gene-OQ193_mgp17;Dbxref=GeneID:76364218;Name=rpl5;gbkey=Gene;gene=rpl5;gene_biotype=protein_coding;locus_tag=OQ193_mgp17
+NC_068105.1	RefSeq	CDS	150054	150611	.	+	0	ID=cds-YP_010547248.1;Parent=gene-OQ193_mgp17;Dbxref=GenBank:YP_010547248.1,GeneID:76364218;Name=YP_010547248.1;gbkey=CDS;gene=rpl5;locus_tag=OQ193_mgp17;product=ribosomal protein L5;protein_id=YP_010547248.1
+NC_068105.1	RefSeq	gene	150615	150917	.	+	.	ID=gene-OQ193_mgp16;Dbxref=GeneID:76364219;Name=rps14;gbkey=Gene;gene=rps14;gene_biotype=protein_coding;locus_tag=OQ193_mgp16
+NC_068105.1	RefSeq	CDS	150615	150917	.	+	0	ID=cds-YP_010547249.1;Parent=gene-OQ193_mgp16;Dbxref=GenBank:YP_010547249.1,GeneID:76364219;Name=YP_010547249.1;gbkey=CDS;gene=rps14;locus_tag=OQ193_mgp16;product=ribosomal protein S14;protein_id=YP_010547249.1
+NC_068105.1	RefSeq	gene	151832	153010	.	+	.	ID=gene-OQ193_mgp15;Dbxref=GeneID:76364220;Name=cob;gbkey=Gene;gene=cob;gene_biotype=protein_coding;locus_tag=OQ193_mgp15
+NC_068105.1	RefSeq	CDS	151832	153010	.	+	0	ID=cds-YP_010547250.1;Parent=gene-OQ193_mgp15;Dbxref=GenBank:YP_010547250.1,GeneID:76364220;Name=YP_010547250.1;gbkey=CDS;gene=cob;locus_tag=OQ193_mgp15;product=apocytochrome b;protein_id=YP_010547250.1
+NC_068105.1	RefSeq	gene	156767	158503	.	+	.	ID=gene-OQ193_mgp14;Dbxref=GeneID:76364221;Name=ccmFn;gbkey=Gene;gene=ccmFn;gene_biotype=protein_coding;locus_tag=OQ193_mgp14
+NC_068105.1	RefSeq	CDS	156767	158503	.	+	0	ID=cds-YP_010547251.1;Parent=gene-OQ193_mgp14;Dbxref=GenBank:YP_010547251.1,GeneID:76364221;Name=YP_010547251.1;gbkey=CDS;gene=ccmFn;locus_tag=OQ193_mgp14;product=cytochrome c biogenesis FN;protein_id=YP_010547251.1
+NC_068105.1	RefSeq	gene	171074	171152	.	+	.	ID=gene-OQ193_mgt09;Dbxref=GeneID:76364222;Name=trnT-UGU;gbkey=Gene;gene=trnT-UGU;gene_biotype=tRNA;locus_tag=OQ193_mgt09
+NC_068105.1	RefSeq	tRNA	171074	171152	.	+	.	ID=rna-OQ193_mgt09;Parent=gene-OQ193_mgt09;Dbxref=GeneID:76364222;gbkey=tRNA;gene=trnT-UGU;locus_tag=OQ193_mgt09;product=tRNA-Thr
+NC_068105.1	RefSeq	exon	171074	171152	.	+	.	ID=exon-OQ193_mgt09-1;Parent=rna-OQ193_mgt09;Dbxref=GeneID:76364222;gbkey=tRNA;gene=trnT-UGU;locus_tag=OQ193_mgt09;product=tRNA-Thr
+NC_068105.1	RefSeq	gene	179768	181753	.	-	.	ID=gene-OQ193_mgp12;Dbxref=GeneID:76364245;Name=matR;gbkey=Gene;gene=matR;gene_biotype=protein_coding;locus_tag=OQ193_mgp12
+NC_068105.1	RefSeq	CDS	179768	181753	.	-	0	ID=cds-YP_010547253.1;Parent=gene-OQ193_mgp12;Dbxref=GenBank:YP_010547253.1,GeneID:76364245;Name=YP_010547253.1;gbkey=CDS;gene=matR;locus_tag=OQ193_mgp12;product=maturase;protein_id=YP_010547253.1
+NC_068105.1	RefSeq	gene	192087	192154	.	+	.	ID=gene-OQ193_mgp01;Dbxref=GeneID:76364246;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=OQ193_mgp01;part=1
+NC_068105.1	RefSeq	gene	289128	289288	.	+	.	ID=gene-OQ193_mgp01;Dbxref=GeneID:76364246;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=OQ193_mgp01;part=2
+NC_068105.1	RefSeq	gene	1135	3378	.	+	.	ID=gene-OQ193_mgp01;Dbxref=GeneID:76364246;Name=nad2;exception=trans-splicing;gbkey=Gene;gene=nad2;gene_biotype=protein_coding;locus_tag=OQ193_mgp01;part=3
+NC_068105.1	RefSeq	CDS	192087	192154	.	+	0	ID=cds-YP_010547231.1;Parent=gene-OQ193_mgp01;Dbxref=GenBank:YP_010547231.1,GeneID:76364246;Name=YP_010547231.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=OQ193_mgp01;part=1;product=NADH dehydrogenase subunit 2;protein_id=YP_010547231.1
+NC_068105.1	RefSeq	CDS	289128	289288	.	+	1	ID=cds-YP_010547231.1;Parent=gene-OQ193_mgp01;Dbxref=GenBank:YP_010547231.1,GeneID:76364246;Name=YP_010547231.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=OQ193_mgp01;part=2;product=NADH dehydrogenase subunit 2;protein_id=YP_010547231.1
+NC_068105.1	RefSeq	CDS	1135	1707	.	+	2	ID=cds-YP_010547231.1;Parent=gene-OQ193_mgp01;Dbxref=GenBank:YP_010547231.1,GeneID:76364246;Name=YP_010547231.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=OQ193_mgp01;part=3;product=NADH dehydrogenase subunit 2;protein_id=YP_010547231.1
+NC_068105.1	RefSeq	CDS	3191	3378	.	+	2	ID=cds-YP_010547231.1;Parent=gene-OQ193_mgp01;Dbxref=GenBank:YP_010547231.1,GeneID:76364246;Name=YP_010547231.1;exception=trans-splicing;gbkey=CDS;gene=nad2;locus_tag=OQ193_mgp01;part=4;product=NADH dehydrogenase subunit 2;protein_id=YP_010547231.1
+NC_068105.1	RefSeq	gene	196905	197129	.	+	.	ID=gene-OQ193_mgp11;Dbxref=GeneID:76364223;Name=atp9;gbkey=Gene;gene=atp9;gene_biotype=protein_coding;locus_tag=OQ193_mgp11
+NC_068105.1	RefSeq	CDS	196905	197129	.	+	0	ID=cds-YP_010547254.1;Parent=gene-OQ193_mgp11;Dbxref=GenBank:YP_010547254.1,GeneID:76364223;Name=YP_010547254.1;gbkey=CDS;gene=atp9;locus_tag=OQ193_mgp11;product=ATPase subunit 9;protein_id=YP_010547254.1
+NC_068105.1	RefSeq	gene	201409	201787	.	-	.	ID=gene-OQ193_mgp13;Dbxref=GeneID:76364207;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=OQ193_mgp13;part=1
+NC_068105.1	RefSeq	gene	252310	254005	.	+	.	ID=gene-OQ193_mgp13;Dbxref=GeneID:76364207;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=OQ193_mgp13;part=2
+NC_068105.1	RefSeq	gene	178997	182463	.	-	.	ID=gene-OQ193_mgp13;Dbxref=GeneID:76364207;Name=nad1;exception=trans-splicing;gbkey=Gene;gene=nad1;gene_biotype=protein_coding;locus_tag=OQ193_mgp13;part=3
+NC_068105.1	RefSeq	CDS	201409	201787	.	-	0	ID=cds-YP_010547252.1;Parent=gene-OQ193_mgp13;Dbxref=GenBank:YP_010547252.1,GeneID:76364207;Name=YP_010547252.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=OQ193_mgp13;part=1;product=NADH dehydrogenase subunit 1;protein_id=YP_010547252.1
+NC_068105.1	RefSeq	CDS	252310	252397	.	+	2	ID=cds-YP_010547252.1;Parent=gene-OQ193_mgp13;Dbxref=GenBank:YP_010547252.1,GeneID:76364207;Name=YP_010547252.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=OQ193_mgp13;part=2;product=NADH dehydrogenase subunit 1;protein_id=YP_010547252.1
+NC_068105.1	RefSeq	CDS	253804	254005	.	+	1	ID=cds-YP_010547252.1;Parent=gene-OQ193_mgp13;Dbxref=GenBank:YP_010547252.1,GeneID:76364207;Name=YP_010547252.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=OQ193_mgp13;part=3;product=NADH dehydrogenase subunit 1;protein_id=YP_010547252.1
+NC_068105.1	RefSeq	CDS	182405	182463	.	-	0	ID=cds-YP_010547252.1;Parent=gene-OQ193_mgp13;Dbxref=GenBank:YP_010547252.1,GeneID:76364207;Name=YP_010547252.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=OQ193_mgp13;part=4;product=NADH dehydrogenase subunit 1;protein_id=YP_010547252.1
+NC_068105.1	RefSeq	CDS	178997	179255	.	-	1	ID=cds-YP_010547252.1;Parent=gene-OQ193_mgp13;Dbxref=GenBank:YP_010547252.1,GeneID:76364207;Name=YP_010547252.1;exception=trans-splicing%2C RNA editing;gbkey=CDS;gene=nad1;locus_tag=OQ193_mgp13;part=5;product=NADH dehydrogenase subunit 1;protein_id=YP_010547252.1
+NC_068105.1	RefSeq	gene	207792	214222	.	-	.	ID=gene-OQ193_mgp10;Dbxref=GeneID:76364224;Name=nad7;gbkey=Gene;gene=nad7;gene_biotype=protein_coding;locus_tag=OQ193_mgp10
+NC_068105.1	RefSeq	CDS	214080	214222	.	-	0	ID=cds-YP_010547255.1;Parent=gene-OQ193_mgp10;Dbxref=GenBank:YP_010547255.1,GeneID:76364224;Name=YP_010547255.1;gbkey=CDS;gene=nad7;locus_tag=OQ193_mgp10;product=NADH dehydrogenase subunit 7;protein_id=YP_010547255.1
+NC_068105.1	RefSeq	CDS	213118	213186	.	-	1	ID=cds-YP_010547255.1;Parent=gene-OQ193_mgp10;Dbxref=GenBank:YP_010547255.1,GeneID:76364224;Name=YP_010547255.1;gbkey=CDS;gene=nad7;locus_tag=OQ193_mgp10;product=NADH dehydrogenase subunit 7;protein_id=YP_010547255.1
+NC_068105.1	RefSeq	CDS	211319	211784	.	-	1	ID=cds-YP_010547255.1;Parent=gene-OQ193_mgp10;Dbxref=GenBank:YP_010547255.1,GeneID:76364224;Name=YP_010547255.1;gbkey=CDS;gene=nad7;locus_tag=OQ193_mgp10;product=NADH dehydrogenase subunit 7;protein_id=YP_010547255.1
+NC_068105.1	RefSeq	CDS	210047	210290	.	-	0	ID=cds-YP_010547255.1;Parent=gene-OQ193_mgp10;Dbxref=GenBank:YP_010547255.1,GeneID:76364224;Name=YP_010547255.1;gbkey=CDS;gene=nad7;locus_tag=OQ193_mgp10;product=NADH dehydrogenase subunit 7;protein_id=YP_010547255.1
+NC_068105.1	RefSeq	CDS	207792	208054	.	-	2	ID=cds-YP_010547255.1;Parent=gene-OQ193_mgp10;Dbxref=GenBank:YP_010547255.1,GeneID:76364224;Name=YP_010547255.1;gbkey=CDS;gene=nad7;locus_tag=OQ193_mgp10;product=NADH dehydrogenase subunit 7;protein_id=YP_010547255.1
+NC_068105.1	RefSeq	gene	219578	219659	.	-	.	ID=gene-OQ193_mgt10;Dbxref=GeneID:76364225;Name=trnI-CAU;gbkey=Gene;gene=trnI-CAU;gene_biotype=tRNA;locus_tag=OQ193_mgt10
+NC_068105.1	RefSeq	tRNA	219578	219659	.	-	.	ID=rna-OQ193_mgt10;Parent=gene-OQ193_mgt10;Dbxref=GeneID:76364225;gbkey=tRNA;gene=trnI-CAU;locus_tag=OQ193_mgt10;product=tRNA-Ile
+NC_068105.1	RefSeq	exon	219578	219659	.	-	.	ID=exon-OQ193_mgt10-1;Parent=rna-OQ193_mgt10;Dbxref=GeneID:76364225;gbkey=tRNA;gene=trnI-CAU;locus_tag=OQ193_mgt10;product=tRNA-Ile
+NC_068105.1	RefSeq	gene	219586	219659	.	-	.	ID=gene-OQ193_mgt11;Dbxref=GeneID:76364226;Name=trnM-CAU;gbkey=Gene;gene=trnM-CAU;gene_biotype=tRNA;locus_tag=OQ193_mgt11
+NC_068105.1	RefSeq	tRNA	219586	219659	.	-	.	ID=rna-OQ193_mgt11;Parent=gene-OQ193_mgt11;Dbxref=GeneID:76364226;gbkey=tRNA;gene=trnM-CAU;locus_tag=OQ193_mgt11;product=tRNA-Met
+NC_068105.1	RefSeq	exon	219586	219659	.	-	.	ID=exon-OQ193_mgt11-1;Parent=rna-OQ193_mgt11;Dbxref=GeneID:76364226;gbkey=tRNA;gene=trnM-CAU;locus_tag=OQ193_mgt11;product=tRNA-Met
+NC_068105.1	RefSeq	gene	226535	226846	.	-	.	ID=gene-OQ193_mgp09;Dbxref=GeneID:76364227;Name=mttB;gbkey=Gene;gene=mttB;gene_biotype=protein_coding;locus_tag=OQ193_mgp09
+NC_068105.1	RefSeq	CDS	226535	226846	.	-	0	ID=cds-YP_010547256.1;Parent=gene-OQ193_mgp09;Dbxref=GenBank:YP_010547256.1,GeneID:76364227;Name=YP_010547256.1;gbkey=CDS;gene=mttB;locus_tag=OQ193_mgp09;product=transport membrane protein;protein_id=YP_010547256.1
+NC_068105.1	RefSeq	gene	230383	230454	.	+	.	ID=gene-OQ193_mgt12;Dbxref=GeneID:76364228;Name=trnG-GCC;gbkey=Gene;gene=trnG-GCC;gene_biotype=tRNA;locus_tag=OQ193_mgt12
+NC_068105.1	RefSeq	tRNA	230383	230454	.	+	.	ID=rna-OQ193_mgt12;Parent=gene-OQ193_mgt12;Dbxref=GeneID:76364228;gbkey=tRNA;gene=trnG-GCC;locus_tag=OQ193_mgt12;product=tRNA-Gly
+NC_068105.1	RefSeq	exon	230383	230454	.	+	.	ID=exon-OQ193_mgt12-1;Parent=rna-OQ193_mgt12;Dbxref=GeneID:76364228;gbkey=tRNA;gene=trnG-GCC;locus_tag=OQ193_mgt12;product=tRNA-Gly
+NC_068105.1	RefSeq	gene	234272	234343	.	+	.	ID=gene-OQ193_mgt13;Dbxref=GeneID:76364229;Name=trnQ-UUG;gbkey=Gene;gene=trnQ-UUG;gene_biotype=tRNA;locus_tag=OQ193_mgt13
+NC_068105.1	RefSeq	tRNA	234272	234343	.	+	.	ID=rna-OQ193_mgt13;Parent=gene-OQ193_mgt13;Dbxref=GeneID:76364229;gbkey=tRNA;gene=trnQ-UUG;locus_tag=OQ193_mgt13;product=tRNA-Gln
+NC_068105.1	RefSeq	exon	234272	234343	.	+	.	ID=exon-OQ193_mgt13-1;Parent=rna-OQ193_mgt13;Dbxref=GeneID:76364229;gbkey=tRNA;gene=trnQ-UUG;locus_tag=OQ193_mgt13;product=tRNA-Gln
+NC_068105.1	RefSeq	gene	242642	242715	.	+	.	ID=gene-OQ193_mgt14;Dbxref=GeneID:76364230;Name=trnW-CCA;gbkey=Gene;gene=trnW-CCA;gene_biotype=tRNA;locus_tag=OQ193_mgt14
+NC_068105.1	RefSeq	tRNA	242642	242715	.	+	.	ID=rna-OQ193_mgt14;Parent=gene-OQ193_mgt14;Dbxref=GeneID:76364230;gbkey=tRNA;gene=trnW-CCA;locus_tag=OQ193_mgt14;product=tRNA-Trp
+NC_068105.1	RefSeq	exon	242642	242715	.	+	.	ID=exon-OQ193_mgt14-1;Parent=rna-OQ193_mgt14;Dbxref=GeneID:76364230;gbkey=tRNA;gene=trnW-CCA;locus_tag=OQ193_mgt14;product=tRNA-Trp
+NC_068105.1	RefSeq	gene	244413	246398	.	+	.	ID=gene-OQ193_mgr02;Dbxref=GeneID:76364231;Name=rrn18;gbkey=Gene;gene=rrn18;gene_biotype=rRNA;locus_tag=OQ193_mgr02
+NC_068105.1	RefSeq	rRNA	244413	246398	.	+	.	ID=rna-OQ193_mgr02;Parent=gene-OQ193_mgr02;Dbxref=GeneID:76364231;gbkey=rRNA;gene=rrn18;locus_tag=OQ193_mgr02;product=18S ribosomal RNA
+NC_068105.1	RefSeq	exon	244413	246398	.	+	.	ID=exon-OQ193_mgr02-1;Parent=rna-OQ193_mgr02;Dbxref=GeneID:76364231;gbkey=rRNA;gene=rrn18;locus_tag=OQ193_mgr02;product=18S ribosomal RNA
+NC_068105.1	RefSeq	gene	246577	246691	.	+	.	ID=gene-OQ193_mgr01;Dbxref=GeneID:76364232;Name=rrn5;gbkey=Gene;gene=rrn5;gene_biotype=rRNA;locus_tag=OQ193_mgr01
+NC_068105.1	RefSeq	rRNA	246577	246691	.	+	.	ID=rna-OQ193_mgr01;Parent=gene-OQ193_mgr01;Dbxref=GeneID:76364232;gbkey=rRNA;gene=rrn5;locus_tag=OQ193_mgr01;product=5S ribosomal RNA
+NC_068105.1	RefSeq	exon	246577	246691	.	+	.	ID=exon-OQ193_mgr01-1;Parent=rna-OQ193_mgr01;Dbxref=GeneID:76364232;gbkey=rRNA;gene=rrn5;locus_tag=OQ193_mgr01;product=5S ribosomal RNA
+NC_068105.1	RefSeq	gene	247780	249060	.	+	.	ID=gene-OQ193_mgp08;Dbxref=GeneID:76364233;Name=rps10;gbkey=Gene;gene=rps10;gene_biotype=protein_coding;locus_tag=OQ193_mgp08
+NC_068105.1	RefSeq	CDS	247780	248023	.	+	0	ID=cds-YP_010547257.1;Parent=gene-OQ193_mgp08;Dbxref=GenBank:YP_010547257.1,GeneID:76364233;Name=YP_010547257.1;gbkey=CDS;gene=rps10;locus_tag=OQ193_mgp08;product=ribosomal protein S4;protein_id=YP_010547257.1
+NC_068105.1	RefSeq	CDS	248948	249060	.	+	2	ID=cds-YP_010547257.1;Parent=gene-OQ193_mgp08;Dbxref=GenBank:YP_010547257.1,GeneID:76364233;Name=YP_010547257.1;gbkey=CDS;gene=rps10;locus_tag=OQ193_mgp08;product=ribosomal protein S4;protein_id=YP_010547257.1
+NC_068105.1	RefSeq	gene	249258	250841	.	+	.	ID=gene-OQ193_mgp07;Dbxref=GeneID:76364234;Name=cox1;gbkey=Gene;gene=cox1;gene_biotype=protein_coding;locus_tag=OQ193_mgp07
+NC_068105.1	RefSeq	CDS	249258	250841	.	+	0	ID=cds-YP_010547258.1;Parent=gene-OQ193_mgp07;Dbxref=GenBank:YP_010547258.1,GeneID:76364234;Name=YP_010547258.1;gbkey=CDS;gene=cox1;locus_tag=OQ193_mgp07;product=cytochrome c oxidase subunit 1;protein_id=YP_010547258.1
+NC_068105.1	RefSeq	gene	255627	257985	.	+	.	ID=gene-OQ193_mgp06;Dbxref=GeneID:76364235;Name=ccmFc;gbkey=Gene;gene=ccmFc;gene_biotype=protein_coding;locus_tag=OQ193_mgp06
+NC_068105.1	RefSeq	CDS	255627	256404	.	+	0	ID=cds-YP_010547259.1;Parent=gene-OQ193_mgp06;Dbxref=GenBank:YP_010547259.1,GeneID:76364235;Name=YP_010547259.1;gbkey=CDS;gene=ccmFc;locus_tag=OQ193_mgp06;product=cytochrome c biogenesis FC;protein_id=YP_010547259.1
+NC_068105.1	RefSeq	CDS	257360	257985	.	+	2	ID=cds-YP_010547259.1;Parent=gene-OQ193_mgp06;Dbxref=GenBank:YP_010547259.1,GeneID:76364235;Name=YP_010547259.1;gbkey=CDS;gene=ccmFc;locus_tag=OQ193_mgp06;product=cytochrome c biogenesis FC;protein_id=YP_010547259.1
+NC_068105.1	RefSeq	gene	261504	261577	.	-	.	ID=gene-OQ193_mgt15;Dbxref=GeneID:76364236;Name=trnH-GUG;gbkey=Gene;gene=trnH-GUG;gene_biotype=tRNA;locus_tag=OQ193_mgt15
+NC_068105.1	RefSeq	tRNA	261504	261577	.	-	.	ID=rna-OQ193_mgt15;Parent=gene-OQ193_mgt15;Dbxref=GeneID:76364236;gbkey=tRNA;gene=trnH-GUG;locus_tag=OQ193_mgt15;product=tRNA-His
+NC_068105.1	RefSeq	exon	261504	261577	.	-	.	ID=exon-OQ193_mgt15-1;Parent=rna-OQ193_mgt15;Dbxref=GeneID:76364236;gbkey=tRNA;gene=trnH-GUG;locus_tag=OQ193_mgt15;product=tRNA-His
+NC_068105.1	RefSeq	gene	270859	271446	.	-	.	ID=gene-OQ193_mgp05;Dbxref=GeneID:76364237;Name=atp4;gbkey=Gene;gene=atp4;gene_biotype=protein_coding;locus_tag=OQ193_mgp05
+NC_068105.1	RefSeq	CDS	270859	271446	.	-	0	ID=cds-YP_010547260.1;Parent=gene-OQ193_mgp05;Dbxref=GenBank:YP_010547260.1,GeneID:76364237;Name=YP_010547260.1;gbkey=CDS;gene=atp4;locus_tag=OQ193_mgp05;product=ATPase subunit 4;protein_id=YP_010547260.1
+NC_068105.1	RefSeq	gene	271638	271910	.	-	.	ID=gene-OQ193_mgp04;Dbxref=GeneID:76364238;Name=nad4L;gbkey=Gene;gene=nad4L;gene_biotype=protein_coding;locus_tag=OQ193_mgp04
+NC_068105.1	RefSeq	CDS	271638	271910	.	-	0	ID=cds-YP_010547261.1;Parent=gene-OQ193_mgp04;Dbxref=GenBank:YP_010547261.1,GeneID:76364238;Name=YP_010547261.1;gbkey=CDS;gene=nad4L;locus_tag=OQ193_mgp04;product=NADH dehydrogenase subunit 4L;protein_id=YP_010547261.1
+NC_068105.1	RefSeq	gene	272728	274248	.	-	.	ID=gene-OQ193_mgp03;Dbxref=GeneID:76364239;Name=atp1;gbkey=Gene;gene=atp1;gene_biotype=protein_coding;locus_tag=OQ193_mgp03
+NC_068105.1	RefSeq	CDS	272728	274248	.	-	0	ID=cds-YP_010547262.1;Parent=gene-OQ193_mgp03;Dbxref=GenBank:YP_010547262.1,GeneID:76364239;Name=YP_010547262.1;gbkey=CDS;gene=atp1;locus_tag=OQ193_mgp03;product=ATPase subunit 1;protein_id=YP_010547262.1
+NC_068105.1	RefSeq	gene	277277	278074	.	-	.	ID=gene-OQ193_mgp02;Dbxref=GeneID:76364240;Name=cox3;gbkey=Gene;gene=cox3;gene_biotype=protein_coding;locus_tag=OQ193_mgp02
+NC_068105.1	RefSeq	CDS	277277	278074	.	-	0	ID=cds-YP_010547263.1;Parent=gene-OQ193_mgp02;Dbxref=GenBank:YP_010547263.1,GeneID:76364240;Name=YP_010547263.1;gbkey=CDS;gene=cox3;locus_tag=OQ193_mgp02;product=cytochrome c oxidase subunit 3;protein_id=YP_010547263.1
+NC_068105.1	RefSeq	gene	285809	285879	.	+	.	ID=gene-OQ193_mgt16;Dbxref=GeneID:76364241;Name=trnC-GCA;gbkey=Gene;gene=trnC-GCA;gene_biotype=tRNA;locus_tag=OQ193_mgt16
+NC_068105.1	RefSeq	tRNA	285809	285879	.	+	.	ID=rna-OQ193_mgt16;Parent=gene-OQ193_mgt16;Dbxref=GeneID:76364241;gbkey=tRNA;gene=trnC-GCA;locus_tag=OQ193_mgt16;product=tRNA-Cys
+NC_068105.1	RefSeq	exon	285809	285879	.	+	.	ID=exon-OQ193_mgt16-1;Parent=rna-OQ193_mgt16;Dbxref=GeneID:76364241;gbkey=tRNA;gene=trnC-GCA;locus_tag=OQ193_mgt16;product=tRNA-Cys
+NC_068105.1	RefSeq	gene	288106	288177	.	+	.	ID=gene-OQ193_mgt17;Dbxref=GeneID:76364242;Name=trnN-GUU;gbkey=Gene;gene=trnN-GUU;gene_biotype=tRNA;locus_tag=OQ193_mgt17
+NC_068105.1	RefSeq	tRNA	288106	288177	.	+	.	ID=rna-OQ193_mgt17;Parent=gene-OQ193_mgt17;Dbxref=GeneID:76364242;gbkey=tRNA;gene=trnN-GUU;locus_tag=OQ193_mgt17;product=tRNA-Asn
+NC_068105.1	RefSeq	exon	288106	288177	.	+	.	ID=exon-OQ193_mgt17-1;Parent=rna-OQ193_mgt17;Dbxref=GeneID:76364242;gbkey=tRNA;gene=trnN-GUU;locus_tag=OQ193_mgt17;product=tRNA-Asn
+NC_068105.1	RefSeq	gene	288548	288630	.	+	.	ID=gene-OQ193_mgt18;Dbxref=GeneID:76364243;Name=trnY-GUA;gbkey=Gene;gene=trnY-GUA;gene_biotype=tRNA;locus_tag=OQ193_mgt18
+NC_068105.1	RefSeq	tRNA	288548	288630	.	+	.	ID=rna-OQ193_mgt18;Parent=gene-OQ193_mgt18;Dbxref=GeneID:76364243;gbkey=tRNA;gene=trnY-GUA;locus_tag=OQ193_mgt18;product=tRNA-Tyr
+NC_068105.1	RefSeq	exon	288548	288630	.	+	.	ID=exon-OQ193_mgt18-1;Parent=rna-OQ193_mgt18;Dbxref=GeneID:76364243;gbkey=tRNA;gene=trnY-GUA;locus_tag=OQ193_mgt18;product=tRNA-Tyr
+
