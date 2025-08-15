@@ -10,13 +10,13 @@
 
 # TIGRE - Tool for InterGenic Region Extraction
 
-Tigre (Tool for InterGenic Region Extraction) is a Python CLI tool that extracts intergenic regions from GFF3 files. It is designed to handle overlapping features and provides options for customizing the extraction process. It has 3 main commands: `clean`, `extract`, and `getfasta`, which cleans and standardizes GFF3 files, extracts intergenic regions (or just regions between features), and retrieves sequences from a FASTA file, respectively.
+TIGRE is a Python CLI tool that extracts intergenic regions from GFF3 file(s). It is designed to handle overlapping features and provides options for customizing the extraction process. It has 3 main commands: `clean`, `extract`, and `getfasta`, which cleans and prepares GFF3 files, extracts intergenic regions (or just regions between features), and retrieves sequences from a FASTA file, respectively.
 
 In `clean` command, TIGRE optionally supports the use of a [GDT](https://github.com/brenodupin/gdt) .gdict file to standardize feature names.
 
 ##  Features
 
-- **Clean & Standardize**: Process and standardize GFF3 files with optional support for [GDT](https://github.com/brenodupin/gdt) to standardize gene names
+- **Clean & Standardize**: Process and prepares GFF3 files with optional support for [GDT](https://github.com/brenodupin/gdt) to standardize gene names
 - **Extract Regions**: Extract intergenic regions with customizable feature filtering
 - **Generate Sequences**: Retrieve FASTA sequences from extracted regions
 - **Parallel Processing**: On demand multi-thread/multi-process execution for batch operations
@@ -51,7 +51,7 @@ pip install tigre[all]    # for all optional dependencies
 TIGRE has the following three commands:
 
 ### 1. `clean` - Prepare GFF3 Files
-Processes GFF3 files by cleaning and standardizing them, optionally using a GDT file for gene name normalization.
+Processes GFF3 files by sorting, solving overlaps and format attributes for further steps, optionally using a GDT file for gene name standardization.
 
 ```bash
 # Single file
@@ -170,13 +170,13 @@ Available for all commands:
 
 TIGRE has extensive logging capabilities, allowing users to customize the verbosity and destination of log messages, by default logs are saved to `tigre_<command>-<timestamp>.log` in the current working directory.
 
-- `-v, --verbose`: Increase verbosity (use multiple times: -v, -vv, -vvv)
+- `-v, --verbose`: Increase verbosity level. Use multiple times for more verbose output: -v (INFO console, TRACE file), -vv (DEBUG console, TRACE file), -vvv (TRACE console, TRACE file). Default: INFO console + DEBUG file.
 - `--log PATH`: Custom log file path
 - `--no-log-file`: Disable file logging
 - `--quiet`: Suppress console output
 
 #### Output Options
-- `--overwrite`: Overwrite existing output files
+- `--overwrite`: Overwrite existing output files. By default, TIGRE will not even execute if one of the output files already exists, to prevent accidental overwrites.
 
 #### Multiple Mode Options
 - `--tsv PATH`: TSV file with accession numbers and other columns
@@ -185,27 +185,29 @@ TIGRE has extensive logging capabilities, allowing users to customize the verbos
 
 ### `tigre clean`
 
-The `clean` command processes and standardizes GFF3 files by removing undesired features, resolving overlapping annotations, and optionally normalizing gene names using GDT.
+The `clean` command processes GFF3 files by removing undesired features, resolving overlapping annotations, and optionally normalizing gene names using GDT.
 
 **Options:**
 - `--gdict PATH`: GDT .gdict file for standardizing gene names
 - `--query-string STR`: pandas query string for feature filtering (default: `"type in ('gene', 'tRNA', 'rRNA', 'region')"`)
 - `--keep-orfs`: Keep ORF sequences in output
 
-**Multiple Mode Additional Options:**
+**Single Mode Options:**
+- `--gff-in PATH`: Input GFF3 file path
+- `--gff-out PATH`: Output GFF3 file path
+
+**Multiple Mode Options:**
+- `--gff-in-suffix STR`: Suffix for input GFF3 files (default: `""`)
+- `--gff-in-ext STR`: Extension for input GFF3 files (default: `".gff3"`)
+- `--gff-out-suffix STR`: Suffix for output GFF3 files (default: `"_clean"`)
+- `--gff-out-ext STR`: Extension for output GFF3 files (default: `".gff3"`)
 - `--server`: Force GDT server usage, instead of detecting if it's necessary
 - `--no-server`: Disable GDT server usage
 
 When processing large datasets with GDT files (>200k entries), TIGRE automatically uses server mode to reduce memory overhead. A dedicated process handles gene name lookups while workers communicate via inter-process queues. There's is a overhead for this, so it is not recommended for small datasets or small .gdict files.
 
-#### Overlap Resolution
-TIGRE automatically handles overlapping features, by merging them into a single [`overlaping_feature_set`](http://www.sequenceontology.org/browser/current_release/term/SO:0001261). The merging process keep the attributes of only the border features, appending `_left` and `_right` suffixes to their attributes.
-
-<img src="https://placehold.co/600x400/png" alt="Overlap resolution example" />
-
-#### Circular Resolution
-TIGRE detects when features span the genome boundary (from end back to start) in circular genomes. It then breaks these features into two parts, one at the end and one at the start, appending their type with "_region".
-
+#### Processing Details
+TIGRE handles complex genomic scenarios including overlapping features and circular genome boundaries. For detailed information about overlap resolution, circular genome handling, and the underlying algorithms, see [PROCESSING.md](PROCESSING.md).
 
 ### `tigre extract`
 
@@ -215,25 +217,50 @@ The `extract` command identifies and extracts intergenic regions (spaces between
 - `--add-region`: Add region line to the output GFF3 file
 - `--feature-type STR`: Feature type name for intergenic regions (default: `"intergenic_region"`)
 
-#### Circular Genome Handling
-For circular genomes, TIGRE detects and merges intergenic regions that span the circular genome boundary (from the end back to the start). These boundary-spanning regions are combined into a single intergenic region marked with the `_merged` suffix.
+**Single Mode Options:**
+- `--gff-in PATH`: Input GFF3 file path
+- `--gff-out PATH`: Output GFF3 file path
+
+**Multiple Mode Options:**
+- `--gff-in-suffix STR`: Suffix for input GFF3 files (default: `"_clean"`)
+- `--gff-int-ext STR`: Extension for input GFF3 files (default: `".gff3"`)
+- `--gff-out-suffix STR`: Suffix for output GFF3 files (default: `"_intergenic"`)
+- `--gff-out-ext STR`: Extension for output GFF3 files (default: `".gff3"`)
+
+#### Intergenic Region Creation
+
+TIGRE identifies and extracts intergenic regions (spaces between annotated features) from GFF3 files, creating annotations for these intervening sequences. For detailed information about the algorithm and how circular genomes are handled, see [PROCESSING.md](PROCESSING.md).
+
 
 ### `tigre getfasta`
 
 `tigre getfasta` retrieves the nucleotide sequences of the intergenic regions extracted by `tigre extract`. The nucleotide sequences are saved in a multi-FASTA file (one per Accession Number).
 
+**Requirements:**
+- Requires [biopython](https://biopython.org) (`pip install tigre[bio]`)
+
 **Options:**
 - `--bedtools-compatible`: Use 0-based indexing in FASTA headers for bedtools compatibility
 
-**Requirements:**
-- Requires [biopython](https://biopython.org) (`pip install tigre[bio]`)
+**Single Mode Options:**
+- `--gff-in PATH`: Input GFF3 file path
+- `--fasta-in PATH`: Input FASTA file path
+- `--fasta-out PATH`: Output FASTA file path
+
+**Multiple Mode Options:**
+- `--gff-in-suffix STR`: Suffix for input GFF3 files (default: `"_intergenic"`)
+- `--gff-in-ext STR`: Extension for input GFF3 files (default: `".gff3"`)
+- `--fasta-in-suffix STR`: Suffix for input FASTA files (default: `""`)
+- `--fasta-in-ext STR`: Extension for input FASTA files (default: `".fasta"`)
+- `--fasta-out-suffix STR`: Suffix for output FASTA files (default: `"_intergenic"`)
+- `--fasta-out-ext STR`: Extension for output FASTA files (default: `".fasta"`)
 
 #### FASTA Header Format
 By default, TIGRE uses 1-based indexing in sequence headers matching GFF3 conventions. When `--bedtools-compatible` is enabled, headers use 0-based indexing for seamless integration with bedtools workflows, while the actual sequences remain unchanged.
 
 ### Example Usage
 
-The input files used in the examples below can be found in the `examples` folder of this repository, and should be run **inside the example folder**.
+The input files used in the examples below can be found in the `examples` folder of this repository, and should be run **inside the `example` folder**.
 
 Single mode example:
 ```bash
@@ -249,7 +276,7 @@ tigre getfasta single -vv --gff-in getfasta/single/NC_007982.1_intergenic.gff3 -
 
 Multiple mode example:
 ```bash
-# Clean multiple GFF3 files using a TSV file
+# Clean multiple GFF3 files using a TSV file, and a GDT file for gene name standardization
 tigre clean multiple -vv --tsv clean/multiple/example_dataset.tsv --gdict clean/multiple/plants_mit.gdict --server 
 
 # Extract intergenic regions from the cleaned GFF3 files
