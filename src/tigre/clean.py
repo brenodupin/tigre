@@ -169,7 +169,7 @@ def overlap_solver(
             # modify the current row with overlap_region info
             row.end = end_region
             row.type = "overlapping_feature_set"
-            # row.strand = '+'
+            row.strand = "+"
             row.attributes = overlaps_chooser(log, overlaps, an)
             log.trace(f"Result: {row.attributes}")
 
