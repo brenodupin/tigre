@@ -21,6 +21,28 @@ In `clean` command, TIGRE optionally supports the use of a [GDT](https://github.
 - **Generate Sequences**: Retrieve FASTA sequences from extracted regions.
 - **Parallel Processing**: On demand multi-thread/multi-process execution for batch operations.
 
+## Table of Contents
+ - [Quick Start](#quick-start)
+   - [Installation](#installation)
+     - [Dependencies](#dependencies)
+
+ - [Commands Overview](#commands-overview)
+   - [`clean`](#1-clean---prepare-gff3-files)
+   - [`extract`](#2-extract---extract-intergenic-regions)
+   - [`getfasta`](#3-getfasta---generate-sequences)
+ 
+ - [Usage Modes](#usage-modes)
+   - [Single Mode](#single-mode)
+   - [Multiple Mode](#multiple-mode)
+     - [TSV format](#tsv-format)
+     - [Input organization requirement](#input-organization-requirement)
+
+ - [Detailed Usage](#detailed-usage)
+   - [Global Options](#global-options)
+   - [`tigre clean`](#tigre-clean)
+   - [`tigre extract`](#tigre-extract)
+   - [`tigre getfasta`](#tigre-getfasta)
+   - [Example Usage](#example-usage)
 
 ## Quick Start
 
