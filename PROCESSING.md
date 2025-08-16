@@ -45,3 +45,74 @@ There are a few possible scenarios for overlapping features, described in the im
   <img src="img/overlap.png" />
 </div>
 
+Figure: Overlapping feature scenarios handled by `tigre clean`.
+The figure illustrates three hypothetical overlapping feature scenarios and how they are resolved into overlapping_feature_set annotations:
+
+ - a. This scenario shows a case where two features (MIT-ATP9 and MIT-ND4) have the exact same start and end coordinates, meaning they completely overlap. 
+ As `tigre` does not correct annotations, the algorithm arbitrarily picks the first feature listed in the GFF3 for the boundary information. The resulting `overlapping_feature_set` will coincide with the chosen feature.
+
+ - b. Overlap between a larger feature (MIT-ATP9) and smaller feature (MIT-RRNS) that have the same start coordinate. The resolution for the left boundary falls in the tie break rule: in this case MIT-ATP9 the chosen as the left boundary feature. For the right side, MIT-ATP9 is also the chosen feature because it is the only feature that ends at the right boundary of the overlap region.
+
+ - c. Regular overlap between MIT-RRNS and MIT-ATP9. The merged region becomes an `overlapping_feature_set` with boundary features determined by the selection rules (lowest start coordinate for left boundary, highest end coordinate for right boundary). Note that the strand of the `overlapping_feature_set` is always set to `+`, regardless of the strands of the original features.
+
+
+# `tigre extract`
+
+`tigre extract` is the command that extracts intergenic regions from the GFF3 file, using the annotations processed by `tigre clean`.
+
+> [!NOTE]
+> We always refer an interving region as "intergenic region", but the user can customize the feature type used to represent these regions in the output by providing a value for the flag `--feature-type` (default as `intergenic_region`).
+
+`tigre extract` expects GFF3 files containing fully independent features, meaning that overlapping and boundary-spanning features have been resolved. All features are sorted by their start coordinate and their attributes are standardized using the format `name=value;source=value;` (for `overlapping_feature_set`, we expect `name_left=value;source_left=value;name_right=value;source_right=value;`).
+
+## Identifying intergenic regions
+The core algorithm identifies intervals between consecutive features and creates intergenic region annotations for these intervals. Each intergenic region is defined as the sequence between the end of one feature and the start of the next feature. Therefore their start coordinate is one position after the end of the upstream (left) feature, and their end coordinate is one position before the start of the downstream (right) feature.
+
+Each intergenic region captures information about its flanking features in its attributes:
+- `name_up` and `source_up`: Identifying information from the upstream flanking feature.
+- `name_dw` and `source_dw`: Identifying information from the downstream flanking feature.
+
+## Genome boundary handling
+`tigre extract` handles genome boundary with special logic to ensure that intergenic regions, and their corresponding flanking features, at the start and end of the genome are correctly identified, especially for circular genomes.
+
+### Start boundary regions
+If the first feature in the genome does not start at coordinate 1, an intergenic region is created from position 1 up to the start of the first feature. For this boundary region:
+
+ - `name_up` and `source_up` are derived from the last feature if the genome is circular, or set as `region_start` if linear.
+ - `name_dw` and `source_dw` are derived from the first feature.
+
+### End boundary regions
+If the last feature does not end at the genome's final coordinate, an intergenic region is created from the end of the last feature to the genome end. For this boundary region:
+
+ - `name_up` and `source_up` are derived from the last feature.
+ - `name_dw` and `source_dw` are derived from first feature if the genome is circular, or set as `region_end` if linear.
+
+### Circular genome boundary merging
+For circular genomes (identified by the presence of `is_circular=true` in the attributes for the region feature), `tigre extract` performs an additional check for boundary merging.
+If both a start boundary region and an end boundary region were to be created (meaning the first feature starts after coordinate 1 AND the last feature ends before the genome end), single intergenic region that spans across the genome boundary is created.
+
+This boundary region:
+ - Spans from the end of the last feature, wraps around the genome boundary, and continues to the start of the first feature.
+ - Has its feature type appended with `_merged` to indicate it crosses the genome boundary.
+ - Uses `name_up`/`source_up` from the last feature and `name_dw`/`source_dw` from the first feature.
+
+The merging logic recognizes that in circular genomes, the space at the end of the genome and the space at the start of the genome actually form a single continuous intergenic region.
+
+
+<div align="center">
+  <img src="img/extract.png" />
+</div>
+
+Figure: Intergenic region extraction scenarios in circular genomes using `tigre extract`.
+A simplified (circular-mapping) mitochondrial genome is shown on the left. The inset depicts the genome boundary delimited by MIT-ATP6 and MIT-RPL16 in different configurations. The linear representations (a-d) illustrate different extraction scenarios:
+ - a. Boundary merging scenario: When both start and end boundary regions would be created (first gene starts after coordinate 1 AND last gene ends before genome end), a single merged intergenic region is created that spans across the genome boundary. The region is annotated as intergenic_region_merged with `name_up`/`source_up` from the last feature (ATP6) and `name_dw`/`source_dw` from the first feature (RPL16).
+ - b. End boundary region: Intergenic region created from the last gene to the genome end, when the last gene does not end right at the genome end. For circular genomes, `name_dw`/`source_dw` is derived from the first feature (RPL16).
+ - c. Start boundary region: Intergenic region created from position 1 to the start of the first feature, when the first gene does not start at coordinate 1. For circular genomes, `name_up`/`source_up` is derived from the last feature (ATP6).
+ - d. Boundary-spanning feature handling: Shows how features that cross the genome boundary are split into fragments in `tigre clean` (with `_fragment` appended to their type). In this case the nth intergenic region's `name_dw`/`source_dw` and the first intergenic region's `name_up`/`source_up` are derived from the fragments (and therefore the original annotation) of MIT-ATP6.
+
+## Output structure
+Each extracted intergenic region follows standard GFF3 format with:
+
+ - Feature type: `intergenic_region` as default (customizable), or `intergenic_region_merged` for boundary-spanning regions in circular genomes.
+ - Strand: Always `+` since intergenic regions are not strand-specific. The strandedness of the flanking features is stored in the attributes of the corresponding intergenic region (in the fields `source_up` and `source_dw`).
+ - Attributes: Include upstream and downstream feature information as described above, plus a unique ID in the format `{seqid}_{feature_type}_{counter}`.
