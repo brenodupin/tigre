@@ -11,7 +11,7 @@ These boundary-spanning features present a computational challenge for downstrea
 
 In such cases, `tigre clean` breaks these features into two parts: one at the end of the genome and one at the start genome, appending their type with "_fragment". This ensures that intergenic regions are correctly identified even when features cross the genome boundary.
 
-To resolve this challenge, tigre clean splits each boundary-spanning feature into two separate annotations, appending "_fragment" to their GFF3 feature type. The splitting is done as follows:
+To resolve this challenge, tigre clean splits each boundary-spanning feature into two separate annotations, appending `_fragment` to their GFF3 feature type. The splitting is done as follows:
 
  - First fragment: Spans from the original feature start coordinate until the end of the genome
  - Second fragment: Spands from the genome start (coordinate 1) to the original feature end position minus the genome size
