@@ -264,6 +264,15 @@ wheels = [
 
 [[package]]
 name = "tigre"
+version = "0.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/89/e9/0dcf4d158997ab6f63dbe06851dc1b0d16ba96c9cbdb8a0032041169790c/tigre-0.0.1.tar.gz", hash = "sha256:a22e2fb71e0173ce784875b4bd0e0caf42eef896f1491235df58cf28dfe6a057", size = 670, upload-time = "2025-08-12T20:07:34.854Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/48/1f/d8bc3f8ab3cd9c0a803ebcc079232f1855085001bcd1cbe80a2f7b93e6e1/tigre-0.0.1-py3-none-any.whl", hash = "sha256:afef2f234bc96126ab97fbf5518d8eaa99ccb4dd4bdc86cb6e0c4f990efa115f", size = 1059, upload-time = "2025-08-12T20:07:33.644Z" },
+]
+
+[[package]]
+name = "tigre1"
 source = { editable = "." }
 dependencies = [
     { name = "pandas" },
@@ -271,8 +280,7 @@ dependencies = [
 
 [package.optional-dependencies]
 all = [
-    { name = "biopython" },
-    { name = "gdt" },
+    { name = "tigre" },
 ]
 bio = [
     { name = "biopython" },
@@ -283,11 +291,10 @@ gdt = [
 
 [package.metadata]
 requires-dist = [
-    { name = "biopython", marker = "extra == 'all'", specifier = ">=1.80" },
     { name = "biopython", marker = "extra == 'bio'", specifier = ">=1.80" },
-    { name = "gdt", marker = "extra == 'all'", specifier = ">=1.0.1" },
     { name = "gdt", marker = "extra == 'gdt'", specifier = ">=1.0.1" },
     { name = "pandas", specifier = ">=1.5.3,<3.0.0" },
+    { name = "tigre", extras = ["bio", "gdt"], marker = "extra == 'all'" },
 ]
 provides-extras = ["all", "bio", "gdt"]
 
