@@ -3,7 +3,7 @@ requires = ["hatchling", "uv-dynamic-versioning"]
 build-backend = "hatchling.build"
 
 [project]
-name = "tigre1"
+name = "tigre"
 dynamic = ["version"]
 description = "tigre - Tool for InterGenic Region Extraction"
 readme = "README.md"
@@ -23,9 +23,6 @@ dependencies = [
 bio = ["biopython>=1.80"]
 gdt = ["gdt>=1.0.1"]
 all = ["tigre[bio,gdt]"]
-
-[tool.hatch.build.targets.wheel]
-      packages = ["src/tigre"]
 
 [project.urls]
 Homepage = "https://github.com/brenodupin/tigre"
