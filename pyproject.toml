@@ -3,7 +3,7 @@ requires = ["hatchling", "uv-dynamic-versioning"]
 build-backend = "hatchling.build"
 
 [project]
-name = "tigre"
+name = "tigre1"
 dynamic = ["version"]
 description = "tigre - Tool for InterGenic Region Extraction"
 readme = "README.md"
