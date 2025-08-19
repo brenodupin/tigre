@@ -208,7 +208,7 @@ class PathBuilder:
 
         This method expects files to be stored in subfolders named after
         the accession number, with filenames formatted as
-        "<accession_number><suffix><self.ext>".
+        "<accession_number>/<accession_number><suffix><self.ext>".
 
         Args:
             base (str | Path): Base directory where files are stored.
