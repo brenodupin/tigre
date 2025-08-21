@@ -1,5 +1,9 @@
 <div align="center">
-  <img src="https://github.com/brenodupin/tigre/releases/download/v0.1.0-alpha/tigre_logo.png" width="50%">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/brenodupin/tigre/releases/download/v0.1.0-alpha/tigre_logo_dark_mode.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/brenodupin/tigre/releases/download/v0.1.0-alpha/tigre_logo_light_mode.png">
+    <img src="https://github.com/brenodupin/tigre/releases/download/v0.1.0-alpha/tigre_logo_light_mode.png" width="50%" alt="TIGRE Logo">
+  </picture>
 
 ![Build Status](https://img.shields.io/badge/tests-in_development-yellow)
 [![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
