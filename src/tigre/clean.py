@@ -139,7 +139,10 @@ def overlap_solver(
 
     next_index = 1  # iterate from the second row
     for index, row in df.loc[1:].iterrows():
-        if index is not next_index:
+        # since both index and next_index are int, we cant use 'is' here
+        # due to python int caching values between -5 and 256 (implementation detail)
+        # dont ask how i know that
+        if index != next_index:
             continue
 
         end_region = row.end
