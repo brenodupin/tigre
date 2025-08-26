@@ -116,7 +116,7 @@ _logging_levels: dict[str, int] = {
 }
 
 
-def _create_logger(
+def create_logger(
     print_to_console: bool = True,
     console_level: str = "INFO",
     save_to_file: bool = True,
@@ -219,7 +219,7 @@ def setup_logger(
     else:  # `--no-log-file` provided
         log_file = None
 
-    log = _create_logger(
+    log = create_logger(
         print_to_console=not quiet,
         console_level=console_level,
         save_to_file=not no_log_file,
