@@ -7,7 +7,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import TypeAlias
+from typing import Literal, TypeAlias
 
 from . import (
     __version__,
@@ -95,7 +95,7 @@ def ensure_overwrite(
 def args_multiple(
     group: _Group,
     file: str = "gff",
-    io: str = "in",
+    io: Literal["in", "out"] = "in",
     ext: str = ".gff3",
     suffix: str = "_clean",
     req: bool = False,
@@ -123,7 +123,7 @@ def args_multiple(
 def args_single(
     group: _Group,
     file: str = "gff",
-    io: str = "in",
+    io: Literal["in", "out"] = "in",
     required: bool = True,
 ) -> None:
     """Add common arguments for single file processing."""
@@ -136,7 +136,7 @@ def args_single(
 
 
 def args_tsv(
-    group: argparse._ArgumentGroup,
+    group: _Group,
     action: str,
 ) -> None:
     """Add arguments for TSV file processing."""
@@ -276,17 +276,8 @@ def extract_command(
         args.gff_in = Path(args.gff_in).resolve()
         args.gff_out = Path(args.gff_out).resolve()
 
-        ensure_exists(
-            log,
-            args.gff_in,
-            "GFF3 input",
-        )
-        ensure_overwrite(
-            log,
-            args.gff_out,
-            "GFF3 output",
-            args.overwrite,
-        )
+        ensure_exists(log, args.gff_in, "GFF3 input")
+        ensure_overwrite(log, args.gff_out, "GFF3 output", args.overwrite)
 
         result = igr.extract_intergenic_regions(
             log.spawn_buffer(),
@@ -299,11 +290,7 @@ def extract_command(
 
     elif args.mode == "multiple":
         args.tsv = Path(args.tsv).resolve()
-        ensure_exists(
-            log,
-            args.tsv,
-            "TSV file",
-        )
+        ensure_exists(log, args.tsv, "TSV file")
 
         igr.extract_multiple(
             log,
@@ -399,6 +386,7 @@ def getfasta_command(
         args.gff_in = Path(args.gff_in).resolve()
         args.fasta_in = Path(args.fasta_in).resolve()
         args.fasta_out = Path(args.fasta_out).resolve()
+
         ensure_exists(log, args.gff_in, "GFF3 input")
         ensure_exists(log, args.fasta_in, "Fasta input")
         ensure_overwrite(log, args.fasta_out, "Fasta output", args.overwrite)
@@ -414,9 +402,12 @@ def getfasta_command(
         handle_single_result(log, result, "Error extracting sequences single")
 
     elif args.mode == "multiple":
+        args.tsv = Path(args.tsv).resolve()
+        ensure_exists(log, args.tsv, "TSV file")
+
         fasta_utils.biopython_wrapper.biopython_multiple(
             log,
-            Path(args.tsv).resolve(),
+            args.tsv,
             _workers_count(args.workers),
             args.gff_in_ext,
             args.gff_in_suffix,
@@ -531,17 +522,8 @@ def clean_command(
         args.gff_in = Path(args.gff_in).resolve()
         args.gff_out = Path(args.gff_out).resolve()
 
-        ensure_exists(
-            log,
-            args.gff_in,
-            "GFF3 input",
-        )
-        ensure_overwrite(
-            log,
-            args.gff_out,
-            "GFF3 output",
-            args.overwrite,
-        )
+        ensure_exists(log, args.gff_in, "GFF3 input")
+        ensure_overwrite(log, args.gff_out, "GFF3 output", args.overwrite)
 
         if args.gdt:
             result = clean_gdt.clean_an_gdt(
@@ -566,14 +548,10 @@ def clean_command(
 
     elif args.mode == "multiple":
         args.tsv = Path(args.tsv).resolve()
-        ensure_exists(
-            log,
-            args.tsv,
-            "TSV file",
-        )
+        ensure_exists(log, args.tsv, "TSV file")
 
         if args.gdt:
-            # solve_gdt_call will decide between ProcessPoolExecutor or
+            # clean_gdt_multiple will decide between ProcessPoolExecutor or
             # ThreadPoolExecutor, depending on input shape and size.
             # This can be overruled by `--server` or `--no-server`
             clean_gdt.clean_gdt_multiple(
