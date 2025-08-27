@@ -41,33 +41,34 @@ def bigger_than_region_solver(
     df: pd.DataFrame,
     an: str,
 ) -> pd.DataFrame:
-    """Handle genes with 'end' bigger than the region."""
+    """Handle features with 'end' bigger than the region."""
     region_end = df.at[0, "end"]
-    log.warning(f"Genes with 'end' bigger than region: {region_end}")
+    log.warning(f"Feature with 'end' bigger than region: {region_end}")
     for row in df[df["end"] > region_end].itertuples():
         log.warning(f" s: {row.start} e: {row.end} | t: {row.type} | {row.attributes}")
 
     new_rows = []
     for index, row in df[df["end"] > region_end].iterrows():
         row_type = row.type
-        log.debug(f"Processing type {row_type}: {row.attributes}")
+        log.debug(f"Processing {row_type}: {row.attributes}")
 
         if row.end // region_end > 1:
-            log.error(f" Gene is bigger than region! g:{row.end} r:{region_end}")
+            log.error(f" Feature is bigger than region! g:{row.end} r:{region_end}")
 
-        # Handle overlap
+        # Handle overlap row
         overlap = row.end - region_end
         df.at[index, "end"] = region_end
-        df.at[index, "type"] = row_type + "_region"
+        df.at[index, "type"] = row_type + "_fragment"
 
         # Create new row
         new_row = row.copy()
         new_row.start = 1
         new_row.end = overlap
-        new_row.type = row_type + "_region"
+        new_row.type = row_type + "_fragment"
         new_rows.append(new_row)
 
-        log.debug(f" s: {new_row.start} | e: {new_row.end} | {new_row.attributes}")
+        log.debug(f" 1 s: {row.start} | e: {region_end} | {row.attributes}")
+        log.debug(f" 2 s: {new_row.start} | e: {new_row.end} | {new_row.attributes}")
 
     return pd.concat([df, pd.DataFrame(new_rows)])
 
