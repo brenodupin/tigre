@@ -28,6 +28,26 @@ _RE_name_right = re.compile(r"name_right=([^;]+)")
 _RE_source_right = re.compile(r"source_right=([^;]+)")
 
 
+def update_header_annotator(header: list[str]) -> list[str]:
+    """Update the GFF3 header with the annotator information.
+
+    Args:
+        header (list[str]): List of header lines from the GFF3 file.
+        annotator (str): Name of the annotator to be added.
+
+    Returns:
+        list[str]: Updated list of header lines.
+    """
+    new_header = []
+    for line in header:
+        if line == "#!processor TIGRE clean.py":
+            new_header.append(f"#!processor TIGRE igr.py")
+        else:
+            new_header.append(line)
+
+    return new_header
+
+
 def extract_intergenic_regions(
     log: log_setup.TempLogger,
     gff_in: Path,
@@ -65,7 +85,7 @@ def extract_intergenic_regions(
                 gff_in,
                 usecols=gff3_utils.GFF3_COLUMNS,
             )
-
+        header = update_header_annotator(header)
         # pop region line out of df
         region = df.iloc[0]
         df = df.iloc[1:].reset_index(drop=True)
