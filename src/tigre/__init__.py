@@ -12,6 +12,7 @@ from typing import Any
 
 from .clean import *
 from .cli import *
+from .combine import *
 from .gff3_utils import *
 from .igr import *
 from .log_setup import *

@@ -13,6 +13,7 @@ from . import (
     __version__,
     clean,
     clean_gdt,
+    combine,
     fasta_utils,
     gff3_utils,
     igr,
@@ -577,7 +578,106 @@ def clean_command(
             )
 
 
+################################################
+
+
 #############################################
+########## combine command functions ########
+
+
+def combine_group(parser: _Parser) -> None:
+    """Add common arguments for combine command."""
+    group = parser.add_argument_group("combine options")
+    group.add_argument(
+        "--overwrite",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Overwrite existing output files. Default: False.",
+    )
+
+
+def combine_parser(
+    sub: _Subparser,
+    global_args: _Parser,
+) -> None:
+    """Create combine command parser and add it to the subparsers."""
+    combine = sub.add_parser(
+        "combine",
+        help="Combine 2 GFF3 files into one.",
+        parents=[global_args],
+    )
+    combine_group(combine)
+
+    combine_sub = combine.add_subparsers(metavar="mode", dest="mode", required=True)
+
+    single_parser = combine_sub.add_parser(
+        "single",
+        help="Combine a single pair of GFF3 files",
+        parents=[global_args],
+    )
+    combine_group(single_parser)
+    single = single_parser.add_argument_group("single file options")
+    args_single(single, "gff1", "in")
+    args_single(single, "gff2", "in")
+    args_single(single, "gff", "out")
+
+    multiple_parser = combine_sub.add_parser(
+        "multiple",
+        help="Combine multiple pairs of GFF3 files from TSV",
+        parents=[global_args],
+    )
+    combine_group(multiple_parser)
+    multiple = multiple_parser.add_argument_group("multiple file options")
+    args_tsv(multiple, "clean")
+    args_multiple(multiple, "gff1", "in", ".gff3", "")
+    args_multiple(multiple, "gff2", "in", ".gff3", "")
+    args_multiple(multiple, "gff", "out", ".gff3", "_combined")
+
+
+def combine_command(
+    args: _Args,
+    log: log_setup.GDTLogger,
+) -> None:
+    """Execute the combine command based on the provided arguments."""
+    if args.mode == "single":
+        args.gff1_in = Path(args.gff1_in).resolve()
+        args.gff2_in = Path(args.gff2_in).resolve()
+        args.gff_out = Path(args.gff_out).resolve()
+
+        ensure_exists(log, args.gff1_in, "GFF3 input 1")
+        ensure_exists(log, args.gff2_in, "GFF3 input 2")
+        ensure_overwrite(log, args.gff_out, "GFF3 output", args.overwrite)
+
+        result = combine.combine_pair(
+            log.spawn_buffer(),
+            args.gff1_in,
+            args.gff2_in,
+            args.gff_out,
+        )
+
+        handle_single_result(log, result, "Error combining GFF3 single")
+
+    elif args.mode == "multiple":
+        args.tsv = Path(args.tsv).resolve()
+        ensure_exists(log, args.tsv, "TSV file")
+
+        combine.combine_multiple(
+            log,
+            args.tsv,
+            _workers_count(args.workers),
+            args.gff1_in_ext,
+            args.gff1_in_suffix,
+            args.gff2_in_ext,
+            args.gff2_in_suffix,
+            args.gff_out_ext,
+            args.gff_out_suffix,
+            args.an_column,
+            args.overwrite,
+        )
+
+
+################################################
 
 
 def cli_entrypoint() -> int:
@@ -605,6 +705,7 @@ def cli_entrypoint() -> int:
     clean_parser(subs, global_args)
     extract_parser(subs, global_args)
     getfasta_parser(subs, global_args)
+    combine_parser(subs, global_args)
 
     args = main.parse_args()
 
@@ -648,6 +749,9 @@ def cli_entrypoint() -> int:
 
         elif args.cmd == "getfasta":
             getfasta_command(args, log)
+
+        elif args.cmd == "combine":
+            combine_command(args, log)
 
     except KeyboardInterrupt:
         log.warning("Process interrupted by user (Ctrl+C)")
