@@ -37,11 +37,12 @@ def update_header_annotator(header: list[str]) -> list[str]:
 
     Returns:
         list[str]: Updated list of header lines.
+
     """
     new_header = []
     for line in header:
         if line == "#!processor TIGRE clean.py":
-            new_header.append(f"#!processor TIGRE igr.py")
+            new_header.append("#!processor TIGRE igr.py")
         else:
             new_header.append(line)
 

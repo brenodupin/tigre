@@ -1,6 +1,6 @@
 ##gff-version 3
 #!gff-spec-version 1.26
-#!processor TIGRE clean.py
+#!processor TIGRE igr.py
 ##sequence-region NC_068105.1 1 290285
 ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=3879
 NC_068105.1	RefSeq	intergenic_region	3379	8962	.	+	.	ID=NC_068105.1_intergenic_region_2;name_up=MIT-ND2;source_up=NC_068105.1|gene|1135|3378|+|gene-OQ193_mgp01;name_dw=MIT-TM;source_dw=NC_068105.1|gene|8963|9036|-|gene-OQ193_mgt01;

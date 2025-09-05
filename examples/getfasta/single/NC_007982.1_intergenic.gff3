@@ -1,6 +1,6 @@
 ##gff-version 3
 #!gff-spec-version 1.26
-#!processor TIGRE clean.py
+#!processor TIGRE igr.py
 ##sequence-region NC_007982.1 1 569630
 ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=381124
 NC_007982.1	RefSeq	intergenic_region	20890	26909	.	+	.	ID=NC_007982.1_intergenic_region_2;name_up=gene-ZeamMp008;source_up=NC_007982.1|gene|19813|20889|+|gene-ZeamMp008;name_dw=gene-ZeamMp012;source_dw=NC_007982.1|gene|26910|27212|+|gene-ZeamMp012;

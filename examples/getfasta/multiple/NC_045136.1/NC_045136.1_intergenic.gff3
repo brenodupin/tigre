@@ -1,6 +1,6 @@
 ##gff-version 3
 #!gff-spec-version 1.26
-#!processor TIGRE clean.py
+#!processor TIGRE igr.py
 ##sequence-region NC_045136.1 1 682840
 ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=3983
 NC_045136.1	RefSeq	intergenic_region	4493	8103	.	+	.	ID=NC_045136.1_intergenic_region_2;name_up=MIT-ND2;source_up=NC_045136.1|gene|2696|4492|-|gene-GH804_mgp01;name_dw=MIT-CO2;source_dw=NC_045136.1|gene|8104|10940|+|gene-GH804_mgp02;

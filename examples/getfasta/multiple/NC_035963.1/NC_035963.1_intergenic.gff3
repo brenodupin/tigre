@@ -1,6 +1,6 @@
 ##gff-version 3
 #!gff-spec-version 1.26
-#!processor TIGRE clean.py
+#!processor TIGRE igr.py
 ##sequence-region NC_035963.1 1 446257
 ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=4081
 NC_035963.1	RefSeq	intergenic_region	5828	5840	.	+	.	ID=NC_035963.1_intergenic_region_2;name_up=MIT-RPS3;source_up=NC_035963.1|gene|3066|5827|-|gene-CQW56_mgp02;name_dw=MIT-RPS19;source_dw=NC_035963.1|gene|5841|6125|-|gene-CQW56_mgp03;
