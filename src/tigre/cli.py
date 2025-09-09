@@ -461,6 +461,16 @@ def clean_group(parser: _Parser) -> None:
         default=False,
         help="Overwrite existing output files. Default: False.",
     )
+    group.add_argument(
+        "--extended-filtering",
+        required=False,
+        action="store_true",
+        default=False,
+        dest="ext_filter",
+        help="Enable extended filtering to more aggressively remove ORFs "
+        "and their related features. This may remove more features than intended "
+        "in some cases. Default: False.",
+    )
 
 
 def clean_parser(
@@ -534,6 +544,7 @@ def clean_command(
                 clean_gdt.load_gdt(log, args.gdt),
                 args.query_string,
                 args.keep_orfs,
+                args.ext_filter,
             )
 
         else:
@@ -543,6 +554,7 @@ def clean_command(
                 args.gff_out,
                 args.query_string,
                 args.keep_orfs,
+                args.ext_filter,
             )
 
         handle_single_result(log, result, "Error cleaning GFF3 single")
@@ -555,6 +567,7 @@ def clean_command(
             # clean_gdt_multiple will decide between ProcessPoolExecutor or
             # ThreadPoolExecutor, depending on input shape and size.
             # This can be overruled by `--server` or `--no-server`
+            log.info("Clean with GDT v1")
             clean_gdt.clean_gdt_multiple(
                 log,
                 args,
@@ -563,6 +576,7 @@ def clean_command(
             )
 
         else:
+            log.info("Clean v2")
             clean.clean_multiple(
                 log,
                 args.tsv,
@@ -575,6 +589,7 @@ def clean_command(
                 args.query_string,
                 args.keep_orfs,
                 args.overwrite,
+                args.ext_filter,
             )
 
 

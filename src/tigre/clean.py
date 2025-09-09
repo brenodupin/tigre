@@ -201,6 +201,7 @@ def clean_an(
     gff_out: Path,
     query_string: str,
     keep_orfs: bool,
+    ext_filter: bool = False,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Clean a GFF3 file by removing unnecessary features and attributes.
 
@@ -211,6 +212,7 @@ def clean_an(
         clean_func: Function to clean attributes in each row
         query_string: Query string to filter the GFF3 file
         keep_orfs: Whether to keep ORFs in the GFF3 file
+        ext_filter: Whether to use extended filtering for ORFs
 
     """
     try:
@@ -223,7 +225,7 @@ def clean_an(
             query_string=query_string,
         )
         if not keep_orfs:
-            df = gff3_utils.filter_orfs(df)
+            df = gff3_utils.filter_orfs(df, extended=ext_filter)
         an = df.at[0, "seqid"]
         header = create_header(an, df.at[0, "attributes"], df.at[0, "end"])
         df["gene_id"] = df["attributes"].str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
@@ -277,6 +279,7 @@ def clean_multiple(
     query_string: str = gff3_utils.QS_GENE_TRNA_RRNA_REGION,
     keep_orfs: bool = False,
     overwrite: bool = False,
+    ext_filter: bool = False,
 ) -> None:
     """Orchestrates the execution of `clean_an` across multiple GFF3 files.
 
@@ -293,6 +296,7 @@ def clean_multiple(
         query_string: Query string to filter the GFF3 file
         keep_orfs: Whether to keep ORFs in the GFF3 file
         overwrite: Whether to overwrite existing output files
+        ext_filter: Whether to use extended filtering for ORFs
 
     """
     tsv = pd.read_csv(tsv_path, sep="\t")
@@ -333,6 +337,7 @@ def clean_multiple(
                 gff_out_builder.build(an),
                 query_string,
                 keep_orfs,
+                ext_filter,
             )
             for an in tsv[an_column]
         ]

@@ -43,6 +43,7 @@ def clean_an_gdt(
     gdict: "gdt.GeneDict",
     query_string: str,
     keep_orfs: bool,
+    ext_filter: bool = False,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Clean a GFF3 file by removing unnecessary features and attributes with a gdict.
 
@@ -53,6 +54,7 @@ def clean_an_gdt(
         gdict: GDT GeneDict instance
         query_string: Query string to filter the GFF3 file
         keep_orfs: Whether to keep ORFs in the GFF3 file
+        ext_filter: Whether to use extended filtering for ORFs
 
     """
     try:
@@ -65,7 +67,7 @@ def clean_an_gdt(
             query_string=query_string,
         )
         if not keep_orfs:
-            df = gff3_utils.filter_orfs(df)
+            df = gff3_utils.filter_orfs(df, extended=ext_filter)
         an = df.at[0, "seqid"]
         header = clean.create_header(an, df.at[0, "attributes"], df.at[0, "end"])
         df["gene_id"] = df["attributes"].str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
@@ -122,6 +124,7 @@ def clean_multiple_gdt(
     query_string: str = gff3_utils.QS_GENE_TRNA_RRNA_REGION,
     keep_orfs: bool = False,
     overwrite: bool = False,
+    ext_filter: bool = False,
 ) -> None:
     """Orchestrates the execution of `clean_an` across multiple GFF3 files.
 
@@ -138,6 +141,7 @@ def clean_multiple_gdt(
         query_string: Query string to filter the GFF3 file
         keep_orfs: Whether to keep ORFs in the GFF3 file
         overwrite: Whether to overwrite existing output files
+        ext_filter: Whether to use extended filtering for ORFs
 
     """
     tsv = pd.read_csv(tsv_path, sep="\t")
@@ -179,6 +183,7 @@ def clean_multiple_gdt(
                 gdict,
                 query_string,
                 keep_orfs,
+                ext_filter,
             )
             for an in tsv[an_column]
         ]
@@ -232,6 +237,7 @@ def clean_gdt_multiple(
             args.query_string,
             args.keep_orfs,
             args.overwrite,
+            args.ext_filter,
         )
 
     else:
@@ -249,6 +255,7 @@ def clean_gdt_multiple(
             args.query_string,
             args.keep_orfs,
             args.overwrite,
+            args.ext_filter,
         )
 
 
