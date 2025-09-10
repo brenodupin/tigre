@@ -34,8 +34,8 @@ def combine_pair(
             gff3_file2,
             usecols=gff3_utils.GFF3_COLUMNS,
         )
-        # remove region from df2 (first element)
-        df2 = df2.loc[1:]
+        # remove from df2 any rows where type is 'region'
+        df2 = df2[df2["type"] != "region"]
 
         df1["gene_id"] = df1["attributes"].str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
         df2["gene_id"] = df2["attributes"].str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
