@@ -24,9 +24,9 @@ jobs:
         
         - name: Install tools
           run: |
-            uv tool install ruff
-            uv tool install "black[jupyter]"
-            uv tool install mypy --with pandas-stubs --with biopython
+            uv tool install ruff==0.12.12
+            uv tool install "black[jupyter]"==25.1.0
+            uv tool install mypy==1.17.1 --with pandas-stubs==2.3.0.250703 --with biopython==1.85
         
         - name: Lint with ruff
           id: lint
