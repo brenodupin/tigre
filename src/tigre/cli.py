@@ -537,8 +537,8 @@ def clean_command(
         ensure_overwrite(log, args.gff_out, "GFF3 output", args.overwrite)
 
         if args.gdt:
-            result = clean_gdt.clean_an_gdt(
-                log.spawn_buffer(),
+            clean_gdt.clean_single_gdt(
+                log,
                 args.gff_in,
                 args.gff_out,
                 clean_gdt.load_gdt(log, args.gdt),
@@ -546,6 +546,7 @@ def clean_command(
                 args.keep_orfs,
                 args.ext_filter,
             )
+            return
 
         else:
             result = clean.clean_an(
@@ -564,19 +565,24 @@ def clean_command(
         ensure_exists(log, args.tsv, "TSV file")
 
         if args.gdt:
-            # clean_gdt_multiple will decide between ProcessPoolExecutor or
-            # ThreadPoolExecutor, depending on input shape and size.
-            # This can be overruled by `--server` or `--no-server`
-            log.info("Clean with GDT v1")
-            clean_gdt.clean_gdt_multiple(
+            log.info("Clean GDT v2")
+            clean_gdt.clean_multiple_gdt(
                 log,
-                args,
+                args.tsv,
                 _workers_count(args.workers),
-                _workers_count(args.workers, threading=True),
+                clean_gdt.load_gdt(log, args.gdt),
+                args.gff_in_ext,
+                args.gff_in_suffix,
+                args.gff_out_ext,
+                args.gff_out_suffix,
+                args.an_column,
+                args.query_string,
+                args.keep_orfs,
+                args.overwrite,
+                args.ext_filter,
             )
 
         else:
-            log.info("Clean v2")
             clean.clean_multiple(
                 log,
                 args.tsv,
