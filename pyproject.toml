@@ -8,7 +8,7 @@ dynamic = ["version"]
 description = "tigre - Tool for InterGenic Region Extraction"
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 
 authors = [
     { name = "Breno Dupin", email = "breno.dupin@gmail.com" },
