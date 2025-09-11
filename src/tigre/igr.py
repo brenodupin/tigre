@@ -2,12 +2,11 @@
 """Module to extract intergenic regions from GFF3 files."""
 
 import concurrent.futures as cf
-import re
 from pathlib import Path
 
 import pandas as pd
 
-from . import gff3_utils, log_setup
+from . import clean, gff3_utils, log_setup
 
 START_IDX = 3
 END_IDX = 4
@@ -17,15 +16,6 @@ SOURCE_LEFT_IDX = 10  # df['source_left']
 
 NAME_RIGHT_IDX = 11  # df['name_right']
 SOURCE_RIGHT_IDX = 12  # df['source_right']
-
-_RE_name = re.compile(r"name=([^;]+)")
-_RE_source = re.compile(r"source=([^;]+)")
-
-_RE_name_left = re.compile(r"name_left=([^;]+)")
-_RE_source_left = re.compile(r"source_left=([^;]+)")
-
-_RE_name_right = re.compile(r"name_right=([^;]+)")
-_RE_source_right = re.compile(r"source_right=([^;]+)")
 
 
 def update_header_annotator(header: list[str]) -> list[str]:
@@ -349,35 +339,23 @@ def _split_attributes(
     log: log_setup.TempLogger,
     df: pd.DataFrame,
 ) -> pd.DataFrame:
-    df["name_left"] = (
-        df["attributes"]
-        .str.extract(_RE_name, expand=False)  # type: ignore[call-overload]
-        .fillna(
-            df["attributes"].str.extract(_RE_name_left, expand=False)  # type: ignore[call-overload]
-        )
-    )
-    df["source_left"] = (
-        df["attributes"]
-        .str.extract(_RE_source, expand=False)  # type: ignore[call-overload]
-        .fillna(
-            df["attributes"].str.extract(_RE_source_left, expand=False)  # type: ignore[call-overload]
-        )
-    )
 
-    df["name_right"] = (
-        df["attributes"]
-        .str.extract(_RE_name, expand=False)  # type: ignore[call-overload]
-        .fillna(
-            df["attributes"].str.extract(_RE_name_right, expand=False)  # type: ignore[call-overload]
-        )
-    )
-    df["source_right"] = (
-        df["attributes"]
-        .str.extract(_RE_source, expand=False)  # type: ignore[call-overload]
-        .fillna(
-            df["attributes"].str.extract(_RE_source_right, expand=False)  # type: ignore[call-overload]
-        )
-    )
+    attrs = df["attributes"].str
+
+    name_left = attrs.extract(clean._RE_name_left, expand=False).astype("string")  # type: ignore[call-overload]
+    name_right = attrs.extract(clean._RE_name_right, expand=False).astype("string")  # type: ignore[call-overload]
+    name_general = attrs.extract(clean._RE_name, expand=False).astype("string")  # type: ignore[call-overload]
+
+    source_left = attrs.extract(clean._RE_source_left, expand=False).astype("string")  # type: ignore[call-overload]
+    source_right = attrs.extract(clean._RE_source_right, expand=False).astype("string")  # type: ignore[call-overload]
+    source_general = attrs.extract(clean._RE_source, expand=False).astype("string")  # type: ignore[call-overload]
+
+    df["name_left"] = name_left.fillna(name_general)
+    df["source_left"] = source_left.fillna(source_general)
+
+    df["name_right"] = name_right.fillna(name_general)
+    df["source_right"] = source_right.fillna(source_general)
+
     return df
 
 
