@@ -5,7 +5,7 @@ import concurrent.futures as cf
 import re
 import traceback
 from pathlib import Path
-from typing import cast
+from typing import Callable, TypeAlias, cast
 
 import pandas as pd
 
@@ -34,10 +34,12 @@ _RE_source_right = re.compile(r"source_right=([^;]+);")
 
 START_IDX = 3
 END_IDX = 4
-NAME_LEFT_IDX = 0
-NAME_RIGHT_IDX = 0
-SOURCE_LEFT_IDX = 0
-SOURCE_RIGHT_IDX = 0
+
+NAME_LEFT_IDX = 10  # df['name_left']
+SOURCE_LEFT_IDX = 11  # df['source_left']
+
+NAME_RIGHT_IDX = 12  # df['name_right']
+SOURCE_RIGHT_IDX = 13  # df['source_right']
 
 
 def _get_column_indices(df: pd.DataFrame) -> None:
@@ -212,37 +214,37 @@ def overlap_solver(
     return df_region
 
 
-def format_df(df: pd.DataFrame) -> pd.DataFrame:
+_NamesType: TypeAlias = "Callable[[pd.DataFrame, log_setup.TempLogger], pd.Series[str]]"
+
+
+def get_names(subset: pd.DataFrame, log: log_setup.TempLogger) -> "pd.Series[str]":
+    """Get names from a subset of the DataFrame."""
+    return subset["gene_id"]
+
+
+def format_df(
+    df: pd.DataFrame, log: log_setup.TempLogger, names_func: _NamesType
+) -> pd.DataFrame:
     """Gather and format the DataFrame to ensure correct data types."""
-    attrs = df["attributes"]
+    attrs = df["attributes"].str
 
-    name_up = attrs.str.extract(_RE_name_up, expand=False)  # type: ignore[call-overload]
-    name_left = attrs.str.extract(_RE_name_left, expand=False)  # type: ignore[call-overload]
-    name_right = attrs.str.extract(_RE_name_right, expand=False)  # type: ignore[call-overload]
-    name_dw = attrs.str.extract(_RE_name_dw, expand=False)  # type: ignore[call-overload]
-    name_general = attrs.str.extract(_RE_name, expand=False)  # type: ignore[call-overload]
+    name_up = attrs.extract(_RE_name_up, expand=False).astype("string")  # type: ignore[call-overload]
+    name_left = attrs.extract(_RE_name_left, expand=False).astype("string")  # type: ignore[call-overload]
+    name_right = attrs.extract(_RE_name_right, expand=False).astype("string")  # type: ignore[call-overload]
+    name_dw = attrs.extract(_RE_name_dw, expand=False).astype("string")  # type: ignore[call-overload]
+    name_general = attrs.extract(_RE_name, expand=False).astype("string")  # type: ignore[call-overload]
 
-    source_up = attrs.str.extract(_RE_source_up, expand=False)  # type: ignore[call-overload]
-    source_left = attrs.str.extract(_RE_source_left, expand=False)  # type: ignore[call-overload]
-    source_right = attrs.str.extract(_RE_source_right, expand=False)  # type: ignore[call-overload]
-    source_dw = attrs.str.extract(_RE_source_dw, expand=False)  # type: ignore[call-overload]
-    source_general = attrs.str.extract(_RE_source, expand=False)  # type: ignore[call-overload]
+    source_up = attrs.extract(_RE_source_up, expand=False).astype("string")  # type: ignore[call-overload]
+    source_left = attrs.extract(_RE_source_left, expand=False).astype("string")  # type: ignore[call-overload]
+    source_right = attrs.extract(_RE_source_right, expand=False).astype("string")  # type: ignore[call-overload]
+    source_dw = attrs.extract(_RE_source_dw, expand=False).astype("string")  # type: ignore[call-overload]
+    source_general = attrs.extract(_RE_source, expand=False).astype("string")  # type: ignore[call-overload]
 
-    df["name_left"] = name_up.where(
-        name_up.notna(), name_left.where(name_left.notna(), name_general)
-    )
+    df["name_left"] = name_up.fillna(name_left).fillna(name_general)
+    df["source_left"] = source_up.fillna(source_left).fillna(source_general)
 
-    df["name_right"] = name_dw.where(
-        name_dw.notna(), name_right.where(name_right.notna(), name_general)
-    )
-
-    df["source_left"] = source_up.where(
-        source_up.notna(), source_left.where(source_left.notna(), source_general)
-    )
-
-    df["source_right"] = source_dw.where(
-        source_dw.notna(), source_right.where(source_right.notna(), source_general)
-    )
+    df["name_right"] = name_dw.fillna(name_right).fillna(name_general)
+    df["source_right"] = source_dw.fillna(source_right).fillna(source_general)
 
     # og_row here means original rows, direct from the gff3 file source
     # meaning they dont have name_left, source_left, name_right or source_right
@@ -272,21 +274,12 @@ def format_df(df: pd.DataFrame) -> pd.DataFrame:
             index=subset.index,
         )
 
-        df.loc[og_row, "name_left"] = df.loc[og_row, "name_left"].combine_first(
-            df.loc[og_row, "gene_id"]
-        )
+        gene_labels = names_func(subset, log)
 
-        df.loc[og_row, "name_right"] = df.loc[og_row, "name_right"].combine_first(
-            df.loc[og_row, "gene_id"]
-        )
-
-        df.loc[og_row, "source_left"] = df.loc[og_row, "source_left"].combine_first(
-            source_fallback
-        )
-
-        df.loc[og_row, "source_right"] = df.loc[og_row, "source_right"].combine_first(
-            source_fallback
-        )
+        df.loc[og_row, "name_left"] = subset["name_left"].fillna(gene_labels)
+        df.loc[og_row, "name_right"] = subset["name_right"].fillna(gene_labels)
+        df.loc[og_row, "source_left"] = subset["source_left"].fillna(source_fallback)
+        df.loc[og_row, "source_right"] = subset["source_right"].fillna(source_fallback)
 
         df.loc[og_row, "attributes"] = [
             f"name={name};source={source};"
@@ -303,6 +296,7 @@ def clean_an(
     log: log_setup.TempLogger,
     gff_in: Path,
     gff_out: Path,
+    names_func: _NamesType,
     query_string: str,
     keep_orfs: bool,
     ext_filter: bool = False,
@@ -313,7 +307,7 @@ def clean_an(
         log: Logger instance
         gff_in: Path to the input GFF3 file
         gff_out: Path to the output GFF3 file
-        clean_func: Function to clean attributes in each row
+        names_func: Function to clean attributes in each row
         query_string: Query string to filter the GFF3 file
         keep_orfs: Whether to keep ORFs in the GFF3 file
         ext_filter: Whether to use extended filtering for ORFs
@@ -342,9 +336,9 @@ def clean_an(
 
         df_region = df.iloc[0:1].copy()
         df = df[df["type"] != "region"]
-        df = format_df(df)
+        df = format_df(df, log, names_func)
 
-        if df["end"].idxmax() != 0:
+        if df["end"].max() > df_region.at[0, "end"]:
             df = bigger_than_region_solver(log, df, df_region.at[0, "end"])
 
         df = df.sort_values(by=["start", "type"], ascending=True, ignore_index=True)
@@ -452,6 +446,7 @@ def clean_multiple(
                 log.spawn_buffer(),
                 gff_in_builder.build(an),
                 gff_out_builder.build(an),
+                get_names,
                 query_string,
                 keep_orfs,
                 ext_filter,
