@@ -6,6 +6,7 @@ import argparse
 import os
 import sys
 from datetime import datetime
+from functools import partial
 from pathlib import Path
 from typing import Literal, TypeAlias
 
@@ -536,27 +537,21 @@ def clean_command(
         ensure_exists(log, args.gff_in, "GFF3 input")
         ensure_overwrite(log, args.gff_out, "GFF3 output", args.overwrite)
 
-        if args.gdt:
-            clean_gdt.clean_single_gdt(
-                log,
-                args.gff_in,
-                args.gff_out,
-                clean_gdt.load_gdt(log, args.gdt),
-                args.query_string,
-                args.keep_orfs,
-                args.ext_filter,
-            )
-            return
+        name_func = (
+            clean.get_names
+            if not args.gdt
+            else partial(clean_gdt.get_names_gdt, clean_gdt.load_gdt(log, args.gdt))
+        )
 
-        else:
-            result = clean.clean_an(
-                log.spawn_buffer(),
-                args.gff_in,
-                args.gff_out,
-                args.query_string,
-                args.keep_orfs,
-                args.ext_filter,
-            )
+        result = clean.clean_an(
+            log.spawn_buffer(),
+            args.gff_in,
+            args.gff_out,
+            name_func,
+            args.query_string,
+            args.keep_orfs,
+            args.ext_filter,
+        )
 
         handle_single_result(log, result, "Error cleaning GFF3 single")
 
