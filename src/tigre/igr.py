@@ -3,6 +3,7 @@
 
 import concurrent.futures as cf
 from pathlib import Path
+from typing import TypeAlias
 
 import pandas as pd
 
@@ -16,6 +17,8 @@ SOURCE_LEFT_IDX = 10  # df['source_left']
 
 NAME_RIGHT_IDX = 11  # df['name_right']
 SOURCE_RIGHT_IDX = 12  # df['source_right']
+
+_SStr: TypeAlias = "clean._SStr"
 
 
 def update_header_annotator(header: list[str]) -> list[str]:
@@ -343,19 +346,19 @@ def _split_attributes(
 
     attrs = df["attributes"].str
 
-    name_left = attrs.extract(clean._RE_name_left, expand=False).astype("string")  # type: ignore[call-overload]
-    name_right = attrs.extract(clean._RE_name_right, expand=False).astype("string")  # type: ignore[call-overload]
-    name_general = attrs.extract(clean._RE_name, expand=False).astype("string")  # type: ignore[call-overload]
+    nm_left: _SStr = attrs.extract(clean._RE_name_left, expand=False).astype("string")  # type: ignore[call-overload]
+    nm_right: _SStr = attrs.extract(clean._RE_name_right, expand=False).astype("string")  # type: ignore[call-overload]
+    nm_general: _SStr = attrs.extract(clean._RE_name, expand=False).astype("string")  # type: ignore[call-overload]
 
-    source_left = attrs.extract(clean._RE_source_left, expand=False).astype("string")  # type: ignore[call-overload]
-    source_right = attrs.extract(clean._RE_source_right, expand=False).astype("string")  # type: ignore[call-overload]
-    source_general = attrs.extract(clean._RE_source, expand=False).astype("string")  # type: ignore[call-overload]
+    src_left: _SStr = attrs.extract(clean._RE_source_left, expand=False).astype("string")  # type: ignore[call-overload]
+    src_right: _SStr = attrs.extract(clean._RE_source_right, expand=False).astype("string")  # type: ignore[call-overload]
+    src_general: _SStr = attrs.extract(clean._RE_source, expand=False).astype("string")  # type: ignore[call-overload]
 
-    df["name_left"] = name_left.fillna(name_general)
-    df["source_left"] = source_left.fillna(source_general)
+    df["name_left"] = nm_left.fillna(nm_general)
+    df["source_left"] = src_left.fillna(src_general)
 
-    df["name_right"] = name_right.fillna(name_general)
-    df["source_right"] = source_right.fillna(source_general)
+    df["name_right"] = nm_right.fillna(nm_general)
+    df["source_right"] = src_right.fillna(src_general)
 
     return df
 

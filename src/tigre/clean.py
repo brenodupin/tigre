@@ -32,6 +32,8 @@ _RE_source_left = re.compile(r"source_left=([^;]+);")
 _RE_name_right = re.compile(r"name_right=([^;]+);")
 _RE_source_right = re.compile(r"source_right=([^;]+);")
 
+_SStr: TypeAlias = "pd.Series[pd.StringDtype]"
+
 START_IDX = 3
 END_IDX = 4
 
@@ -228,23 +230,23 @@ def format_df(
     """Gather and format the DataFrame to ensure correct data types."""
     attrs = df["attributes"].str
 
-    name_up = attrs.extract(_RE_name_up, expand=False).astype("string")  # type: ignore[call-overload]
-    name_left = attrs.extract(_RE_name_left, expand=False).astype("string")  # type: ignore[call-overload]
-    name_right = attrs.extract(_RE_name_right, expand=False).astype("string")  # type: ignore[call-overload]
-    name_dw = attrs.extract(_RE_name_dw, expand=False).astype("string")  # type: ignore[call-overload]
-    name_general = attrs.extract(_RE_name, expand=False).astype("string")  # type: ignore[call-overload]
+    nm_up: _SStr = attrs.extract(_RE_name_up, expand=False).astype("string")  # type: ignore[call-overload]
+    nm_left: _SStr = attrs.extract(_RE_name_left, expand=False).astype("string")  # type: ignore[call-overload]
+    nm_dw: _SStr = attrs.extract(_RE_name_dw, expand=False).astype("string")  # type: ignore[call-overload]
+    nm_right: _SStr = attrs.extract(_RE_name_right, expand=False).astype("string")  # type: ignore[call-overload]
+    nm_general: _SStr = attrs.extract(_RE_name, expand=False).astype("string")  # type: ignore[call-overload]
 
-    source_up = attrs.extract(_RE_source_up, expand=False).astype("string")  # type: ignore[call-overload]
-    source_left = attrs.extract(_RE_source_left, expand=False).astype("string")  # type: ignore[call-overload]
-    source_right = attrs.extract(_RE_source_right, expand=False).astype("string")  # type: ignore[call-overload]
-    source_dw = attrs.extract(_RE_source_dw, expand=False).astype("string")  # type: ignore[call-overload]
-    source_general = attrs.extract(_RE_source, expand=False).astype("string")  # type: ignore[call-overload]
+    src_up: _SStr = attrs.extract(_RE_source_up, expand=False).astype("string")  # type: ignore[call-overload]
+    src_left: _SStr = attrs.extract(_RE_source_left, expand=False).astype("string")  # type: ignore[call-overload]
+    src_dw: _SStr = attrs.extract(_RE_source_dw, expand=False).astype("string")  # type: ignore[call-overload]
+    src_right: _SStr = attrs.extract(_RE_source_right, expand=False).astype("string")  # type: ignore[call-overload]
+    src_general: _SStr = attrs.extract(_RE_source, expand=False).astype("string")  # type: ignore[call-overload]
 
-    df["name_left"] = name_up.fillna(name_left).fillna(name_general)
-    df["source_left"] = source_up.fillna(source_left).fillna(source_general)
+    df["name_left"] = nm_up.fillna(nm_left).fillna(nm_general)
+    df["source_left"] = src_up.fillna(src_left).fillna(src_general)
 
-    df["name_right"] = name_dw.fillna(name_right).fillna(name_general)
-    df["source_right"] = source_dw.fillna(source_right).fillna(source_general)
+    df["name_right"] = nm_dw.fillna(nm_right).fillna(nm_general)
+    df["source_right"] = src_dw.fillna(src_right).fillna(src_general)
 
     # og_row here means original rows, direct from the gff3 file source
     # meaning they dont have name_left, source_left, name_right or source_right
