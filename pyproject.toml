@@ -41,7 +41,7 @@ fallback-version = "0.0.0-dev"
 cache-keys = [{ file = "pyproject.toml" }, { git = { commit = true, tags = true }}]
 
 [tool.black]
-line-length = 88
+line-length = 92
 
 [[tool.uv.index]]
 name = "pypi"
