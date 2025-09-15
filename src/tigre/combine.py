@@ -34,13 +34,25 @@ def combine_pair(
             gff3_file2,
             usecols=gff3_utils.GFF3_COLUMNS,
         )
-        # remove from df2 any rows where type is 'region'
+
+        # region line should be the first line in the GFF3 file
+        region = df1.iloc[0].copy()
+
+        df1 = df1[df1["type"] != "region"]
         df2 = df2[df2["type"] != "region"]
 
-        df1["gene_id"] = df1["attributes"].str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
-        df2["gene_id"] = df2["attributes"].str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
+        df1_gene_ids: "pd.Series[str]" = (
+            df1["attributes"]
+            .str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
+            .astype("string")
+        )
+        df2_gene_ids: "pd.Series[str]" = (
+            df2["attributes"]
+            .str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
+            .astype("string")
+        )
 
-        duplicated_ids = set(df1["gene_id"]).intersection(set(df2["gene_id"]))
+        duplicated_ids = set(df1_gene_ids).intersection(df2_gene_ids)
         if duplicated_ids:
             log.warning(
                 f"Warning: Found {len(duplicated_ids)} duplicated IDs between input "
@@ -48,9 +60,7 @@ def combine_pair(
             )
             log.debug(f"Duplicated IDs: {', '.join(duplicated_ids)}")
 
-        df1, df2 = df1.drop(columns=["gene_id"]), df2.drop(columns=["gene_id"])
-
-        combined_df = pd.concat([df1, df2], ignore_index=True)
+        combined_df = pd.concat([pd.DataFrame([region]), df1, df2], ignore_index=True)
 
         with open(gff_out, "w") as f:
             f.write("\n".join(header) + "\n")
@@ -59,7 +69,9 @@ def combine_pair(
         return True, gff_out.stem, log.get_records()
 
     except Exception as e:
-        log.error(f"Error processing files '{gff3_file1}' and '{gff3_file2}': {e}")
+        log.error(
+            f"Error processing files '{gff3_file1.name}' and '{gff3_file2.name}': {e}"
+        )
         return False, gff_out.stem, log.get_records()
 
 
