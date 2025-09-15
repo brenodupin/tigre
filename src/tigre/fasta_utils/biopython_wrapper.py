@@ -48,9 +48,7 @@ def biopython_getfasta(
         df_fast = df.iloc[:-1] if has_ig_merged else df
         seq_len = len(fasta)
 
-        log.trace(
-            f"\tseqid: {seqid}, seq_len: {seq_len}, has_ig_merged: {has_ig_merged}"
-        )
+        log.trace(f"\tseqid: {seqid}, seq_len: {seq_len}, has_ig_merged: {has_ig_merged}")
 
         for row in df_fast.itertuples():
             start = cast(int, row.start)
@@ -115,9 +113,7 @@ def biopython_multiple(
     gff3_utils.check_files(log, tsv, fasta_in_builder, an_column, should_exist=True)
 
     if not overwrite:
-        gff3_utils.check_files(
-            log, tsv, fasta_out_builder, an_column, should_exist=False
-        )
+        gff3_utils.check_files(log, tsv, fasta_out_builder, an_column, should_exist=False)
 
     log.info(f"Starting processing {tsv.shape[0]} ANs with {workers} workers...")
     with cf.ProcessPoolExecutor(max_workers=workers) as executor:

@@ -98,9 +98,7 @@ def bedtools_multiple(
     gff3_utils.check_files(log, tsv, fasta_in_builder, an_column, should_exist=True)
 
     if not overwrite:
-        gff3_utils.check_files(
-            log, tsv, fasta_out_builder, an_column, should_exist=False
-        )
+        gff3_utils.check_files(log, tsv, fasta_out_builder, an_column, should_exist=False)
 
     log.trace(
         "hard stop to check some things:"

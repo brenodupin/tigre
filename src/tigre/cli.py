@@ -742,9 +742,7 @@ def cli_entrypoint() -> int:
         args.cmd,
     )
     log.info(f"TIGRE v{__version__} - Tool for InterGenic Region Extraction")
-    log.info(
-        f"Command: {args.cmd} | Mode: {args.mode if hasattr(args, 'mode') else 'N/A'}"
-    )
+    log.info(f"Command: {args.cmd} | Mode: {args.mode if hasattr(args, 'mode') else 'N/A'}")
     log.trace(f"Full args: {args}")
     log.debug(f"Working directory: {Path().resolve()}")
     log.trace(f"CLI script location: {Path(__file__).resolve()}")

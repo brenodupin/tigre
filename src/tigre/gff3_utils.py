@@ -76,9 +76,7 @@ def load_gff3(
                 **kwargs,
             )
             .query(query_string)
-            .sort_values(
-                by=["start", "end"], ascending=[True, False], ignore_index=True
-            )
+            .sort_values(by=["start", "end"], ascending=[True, False], ignore_index=True)
         )
         return df
 
@@ -117,9 +115,9 @@ def filter_orfs(
     if extended:
         orfs_strings.extend(["gene=ORF", "gene=orf", "gene=Orf", "Name=Orf"])
 
-    return gff3_df[
-        ~gff3_df["attributes"].str.contains("|".join(orfs_strings))
-    ].reset_index(drop=True)
+    return gff3_df[~gff3_df["attributes"].str.contains("|".join(orfs_strings))].reset_index(
+        drop=True
+    )
 
 
 # will be pre-compiled by the PathBuilder class
@@ -283,9 +281,7 @@ class PathBuilder:
         if help_text is None:
             help_text = getattr(builder_func, "__name__", "anonymous_function")
 
-        self._str = (
-            f"PathBuilder('{self.ext}', build='custom', help_text='{help_text}')"
-        )
+        self._str = f"PathBuilder('{self.ext}', build='custom', help_text='{help_text}')"
         return self
 
     def __repr__(self) -> str:

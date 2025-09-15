@@ -117,9 +117,7 @@ def overlaps_chooser(
 
     left = overlaps[overlaps.start == overlaps.start.min()]
     if left.shape[0] > 1:
-        log.trace(
-            f" More than one feature with the lowest start: {overlaps.start.min()}"
-        )
+        log.trace(f" More than one feature with the lowest start: {overlaps.start.min()}")
         left = left[left.end == left.end.max()]
         if left.shape[0] > 1 and left.end.max() == overlaps.end.max():
             log.trace(
