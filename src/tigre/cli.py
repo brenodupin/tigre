@@ -508,21 +508,6 @@ def clean_parser(
     args_tsv(multiple, "clean")
     args_multiple(multiple, "gff", "in", ".gff3", "")
     args_multiple(multiple, "gff", "out", ".gff3", "_clean")
-    multiple.add_argument(
-        "--server",
-        required=False,
-        action="store_true",
-        default=False,
-        help="Force the use of the GDT server to process GFF3 files, overriding "
-        "auto-detection.",
-    )
-    multiple.add_argument(
-        "--no-server",
-        required=False,
-        action="store_true",
-        default=False,
-        help="Disable the use of the GDT server to process GFF3 files.",
-    )
 
 
 def clean_command(
@@ -560,7 +545,6 @@ def clean_command(
         ensure_exists(log, args.tsv, "TSV file")
 
         if args.gdt:
-            log.info("Clean GDT v2")
             clean_gdt.clean_multiple_gdt(
                 log,
                 args.tsv,
@@ -620,7 +604,7 @@ def combine_parser(
     """Create combine command parser and add it to the subparsers."""
     combine = sub.add_parser(
         "combine",
-        help="Combine 2 GFF3 files into one.",
+        help="Combine two GFF3 files into one.",
         parents=[global_args],
     )
     combine_group(combine)
@@ -750,12 +734,6 @@ def cli_entrypoint() -> int:
 
     try:
         if args.cmd == "clean":
-            if args.gdt and args.mode == "multiple" and args.server and args.no_server:
-                main.error(
-                    "You cannot specify both --server and --no-server together."
-                    "Please choose one or neither."
-                )
-
             clean_command(args, log)
 
         elif args.cmd == "extract":
