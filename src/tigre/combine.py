@@ -17,19 +17,21 @@ def combine_pair(
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Combine two GFF3 files into one.
 
-    This combination follow the procedure:
-    1. Read both GFF3 files into DataFrames.
-    2. Copy region line (first row of GFF3) from the first file.
-    3. Remove region lines (type == 'region') from both DataFrames.
+    This combination follows the procedure:
+    1. Read both GFF3 files as DataFrames.
+    2. Copy region line (first row of GFF3) from the `gff-in-1` file.
+    3. Remove region lines (`type == 'region'`) from both DataFrames.
     4. Check for duplicated IDs between both files and log a warning if any is found.
     5. Concatenate both DataFrames, with the region line extracted earlier as the first row.
-    6. Write the combined DataFrame to a new GFF3 file, preserving the header from the first file.
+    6. Write the combined DataFrame to a `gff-out` path, preserving the header from the
+    `gff-in-1` file.
 
     Args:
         log: Logger instance
         gff3_file1: Path to the first GFF3 file
         gff3_file2: Path to the second GFF3 file
         gff_out: Path to the output GFF3 file
+
     """
     try:
         header = []

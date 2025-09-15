@@ -155,7 +155,7 @@ The file paths are constructed as:
 
 Using the example above, the corresponding folder structure should look like this:
 ```
-data/
+your_project/
 ├──example.tsv
 ├── NC_123456.1/
 │   ├── NC_123456.1.gff3
@@ -217,20 +217,23 @@ The `clean` command processes GFF3 files by retaining features that match the `-
 - `--gdict PATH`: GDT .gdict file for standardizing gene names.
 - `--query-string STR`: pandas query string for feature filtering (default: `"type in ('gene', 'tRNA', 'rRNA', 'region')"`).
 - `--keep-orfs`: Keep ORF sequences in output.
+- `--extended-filtering`: Enable extended filtering to more aggressively remove ORFs and their related features. This may remove more features than intended in some cases. Default: False.
+- `--overwrite`: Overwrite existing output files. By default, TIGRE will not even execute if one of the output files already exists, to prevent accidental overwrites.
 
 **Single Mode Options:**
 - `--gff-in PATH`: Input GFF3 file path.
 - `--gff-out PATH`: Output GFF3 file path.
 
 **Multiple Mode Options:**
+- `--tsv PATH`: TSV file with accession numbers and other columns.
+- `--an-column STR`: Column name for accession numbers in TSV (default: `"AN"`).
+- `--workers INT`: Number of workers for parallel processing (default: `0`, which uses all available CPU cores).
 - `--gff-in-suffix STR`: Suffix for input GFF3 files (default: `""`).
 - `--gff-in-ext STR`: Extension for input GFF3 files (default: `".gff3"`).
 - `--gff-out-suffix STR`: Suffix for output GFF3 files (default: `"_clean"`).
 - `--gff-out-ext STR`: Extension for output GFF3 files (default: `".gff3"`).
-- `--server`: Force GDT server usage, instead of detecting if it's necessary.
-- `--no-server`: Disable GDT server usage.
 
-When processing large datasets with GDT files (>200k entries), TIGRE automatically uses server mode to reduce memory overhead. A dedicated process handles gene name lookups while workers communicate via inter-process queues. There's is a overhead for this, so it is not recommended for small datasets or small .gdict files.
+When `clean` is called with a GDT file in `multiple` mode, TIGRE automatically uses a server-client architecture to optimize memory usage. A dedicated dictionary server process loads and queries the gene dictionary (gdict), while worker processes communicate with it via inter-process queues and pipes to perform gene name lookups. This design prevents each worker from loading its own copy of the potentially large gdict file, significantly reducing overall memory overhead.
 
 #### Processing Details
 TIGRE handles complex genomic scenarios including overlapping features and circular genome boundaries. For detailed information about overlap resolution, circular genome handling, and the underlying algorithms, see [PROCESSING.md](https://github.com/brenodupin/tigre/blob/master/PROCESSING.md#tigre-clean)
@@ -242,12 +245,16 @@ The `extract` command identifies and extracts intergenic regions (spaces between
 **Options:**
 - `--add-region`: Add region line to the output GFF3 file.
 - `--feature-type STR`: Feature type name for intergenic regions (default: `"intergenic_region"`).
+- `--overwrite`: Overwrite existing output files. By default, TIGRE will not even execute if one of the output files already exists, to prevent accidental overwrites.
 
 **Single Mode Options:**
 - `--gff-in PATH`: Input GFF3 file path.
 - `--gff-out PATH`: Output GFF3 file path.
 
 **Multiple Mode Options:**
+- `--tsv PATH`: TSV file with accession numbers and other columns.
+- `--an-column STR`: Column name for accession numbers in TSV (default: `"AN"`).
+- `--workers INT`: Number of workers for parallel processing (default: `0`, which uses all available CPU cores).
 - `--gff-in-suffix STR`: Suffix for input GFF3 files (default: `"_clean"`).
 - `--gff-int-ext STR`: Extension for input GFF3 files (default: `".gff3"`).
 - `--gff-out-suffix STR`: Suffix for output GFF3 files (default: `"_intergenic"`).
@@ -267,6 +274,7 @@ TIGRE identifies and extracts intergenic regions (spaces between annotated featu
 
 **Options:**
 - `--bedtools-compatible`: Use 0-based indexing in FASTA headers for bedtools compatibility
+- `--overwrite`: Overwrite existing output files. By default, TIGRE will not even execute if one of the output files already exists, to prevent accidental overwrites.
 
 **Single Mode Options:**
 - `--gff-in PATH`: Input GFF3 file path.
@@ -274,6 +282,9 @@ TIGRE identifies and extracts intergenic regions (spaces between annotated featu
 - `--fasta-out PATH`: Output FASTA file path.
 
 **Multiple Mode Options:**
+- `--tsv PATH`: TSV file with accession numbers and other columns.
+- `--an-column STR`: Column name for accession numbers in TSV (default: `"AN"`).
+- `--workers INT`: Number of workers for parallel processing (default: `0`, which uses all available CPU cores).
 - `--gff-in-suffix STR`: Suffix for input GFF3 files (default: `"_intergenic"`).
 - `--gff-in-ext STR`: Extension for input GFF3 files (default: `".gff3"`).
 - `--fasta-in-suffix STR`: Suffix for input FASTA files (default: `""`).
@@ -292,6 +303,38 @@ Where:
 - `end`: End position of the intergenic region (1-based index).
 
 By default, TIGRE uses 1-based indexing in sequence headers matching GFF3 conventions. When `--bedtools-compatible` is enabled, headers use 0-based indexing for seamless integration with bedtools workflows, while the actual sequences remain unchanged.
+
+### `tigre combine`
+
+`tigre combine` merges two GFF3 files into a single GFF3 file. It follows the same input/output conventions as the other commands, when calcutaling paths.
+
+**Options:**
+- `--overwrite`: Overwrite existing output files. By default, TIGRE will not even execute if one of the output files already exists, to prevent accidental overwrites.
+
+**Single Mode Options:**
+- `--gff-in-1 PATH`: First input GFF3 file path.
+- `--gff-in-2 PATH`: Second input GFF3 file path.
+- `--gff-out PATH`: Output GFF3 file path.
+
+**Multiple Mode Options:**
+- `--tsv PATH`: TSV file with accession numbers and other columns.
+- `--an-column STR`: Column name for accession numbers in TSV (default: `"AN"`).
+- `--workers INT`: Number of workers for parallel processing (default: `0`, which uses all available CPU cores).
+- `--gff-in-suffix-1 STR`: Suffix for first input GFF3 files (default: `""`).
+- `--gff-in-ext-1 STR`: Extension for first input GFF3 files (default: `".gff3"`).
+- `--gff-in-suffix-2 STR`: Suffix for second input GFF3 files (default: `"_intergenic"`).
+- `--gff-in-ext-2 STR`: Extension for second input GFF3 files (default: `".gff3"`).
+- `--gff-out-suffix STR`: Suffix for output GFF3 files (default: `"_combined"`).
+- `--gff-out-ext STR`: Extension for output GFF3 files (default: `".gff3"`).
+
+This combination follows the procedure:
+1. Read both GFF3 files as DataFrames.
+2. Copy region line (first row of GFF3) from the `gff-in-1` file.
+3. Remove region lines (`type == 'region'`) from both DataFrames.
+4. Check for duplicated IDs between both files and log a warning if any is found.
+5. Concatenate both DataFrames, with the region line extracted earlier as the first row.
+6. Write the combined DataFrame to a `gff-out` path, preserving the header from the `gff-in-1` file.
+
 
 ### Example Usage
 
