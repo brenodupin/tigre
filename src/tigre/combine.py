@@ -15,7 +15,22 @@ def combine_pair(
     gff3_file2: Path,
     gff_out: Path,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
-    """Combine two GFF3 files into one, does not ensure uniqueness of IDs (yet)."""
+    """Combine two GFF3 files into one.
+
+    This combination follow the procedure:
+    1. Read both GFF3 files into DataFrames.
+    2. Copy region line (first row of GFF3) from the first file.
+    3. Remove region lines (type == 'region') from both DataFrames.
+    4. Check for duplicated IDs between both files and log a warning if any is found.
+    5. Concatenate both DataFrames, with the region line extracted earlier as the first row.
+    6. Write the combined DataFrame to a new GFF3 file, preserving the header from the first file.
+
+    Args:
+        log: Logger instance
+        gff3_file1: Path to the first GFF3 file
+        gff3_file2: Path to the second GFF3 file
+        gff_out: Path to the output GFF3 file
+    """
     try:
         header = []
         with open(gff3_file1, "r") as gff_file:
@@ -94,12 +109,16 @@ def combine_multiple(
         log: Logger instance
         tsv_path: Path to the TSV file containing ANs
         workers: Number of worker processes to use
+
         gff1_in_ext: Extension for the first input GFF3 files
         gff1_in_suffix: Suffix for the first input GFF3 files
+
         gff2_in_ext: Extension for the second input GFF3 files
         gff2_in_suffix: Suffix for the second input GFF3 files
+
         gff_out_ext: Extension for the output GFF3 files
         gff_out_suffix: Suffix for the output GFF3 files
+
         an_column: Column name in the TSV file that contains ANs
         overwrite: Whether to overwrite existing output files
 
