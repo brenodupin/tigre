@@ -324,6 +324,7 @@ def clean_an(
         )
         if not keep_orfs:
             df = gff3_utils.filter_orfs(df, extended=ext_filter)
+
         an = df.at[0, "seqid"]
         header = create_header(an, df.at[0, "attributes"], df.at[0, "end"])
         df["gene_id"] = df["attributes"].str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
@@ -367,15 +368,10 @@ def clean_an(
         return True, an, log.get_records()
 
     except Exception:
-        if "an" not in locals():
-            error_msg = traceback.format_exc()
-            log.error(f"Error in {gff_in}:\n{error_msg}")
-            return False, "Not defined", log.get_records()
-
+        an_error: str = an if "an" in locals() else gff_in.name
         error_msg = traceback.format_exc()
-        log.error(f"[{an}] Error in {gff_in}:\n{error_msg}")
-        log.debug(f"[{an}] -- End --")
-        return False, an, log.get_records()
+        log.error(f"Error in {an_error}:\n{error_msg}")
+        return False, an_error, log.get_records()
 
 
 def clean_multiple(

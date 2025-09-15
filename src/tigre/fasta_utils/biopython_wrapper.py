@@ -20,7 +20,6 @@ def biopython_getfasta(
     bedtools_compatible: bool = False,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Extract sequences from a FASTA file using Biopython."""
-    seqid = "Not obtained yet"
     try:
         log.trace(f"biopython_getfasta: {gff_in = } | {fasta_in = } | {fasta_out = }")
         log.debug(
@@ -41,7 +40,7 @@ def biopython_getfasta(
         if df.empty:
             log.warning(f"Empty GFF3 file: {gff_in.name}, creating empty FASTA.")
             SeqIO.write([], fasta_out, "fasta")
-            return True, seqid, log.get_records()
+            return True, gff_in.name, log.get_records()
 
         seqid = df.iat[0, 0]
         df["start"] = df["start"] - 1
@@ -79,8 +78,9 @@ def biopython_getfasta(
 
         return True, seqid, log.get_records()
     except Exception as e:
-        log.error(f"Error in biopython_getfasta: {e}")
-        return False, seqid, log.get_records()
+        an_error = seqid if "seqid" in locals() else gff_in.name
+        log.error(f"Error in biopython_getfasta {an_error}: {e}")
+        return False, an_error, log.get_records()
 
 
 def biopython_multiple(
