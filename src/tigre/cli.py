@@ -101,11 +101,13 @@ def args_multiple(
     ext: str = ".gff3",
     suffix: str = "_clean",
     req: bool = False,
+    *,
+    extra: str = "",
 ) -> None:
     """Add common arguments for multiple file processing."""
     up = file.upper()
     group.add_argument(
-        f"--{file}-{io}-ext",
+        f"--{file}-{io}-ext{extra}",
         required=req,
         type=str,
         metavar="STR",
@@ -113,7 +115,7 @@ def args_multiple(
         help=f"File Extension for {io}put {up} files. Default: '{ext}'.",
     )
     group.add_argument(
-        f"--{file}-{io}-suffix",
+        f"--{file}-{io}-suffix{extra}",
         required=req,
         type=str,
         metavar="STR",
@@ -129,10 +131,12 @@ def args_single(
     file: str = "gff",
     io: Literal["in", "out"] = "in",
     required: bool = True,
+    *,
+    extra: str = "",
 ) -> None:
     """Add common arguments for single file processing."""
     group.add_argument(
-        f"--{file}-{io}",
+        f"--{file}-{io}{extra}",
         required=required,
         type=str,
         metavar="PATH",
@@ -628,8 +632,8 @@ def combine_parser(
     )
     combine_group(single_parser)
     single = single_parser.add_argument_group("single file options")
-    args_single(single, "gff1", "in")
-    args_single(single, "gff2", "in")
+    args_single(single, "gff", "in", extra="-1")
+    args_single(single, "gff", "in", extra="-2")
     args_single(single, "gff", "out")
 
     multiple_parser = combine_sub.add_parser(
@@ -640,8 +644,8 @@ def combine_parser(
     combine_group(multiple_parser)
     multiple = multiple_parser.add_argument_group("multiple file options")
     args_tsv(multiple, "clean")
-    args_multiple(multiple, "gff1", "in", ".gff3", "")
-    args_multiple(multiple, "gff2", "in", ".gff3", "")
+    args_multiple(multiple, "gff", "in", ".gff3", "", extra="-1")
+    args_multiple(multiple, "gff", "in", ".gff3", "", extra="-2")
     args_multiple(multiple, "gff", "out", ".gff3", "_combined")
 
 
@@ -651,18 +655,18 @@ def combine_command(
 ) -> None:
     """Execute the combine command based on the provided arguments."""
     if args.mode == "single":
-        args.gff1_in = Path(args.gff1_in).resolve()
-        args.gff2_in = Path(args.gff2_in).resolve()
+        args.gff_in_1 = Path(args.gff_in_1).resolve()
+        args.gff_in_2 = Path(args.gff_in_2).resolve()
         args.gff_out = Path(args.gff_out).resolve()
 
-        ensure_exists(log, args.gff1_in, "GFF3 input 1")
-        ensure_exists(log, args.gff2_in, "GFF3 input 2")
+        ensure_exists(log, args.gff_in_1, "GFF3 input 1")
+        ensure_exists(log, args.gff_in_2, "GFF3 input 2")
         ensure_overwrite(log, args.gff_out, "GFF3 output", args.overwrite)
 
         result = combine.combine_pair(
             log.spawn_buffer(),
-            args.gff1_in,
-            args.gff2_in,
+            args.gff_in_1,
+            args.gff_in_2,
             args.gff_out,
         )
 
@@ -676,10 +680,10 @@ def combine_command(
             log,
             args.tsv,
             _workers_count(args.workers),
-            args.gff1_in_ext,
-            args.gff1_in_suffix,
-            args.gff2_in_ext,
-            args.gff2_in_suffix,
+            args.gff_in_ext_1,
+            args.gff_in_suffix_1,
+            args.gff_in_ext_2,
+            args.gff_in_suffix_2,
             args.gff_out_ext,
             args.gff_out_suffix,
             args.an_column,

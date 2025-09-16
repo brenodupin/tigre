@@ -96,10 +96,10 @@ def combine_multiple(
     log: log_setup.GDTLogger,
     tsv_path: Path,
     workers: int,
-    gff1_in_ext: str = ".gff3",
-    gff1_in_suffix: str = "",
-    gff2_in_ext: str = ".gff3",
-    gff2_in_suffix: str = "",
+    gff_in_ext_1: str = ".gff3",
+    gff_in_suffix_1: str = "",
+    gff_in_ext_2: str = ".gff3",
+    gff_in_suffix_2: str = "",
     gff_out_ext: str = ".gff3",
     gff_out_suffix: str = "_clean",
     an_column: str = "AN",
@@ -112,11 +112,11 @@ def combine_multiple(
         tsv_path: Path to the TSV file containing ANs
         workers: Number of worker processes to use
 
-        gff1_in_ext: Extension for the first input GFF3 files
-        gff1_in_suffix: Suffix for the first input GFF3 files
+        gff_in_ext_1: Extension for the first input GFF3 files
+        gff_in_suffix_1: Suffix for the first input GFF3 files
 
-        gff2_in_ext: Extension for the second input GFF3 files
-        gff2_in_suffix: Suffix for the second input GFF3 files
+        gff_in_ext_2: Extension for the second input GFF3 files
+        gff_in_suffix_2: Suffix for the second input GFF3 files
 
         gff_out_ext: Extension for the output GFF3 files
         gff_out_suffix: Suffix for the output GFF3 files
@@ -127,13 +127,13 @@ def combine_multiple(
     """
     tsv = pd.read_csv(tsv_path, sep="\t")
 
-    gff1_in_builder = gff3_utils.PathBuilder(gff1_in_ext).use_folder_builder(
+    gff1_in_builder = gff3_utils.PathBuilder(gff_in_ext_1).use_folder_builder(
         tsv_path.parent,
-        gff1_in_suffix,
+        gff_in_suffix_1,
     )
-    gff2_in_builder = gff3_utils.PathBuilder(gff2_in_ext).use_folder_builder(
+    gff2_in_builder = gff3_utils.PathBuilder(gff_in_ext_2).use_folder_builder(
         tsv_path.parent,
-        gff2_in_suffix,
+        gff_in_suffix_2,
     )
     gff_out_builder = gff3_utils.PathBuilder(gff_out_ext).use_folder_builder(
         tsv_path.parent,
