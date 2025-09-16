@@ -28,12 +28,7 @@ In `clean` command, TIGRE optionally supports the use of a [GDT](https://github.
 ## Table of Contents
  - [Quick Start](#quick-start)
    - [Installation](#installation)
-     - [Dependencies](#dependencies)
-
- - [Commands Overview](#commands-overview)
-   - [`clean`](#1-clean---prepare-gff3-files)
-   - [`extract`](#2-extract---extract-intergenic-regions)
-   - [`getfasta`](#3-getfasta---generate-sequences)
+   - [Example Usage](#example-usage)
  
  - [Usage Modes](#usage-modes)
    - [Single Mode](#single-mode)
@@ -50,6 +45,8 @@ In `clean` command, TIGRE optionally supports the use of a [GDT](https://github.
 
 ## Quick Start
 
+### Installation
+
 **Dependencies:**
 - [Python](https://www.python.org/) `(>=3.12)`
 - [pandas](https://pandas.pydata.org/) `(>=1.5.3,<3.0.0)`
@@ -58,15 +55,13 @@ In `clean` command, TIGRE optionally supports the use of a [GDT](https://github.
 - [biopython](https://biopython.org) `(>=1.80)`
 - [gdt](https://github.com/brenodupin/gdt) `(>=1.0.1)`
 
-### Installation
-
 ```bash
 # Basic installation
 pip install tigre
 
 # With optional dependencies
 pip install tigre[bio]    # for biopython (getfasta command)
-pip install tigre[gdt]    # for gdt (GDT support in clean command)
+pip install tigre[gdt]    # for GDT support in clean command
 pip install tigre[all]    # for all optional dependencies
 ```
 ### Example Usage
@@ -78,7 +73,7 @@ zstd -d -c plants_mit.tar.zst | tar -xf -
 cd plants_mit
 
 # Run TIGRE pipeline
-tigre clean multiple   -v --log tigre_clean.log   --gdict plants_mit.gdict --tsv plants_mit.tsv
+tigre clean multiple -v --log tigre_clean.log --gdict plants_mit.gdict --tsv plants_mit.tsv
 tigre extract multiple -v --log tigre_extract.log --tsv plants_mit.tsv
 tigre getfasta multiple -v --log tigre_getfasta.log --tsv plants_mit.tsv --bedtools-compatible
 ```
@@ -316,3 +311,46 @@ This combination follows the procedure:
 4. Check for duplicated IDs between both files and log a warning if any is found.
 5. Concatenate both DataFrames, with the region line extracted earlier as the first row.
 6. Write the combined DataFrame to a `gff-out` path, preserving the header from the `gff-in-1` file.
+
+## Advanced Usage
+
+### Experimental Extraction of Introns  
+
+TIGRE can be used to extract intronic regions by iterating through tigre `clean`, `extract` and `combine` commands in a specific way. The process involves three main steps:
+
+1. **Extract Intergenic Regions**: use `tigre clean` to prepare the input GFF3 files. Next, extract the corresponding intergenic regions with `tigre extract`.
+
+2. **Combine GFF3 Files**: use `tigre combine` to merge the original GFF3 files with their corresponding "intergenic" GFF3 files (from step 1). The combined files contain the original annotated genome features (e.g., CDS, gene, tRNA, etc) and the newly extracted intergenic regions.
+
+3. **Extract Intronic Regions**: run `tigre clean` and `tigre extract` again, while keeping only `region`, `exon`, `CDS`, `intergenic_regions` and `intergenic_regions_merged` feature types (defined in --query-string). This "workaround" extracts the intronic regions from the combined GFF3 file.
+
+
+Below you can find a step-by-step example of this advanced usage of TIGRE. The example input GFF3 files are stored in the `advanced_usage` folder in the examples directory. These genomes already contain annotated introns, so these annotations will serve as benchmark to showcase our process.
+
+
+First, run the TIGRE pipeline to get the intergenic regions:
+
+```bash
+cd examples/advanced_usage
+tigre clean multiple -v --log tigre_clean.log --tsv plants_introns.tsv
+tigre extract multiple -v --log tigre_extract.log --tsv plants_introns.tsv
+```
+
+Now, combine the original GFF3 files with the newly created intergenic GFF3 files. As the original GFF3 files do not have suffixes, set `--gff-in-suffix-1` to "". The intergenic GFF files have the default suffix `_intergenic`, so set `--gff-in-suffix-2` to "_intergenic". To distinguish the output files, set `--gff-out-suffix` to "_combined".
+
+```bash
+tigre combine multiple -v --log tigre_combine.log --tsv plants_introns.tsv --gff-in-suffix-1 "" --gff-in-suffix-2 "_intergenic" --gff-out-suffix "_combined"
+```
+
+Create a special 'clean' version of the genomes of interest. To extract the introns (and nothing else), filter the genomic features to keep only `region`, `exon`, `CDS`, `intergenic_regions` and `intergenic_regions_merged` types. The `--query-string` argument should be set accordingly (see command below; note that `genes` are not included in query string). The input files have the suffix `_combined`, and the output files will have the suffix `_clean_to_introns`. Deploy `--extended-filtering` to remove all ORFs and their associated features.
+
+```bash
+tigre clean multiple -v --log tigre_clean_to_introns.log --tsv plants_introns.tsv --query-string "type in ('region', 'exon', 'CDS', 'intergenic_region', 'intergenic_region_merged')" --gff-in-suffix "_combined" --gff-out-suffix "_clean_to_introns" --extended-filtering
+```
+
+Finally, extract the intronic regions from the `_clean_to_introns` files. The output files will have the suffix `_intronic`.
+
+```bash
+tigre extract multiple -v --log tigre_extract_introns.log --tsv plants_introns.tsv --gff-in-suffix "_clean_to_introns" --gff-out-suffix "_intronic" --feature-type "maybe_intron"
+```
+A detailed explanation on how this process works can be found in [PROCESSING.md](PROCESSING.md#experimental-intron-extraction).
