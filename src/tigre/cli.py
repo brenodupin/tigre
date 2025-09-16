@@ -108,6 +108,7 @@ def args_multiple(
         f"--{file}-{io}-ext",
         required=req,
         type=str,
+        metavar="STR",
         default=ext,
         help=f"File Extension for {io}put {up} files. Default: '{ext}'.",
     )
@@ -115,6 +116,7 @@ def args_multiple(
         f"--{file}-{io}-suffix",
         required=req,
         type=str,
+        metavar="STR",
         default=suffix,
         help=f"Suffix to append when building {io}put {up} file paths from the TSV "
         f"file. Example: '{suffix}' creates paths like '<AN>{suffix}.gff3' if the "
@@ -133,6 +135,7 @@ def args_single(
         f"--{file}-{io}",
         required=required,
         type=str,
+        metavar="PATH",
         help=f"{file.upper()} {io}put file.",
     )
 
@@ -146,6 +149,7 @@ def args_tsv(
         "--tsv",
         required=True,
         type=str,
+        metavar="PATH",
         help="TSV file with a column of accession numbers, from which file paths are "
         f"derived for {action}.",
     )
@@ -153,6 +157,7 @@ def args_tsv(
         "--an-column",
         required=False,
         type=str,
+        metavar="STR",
         default="AN",
         help="Column name containing the accession number in the TSV. Default: 'AN'.",
     )
@@ -160,6 +165,7 @@ def args_tsv(
         "--workers",
         required=False,
         type=int,
+        metavar="INT",
         default=0,
         help="Number of workers to use for parallel processing. Set to 0 to use all "
         f"available cores ({MAX_CPU}). Default: 0.",
@@ -182,6 +188,7 @@ def args_log(parser: _Parser) -> None:
         "--log",
         required=False,
         type=str,
+        metavar="PATH",
         default=None,
         help="Path to the log file. If not provided, a default log file will be "
         "created.",
@@ -226,6 +233,7 @@ def extract_group(parser: _Parser) -> None:
         "--feature-type",
         required=False,
         type=str,
+        metavar="STR",
         default="intergenic_region",
         help="Feature type name to use for intervening regions in the output GFF3 "
         "file. Features spanning the genome boundary in circular genomes will be "
@@ -435,6 +443,7 @@ def clean_group(parser: _Parser) -> None:
         "--gdict",
         required=False,
         type=str,
+        metavar="PATH",
         dest="gdt",
         default=None,
         help="Path to a Gene Dictionary Table (GDT) file to standardize gene names. "
@@ -444,6 +453,7 @@ def clean_group(parser: _Parser) -> None:
         "--query-string",
         required=False,
         type=str,
+        metavar="STR",
         default=gff3_utils.QS_GENE_TRNA_RRNA_REGION,
         help=f"pandas query string to filter features in GFF3 file. Default: "
         f"'{gff3_utils.QS_GENE_TRNA_RRNA_REGION}'.",
