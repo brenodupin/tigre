@@ -9,6 +9,7 @@ wheels/
 # Virtual environments
 .venv
 .env
+*.DS_Store
 
 # log_setup log files
 *.log
