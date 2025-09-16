@@ -50,6 +50,14 @@ In `clean` command, TIGRE optionally supports the use of a [GDT](https://github.
 
 ## Quick Start
 
+**Dependencies:**
+- [Python](https://www.python.org/) `(>=3.12)`
+- [pandas](https://pandas.pydata.org/) `(>=1.5.3,<3.0.0)`
+
+**Optional Dependencies:**
+- [biopython](https://biopython.org) `(>=1.80)`
+- [gdt](https://github.com/brenodupin/gdt) `(>=1.0.1)`
+
 ### Installation
 
 ```bash
@@ -61,53 +69,27 @@ pip install tigre[bio]    # for biopython (getfasta command)
 pip install tigre[gdt]    # for gdt (GDT support in clean command)
 pip install tigre[all]    # for all optional dependencies
 ```
-
-### Dependencies
-
-**Dependencies:**
-- [Python](https://www.python.org/) `(>=3.10)`
-- [pandas](https://pandas.pydata.org/) `(>=1.5.3,<3.0.0)`
-
-**Optional Dependencies:**
-- [biopython](https://biopython.org) `(>=1.80)`
-- [gdt](https://github.com/brenodupin/gdt) `(>=1.0.1)`
-
-## Commands Overview
-
-TIGRE has the following three commands:
-
-### 1. `clean` - Prepare GFF3 Files
-Processes GFF3 files by sorting, solving overlaps and format attributes for further steps, optionally using a GDT file for gene name standardization.
+### Example Usage
 
 ```bash
-# Single file
-tigre clean single --gff-in input.gff3 --gff-out clean.gff3
+# Download plants_mit.tar.zst dataset from our github
+wget TODO: add link here
+zstd -d -c plants_mit.tar.zst | tar -xf -
+cd plants_mit
 
-# Multiple files from TSV
-tigre clean multiple --tsv samples.tsv --gff-in-suffix "" --gff-out-suffix "_clean"
+# Run TIGRE pipeline
+tigre clean multiple   -v --log tigre_clean.log   --gdict plants_mit.gdict --tsv plants_mit.tsv
+tigre extract multiple -v --log tigre_extract.log --tsv plants_mit.tsv
+tigre getfasta multiple -v --log tigre_getfasta.log --tsv plants_mit.tsv --bedtools-compatible
 ```
 
-### 2. `extract` - Extract Intergenic Regions  
-Identifies and extracts regions between features in processed GFF3s.
+Commands
 
-```bash
-# Single file
-tigre extract single --gff-in clean.gff3 --gff-out intergenic.gff3
+ - `clean` → Prepares GFF3 files (sorting, overlap resolution, attribute formatting, optional GDT normalization).
+ - `extract` → Extracts intergenic regions from cleaned GFF3s.
+ - `getfasta` → Retrieves FASTA sequences for extracted regions.
 
-# Multiple files
-tigre extract multiple --tsv samples.tsv --gff-in-suffix "_clean" --gff-out-suffix "_intergenic"
-```
-
-### 3. `getfasta` - Generate Sequences
-Retrieves FASTA sequences of extracted regions.
-
-```bash
-# Single file
-tigre getfasta single --gff-in intergenic.gff3 --fasta-in genome.fasta --fasta-out sequences.fasta
-
-# Multiple files  
-tigre getfasta multiple --tsv samples.tsv --gff-in-suffix "_intergenic" --fasta-out-suffix "_intergenic"
-```
+More examples in [EXAMPLES.md](examples/EXAMPLES.md)
 
 ## Usage Modes
 
@@ -334,32 +316,3 @@ This combination follows the procedure:
 4. Check for duplicated IDs between both files and log a warning if any is found.
 5. Concatenate both DataFrames, with the region line extracted earlier as the first row.
 6. Write the combined DataFrame to a `gff-out` path, preserving the header from the `gff-in-1` file.
-
-
-### Example Usage
-
-The input files used in the examples below can be found in the `examples` folder of this repository, and should be run **inside the `example` folder**.
-
-Single mode example:
-```bash
-# Clean a GFF3 file
-tigre clean single -vv --gff-in clean/single/NC_007982.1.gff3 --gff-out clean/single/NC_007982.1_clean.gff3 --query-string "type in ('gene', 'tRNA', 'rRNA', region')" --overwrite
-
-# Extract intergenic regions from the cleaned GFF3 file
-tigre extract single -vv --gff-in extract/single/NC_007982.1_clean.gff3 --gff-out extract/single/NC_007982.1_intergenic.gff3 --feature-type "intergenic_region"
-
-# Get FASTA sequences of the intergenic regions
-tigre getfasta single -vv --gff-in getfasta/single/NC_007982.1_intergenic.gff3 --fasta-in getfasta/single/NC_007982.1.fasta --fasta-out getfasta/single/NC_007982.1_intergenic.fasta --bedtools-compatible
-```
-
-Multiple mode example:
-```bash
-# Clean multiple GFF3 files using a TSV file, and a GDT file for gene name standardization
-tigre clean multiple -vv --tsv clean/multiple/example_dataset.tsv --gdict clean/multiple/plants_mit.gdict --server 
-
-# Extract intergenic regions from the cleaned GFF3 files
-tigre extract multiple -vv --tsv extract/multiple/example_dataset.tsv --gff-in-suffix "_clean" --feature-type "intergenic_region"
-
-# Get FASTA sequences of the intergenic regions
-tigre getfasta multiple -vv --tsv getfasta/multiple/example_dataset.tsv --bedtools-compatible --gff-in-suffix "_intergenic"
-```
