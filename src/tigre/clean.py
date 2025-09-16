@@ -61,6 +61,27 @@ def _get_column_indices(df: pd.DataFrame) -> None:
     SOURCE_RIGHT_IDX = cast(int, df.columns.get_loc("source_right"))
 
 
+def adjust_coords(
+    log: log_setup.TempLogger,
+    df: pd.DataFrame,
+    region_end: int,
+) -> pd.DataFrame:
+    """Adjust features with 'end' and 'start' bigger than the region."""
+    log.warning(f"Feature with 'end' and 'start' bigger than region: {region_end}")
+
+    for index, row in df[(df["end"] > region_end) & (df["start"] > region_end)].iterrows():
+        log.warning(
+            f" s: {row.start} e: {row.end} | t: {row.type} | nl: {row.name_left} |"
+            f" nr: {row.name_right}"
+        )
+
+        df.at[index, "start"] = row.start - region_end
+        df.at[index, "end"] = row.end - region_end
+        log.debug(f" Adjusted s: {df.at[index, 'start']} e: {df.at[index, 'end']}")
+
+    return df
+
+
 def bigger_than_region_solver(
     log: log_setup.TempLogger,
     df: pd.DataFrame,
@@ -336,11 +357,17 @@ def clean_an(
             log.warning(" Always choosing the first region and removing the rest.")
 
         df_region = df.iloc[0:1].copy()
+        region_end: int = df_region.at[0, "end"].astype(int)
         df = df[df["type"] != "region"]
         df = format_df(df, log, names_func)
 
-        if df["end"].max() > df_region.at[0, "end"]:
-            df = bigger_than_region_solver(log, df, df_region.at[0, "end"])
+        if ((df["end"] > region_end) & (df["start"] > region_end)).any():
+            df = adjust_coords(log, df, region_end)
+
+        df = df.sort_values(by=["start", "type"], ascending=True, ignore_index=True)
+
+        if ((df["end"] > region_end) & (df["start"] <= region_end)).any():
+            df = bigger_than_region_solver(log, df, region_end)
 
         df = df.sort_values(by=["start", "type"], ascending=True, ignore_index=True)
 
