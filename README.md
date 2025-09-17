@@ -39,9 +39,13 @@ In `clean` command, TIGRE optionally supports the use of a [GDT](https://github.
  - [Detailed Usage](#detailed-usage)
    - [Global Options](#global-options)
    - [`tigre clean`](#tigre-clean)
+     - [Processing Details](#processing-details)
    - [`tigre extract`](#tigre-extract)
+     - [Intergenic Region Creation](#intergenic-region-creation)
    - [`tigre getfasta`](#tigre-getfasta)
-   - [Example Usage](#example-usage)
+     - [FASTA Header Format](#fasta-header-format)
+   - [`tigre combine`](#tigre-combine)
+   - [Advanced Usage](#advanced-usage)
 
 ## Quick Start
 
