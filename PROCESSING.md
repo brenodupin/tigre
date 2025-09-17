@@ -119,43 +119,58 @@ Each extracted intergenic region follows standard GFF3 format with:
 
 # Experimental Intron Extraction
 
-TIGRE can be used (experimentally) to extract intronic regions through a multi-step process that exploits the fundamental behavior of `tigre extract`: it creates intergenic regions by identifying "gaps" between consecutive features. By strategically manipulating which features are present in the GFF3 file during different extraction steps, this approach redirects the gap-finding algorithm to identify intronic rather than intergenic regions.
-The key insight is that within gene boundaries, introns are essentially "voids" - i.e, gene regions that are not occupied by exons or coding sequences (CDS). 
+TIGRE can be used (experimentally) to extract intronic regions through an iterative implementation of `tigre clean` and `tigre extract`, along with the help of `tigre combine`. With a few tweaks in the original behaviour of TIGRE (see details below), this approach redirects TIGRE's "gap-finding" strategy to identify intronic rather than intergenic regions. Note that, in our context, "gap" means regions of the genome that are not annotated. The lack of annotation can come from the original .gff3 file or from the way that the filtering of `tigre clean` is customized. The word "gap" here should not be confounded with the usual "gaps" in multiple sequence alignments.  
+
+By iterating through `tigre clean` and `tigre extract`, one can remove potential intronic regions because we are considering introns to be "voids" - i.e, gene regions that are not occupied by exons or coding sequences (CDS). Note that this approach is only experimental and it has clear limitations (see Limitations and Considerations below). The main issue is the possibility of annotating a non-intronic region (e.g., 5' UTR) as intron, given our "by exclusion" definition of introns. Accuracy of the final results will rely heavily on the quality of the original annotation.
 
 ## Multi-Step Process
 
 ### Step 1: Initial Intergenic Extraction
-The process begins with standard TIGRE operations to extract all intergenic regions from the original genome annotations:
+The process begins with the standard approach of TIGRE to extract all intergenic regions from the original genome annotations:
 
 1. **Clean the input**: `tigre clean` processes the original GFF3 files to resolve overlaps and boundary-spanning features.
-2. **Extract intergenic regions**: `tigre extract` identifies all gaps between annotated features and creates `intergenic_region` annotations.
+2. **Extract intergenic regions**: `tigre extract` identifies all "gaps" between annotated features and creates `intergenic_region` annotations.
 
-At this stage, the extracted regions represent true intergenic spaces - areas between genes where no annotations exist.
+At this stage, the extracted regions represent true intergenic spaces - areas between genes where no annotation previously existed. Note that, prior to extracting the intergenic regions, the user has the flexibility to keep (or remove) ORFs that are oftentimes annotated in these intergenic regions (see Options under `tigre clean` in [README](README.md#tigre-clean)). 
 
-### Step 2: Feature Combination
-The original GFF3 files are combined with their corresponding intergenic GFF3 files using `tigre combine`. This creates GFF3 files containing:
+### Step 2: Annotation Merger
+The original GFF3 files are combined with their corresponding intergenic GFF3 files using `tigre combine`. This creates "_combined.gff3" files containing:
 
-- All original genomic features (genes, CDS, exons, tRNAs, etc.)
-- The newly extracted intergenic regions
+- All original genomic features (genes, CDS, exons, tRNAs, etc.).
+- The newly extracted intergenic regions.
 
-The result is a "complete"/combined genome annotation where every nucleotide position is now covered by some type of feature - either an original annotation or an intergenic region.
+The result is a "complete"/"combined" genome annotation where every nucleotide position is now covered by some type of feature - either an original annotation or an intergenic region.
 
 ### Step 3: Strategic Feature Filtering and Re-extraction
-The combined files undergo a second round of processing with strategic feature filtering:
+The combined files undergo a second round of processing with a strategic feature filtering:
 
-1. **Selective cleaning**: `tigre clean` processes the combined files, but with a crucial modification - the `--query-string` parameter is used to retain only specific feature types:
-   - `region`: Genome sequence boundaries
-   - `exon` and `CDS`: Protein-coding sequences within genes
-   - `intergenic_region` and `intergenic_region_merged`: Previously identified intergenic spaces
+1. **Selective cleaning**: `tigre clean` processes the combined files, but with an important modification - the `--query-string` parameter is used to retain only specific feature types:
+   - `region`: Genome sequence boundaries.
+   - `exon` and `CDS`: Protein-coding sequences within genes.
+   - `intergenic_region` and `intergenic_region_merged`: Previously identified intergenic spaces.
 
    Importantly, gene annotations are **excluded** from this filtering step.
 
-2. **Intronic extraction**: `tigre extract` now operates on a modified landscape where:
-   - Intergenic regions occupy the spaces between genes (from Step 1)
-   - CDS and exon features occupy the coding portions within genes
-   - Gene-level boundaries are absent, creating "voids" within the original gene territories
+2. **Intronic extraction**: `tigre extract` now operates on a modified annotation file where:
+   - Intergenic regions occupy the spaces between genes (from Step 1).
+   - CDS and exon features occupy the coding portions within genes.
+   - Spaces between CDS/exons are empty, creating "voids" within the original gene annotations.
 
-The algorithm identifies these intra-gene voids as gaps between CDS/exon features and intergenic regions, effectively capturing intronic sequences.
+`tigre extract` identifies these intra-gene voids between CDS/exon features, effectively capturing (possible) intronic sequences.
+
+
+<div align="center">
+  <img src="img/intron_workflow.png" />
+</div>
+
+Figure. Workflow of the advanced usage of TIGRE for the extraction of intronic regions.
+ - a. The original `<AN>.gff3` file is processed by `tigre clean` and `tigre extract` (1) to generate `<AN>_intergenic.gff3`, just as the usual TIGRE pipeline. 
+ - b. `<AN>.gff3` and `<AN>_intergenic.gff3` are merged via `tigre combine` (2). Note that, at this stage, every nucleotide is encapsulated in at least one annotation type (intergenic, CDS, gene, etc).
+ - c. `<AN>_combined.gff3` is processed by `tigre clean`, generating `<AN>_clean_to_intron.gff3` (3).
+ - d. `<AN>_clean_to_intron.gff3` serves as input for `tigre extract` for the extraction of (potential) intronic regions (4).<br>
+
+This diagram depicts the mitochondrial genome of Lachancea dasiensis CBS 10888 (Fungi) - Accession number: HE983611.1. The original annotation already contained introns (inside the cox1 gene) that served as benchmark to demonstrate the accuracy of the final results. This experimental advanced usage of TIGRE produces only potential intronic regions (hence the region names as "maybe_introns"). See Limitations and Considerations below for details on how to interpret these results. Genome maps were generated via [Geneious Prime](https://geneious.com) (R) 2023.2.1.
+
 
 ## Output Characteristics
 
@@ -167,14 +182,14 @@ The extracted intronic regions are annotated with a customizable feature type (s
 
 ## Limitations and Considerations
 
-This experimental approach has several important limitations:
+This experimental approach has the following limitations:
 
 1. **Accuracy depends on annotation quality**: The method can only identify introns in regions where gene boundaries and CDS/exon features are correctly annotated in the original GFF3 file.
 
-2. **Alternative splicing complexity**: In cases of alternative splicing or complex gene structures, the method may not capture all possible intronic variants.
+2. **Alternative splicing complexity**: The cases have not been tested in this advanced use of TIGRE of alternative splicing or complex gene structures, the method may not capture all possible intronic variants.
 
-3. **Pseudo-introns**: The method may identify regions as "introns" that are actually gaps in annotation rather than true intronic sequences.
+3. **Pseudo-introns**: This "approach by exclusion" may identify regions as "introns" that are actually erroneous gaps in annotation rather than true intronic sequences. "Erroneous gaps" can refer both to a gap caused by an actual mistake in the original annotation or a gap created by the filtering criteria defined in --query-string. In both scenarios, this approach would classify (by exclusion) a non-intron as intron.
 
-4. **Feature type dependency**: The success of the extraction depends critically on the consistency of feature type naming in the input GFF3 files.
+4. **Feature type dependency**: The success of the extraction depends on the consistency of feature type naming in the input GFF3 files.
 
-5. **Maturase and similar protein interference**: In cases where maturases, laglidadg endonucleases, or other proteins are encoded within introns, their CDS annotations will interfere with proper intron extraction. These proteins are typically encoded by open reading frames located within the intronic sequences of other genes. When their CDS features are retained in the Selective cleaning step, they create artificial boundaries that split true intronic regions into multiple fragments. In such cases, users should manually remove the CDS and gene annotations of these intronic proteins from the `<AN>_clean_to_introns.gff3` files and re-run the final extraction step to obtain more accurate intronic annotations.
+5. **Intronic proteins (such as maturases and endonucleases)**: In cases where maturases, laglidadg endonucleases, or other similar proteins are encoded within introns, their CDS annotations will interfere with "proper" intron extraction. These proteins are typically encoded by open reading frames located within the intronic sequences of other genes. When their CDS features are retained in the Selective cleaning step, they "force the splitting" of intronic regions into multiple fragments. In such cases, users can manually check/remove the CDS and gene annotations of these intronic proteins from the `<AN>_clean_to_introns.gff3` files and re-run `tigre extract`. 
