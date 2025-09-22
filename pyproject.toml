@@ -21,7 +21,7 @@ dependencies = [
 
 [project.optional-dependencies]
 bio = ["biopython>=1.80"]
-gdt = ["gdt>=1.0.1"]
+gdt = ["gdt>=1.1.3"]
 all = ["tigre[bio,gdt]"]
 
 [project.urls]

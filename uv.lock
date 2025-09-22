@@ -28,14 +28,14 @@ wheels = [
 
 [[package]]
 name = "gdt"
-version = "1.0.1"
+version = "1.1.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pandas" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f4/26/a49cb76f14e0b7529a76204c699aaa275b2f022c7106d1aa6d5d0795bfaf/gdt-1.0.1.tar.gz", hash = "sha256:a98f9771dec0d2397cd0b530278765e40420197637e6f5c9bff69d89a99e394d", size = 26989, upload-time = "2025-06-29T01:09:44.77Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4c/a8/bb231090382555cd642db17eee539615339b42365db26cb8798eeaee3865/gdt-1.1.3.tar.gz", hash = "sha256:88155cad4463243cbf5fe417ab66d3d22fe5afa427c5405ea80bf8a160056a8b", size = 34334, upload-time = "2025-09-22T13:42:03.551Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/39/62/34ca4b7c86967e9782750796c0da3038d8b2bd202501db29e5ea0b5ec362/gdt-1.0.1-py3-none-any.whl", hash = "sha256:b248db233d0051abea51a4b08ed48d354a66903d323e6fe04a44d33e97471d50", size = 24173, upload-time = "2025-06-29T01:09:43.637Z" },
+    { url = "https://files.pythonhosted.org/packages/f8/50/cc5e456842d9469fb5500478e9eace148f179b19cce545a846af47f63d06/gdt-1.1.3-py3-none-any.whl", hash = "sha256:278455b8530d4b07e29e9413c27ec7de1438105d0cdc3d0f5b0eb3da88e399e6", size = 30933, upload-time = "2025-09-22T13:42:02.506Z" },
 ]
 
 [[package]]
@@ -166,8 +166,8 @@ gdt = [
 requires-dist = [
     { name = "biopython", marker = "extra == 'all'", specifier = ">=1.80" },
     { name = "biopython", marker = "extra == 'bio'", specifier = ">=1.80" },
-    { name = "gdt", marker = "extra == 'all'", specifier = ">=1.0.1" },
-    { name = "gdt", marker = "extra == 'gdt'", specifier = ">=1.0.1" },
+    { name = "gdt", marker = "extra == 'all'", specifier = ">=1.1.3" },
+    { name = "gdt", marker = "extra == 'gdt'", specifier = ">=1.1.3" },
     { name = "pandas", specifier = ">=1.5.3,<3.0.0" },
 ]
 provides-extras = ["all", "bio", "gdt"]
