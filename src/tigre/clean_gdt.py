@@ -14,7 +14,7 @@ import pandas as pd
 from . import clean, gff3_utils, log_setup
 
 if TYPE_CHECKING:
-    import gdt  # type: ignore[import-not-found]
+    import gdt
 
 
 _ReqQueue: TypeAlias = "mp.queues.Queue[tuple[list[str], mp.connection.Connection]]"
@@ -288,5 +288,5 @@ def load_gdt(
 
     gdict = gdt.read_gdict(gdt_path, lazy_info=False)
     log.info(f"GDT dictionary loaded from {gdt_path}")
-    gdt.log_info(log, gdict)
+    gdt.log_info(log, gdict)  # type: ignore[arg-type]
     return gdict
