@@ -47,6 +47,35 @@ _Group: TypeAlias = "argparse._ArgumentGroup"
 _Args: TypeAlias = "argparse.Namespace"
 
 
+def _print_version() -> str:
+    """Print the version of the tigre package."""
+    result = f"tigre version {__version__}"
+    if any(arg.startswith("-v") or arg == "--verbose" for arg in sys.argv):
+        result += f"\npython version {sys.version.split()[0]} at {sys.executable}"
+
+        try:
+            import pandas as pd
+
+            result += f"\npandas version {pd.__version__} at {pd.__file__}"
+        except ImportError:
+            result += "\npandas version not available (it's a required dependency)"
+
+        try:
+            import gdt
+
+            result += f"\ngdt version {gdt.__version__} at {gdt.__file__}"
+        except ImportError:
+            result += "\ngdt version not available"
+
+        try:
+            import Bio
+
+            result += f"\nbiopython version {Bio.__version__} at {Bio.__file__}"
+        except ImportError:
+            result += "\nbiopython version not available"
+    return result
+
+
 def _workers_count(workers: int, threading: bool = False) -> int:
     """Return the number of workers to use."""
     cpus = MAX_CPU * 3 if threading else MAX_CPU
@@ -710,7 +739,7 @@ def cli_entrypoint() -> int:
     main.add_argument(
         "--version",
         action="version",
-        version=f"tigre {__version__}",
+        version=_print_version(),
         help="Show the version of the tigre package.",
     )
 
