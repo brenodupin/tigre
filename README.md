@@ -73,7 +73,7 @@ pip install tigre[all]    # for all optional dependencies
 
 ```bash
 # Download plants_mit.tar.zst dataset from our github
-wget TODO: add link here
+wget https://raw.githubusercontent.com/brenodupin/tigre/master/examples/plants_mit.tar.zst
 zstd -d -c plants_mit.tar.zst | tar -xf -
 cd plants_mit
 
