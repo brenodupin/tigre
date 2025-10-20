@@ -11,8 +11,8 @@ from . import gff3_utils, log_setup
 
 def combine_pair(
     log: log_setup.TempLogger,
-    gff3_file1: Path,
-    gff3_file2: Path,
+    gff_file_1: Path,
+    gff_file_2: Path,
     gff_out: Path,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Combine two GFF3 files into one.
@@ -28,14 +28,14 @@ def combine_pair(
 
     Args:
         log: Logger instance
-        gff3_file1: Path to the first GFF3 file
-        gff3_file2: Path to the second GFF3 file
+        gff_file_1: Path to the first GFF3 file
+        gff_file_2: Path to the second GFF3 file
         gff_out: Path to the output GFF3 file
 
     """
     try:
         header = []
-        with open(gff3_file1, "r") as gff_file:
+        with open(gff_file_1, "r") as gff_file:
             for line in gff_file:
                 if not line.startswith("#"):
                     break
@@ -43,12 +43,12 @@ def combine_pair(
                 header.append(line.strip())
 
             df1 = gff3_utils.load_gff3(
-                gff3_file1,
+                gff_file_1,
                 usecols=gff3_utils.GFF3_COLUMNS,
             )
 
         df2 = gff3_utils.load_gff3(
-            gff3_file2,
+            gff_file_2,
             usecols=gff3_utils.GFF3_COLUMNS,
         )
 
@@ -87,7 +87,7 @@ def combine_pair(
 
     except Exception as e:
         log.error(
-            f"Error processing files '{gff3_file1.name}' and '{gff3_file2.name}': {e}"
+            f"Error processing files '{gff_file_1.name}' and '{gff_file_2.name}': {e}"
         )
         return False, gff_out.stem, log.get_records()
 
@@ -127,11 +127,11 @@ def combine_multiple(
     """
     tsv = pd.read_csv(tsv_path, sep="\t")
 
-    gff1_in_builder = gff3_utils.PathBuilder(gff_in_ext_1).use_folder_builder(
+    gff_in_builder_1 = gff3_utils.PathBuilder(gff_in_ext_1).use_folder_builder(
         tsv_path.parent,
         gff_in_suffix_1,
     )
-    gff2_in_builder = gff3_utils.PathBuilder(gff_in_ext_2).use_folder_builder(
+    gff_in_builder_2 = gff3_utils.PathBuilder(gff_in_ext_2).use_folder_builder(
         tsv_path.parent,
         gff_in_suffix_2,
     )
@@ -143,14 +143,14 @@ def combine_multiple(
     gff3_utils.check_files(
         log,
         tsv,
-        gff1_in_builder,
+        gff_in_builder_1,
         an_column,
         should_exist=True,
     )
     gff3_utils.check_files(
         log,
         tsv,
-        gff2_in_builder,
+        gff_in_builder_2,
         an_column,
         should_exist=True,
     )
@@ -170,8 +170,8 @@ def combine_multiple(
             executor.submit(
                 combine_pair,
                 log.spawn_buffer(),
-                gff1_in_builder.build(an),
-                gff2_in_builder.build(an),
+                gff_in_builder_1.build(an),
+                gff_in_builder_2.build(an),
                 gff_out_builder.build(an),
             )
             for an in tsv[an_column]
