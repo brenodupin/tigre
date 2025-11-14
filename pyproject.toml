@@ -46,6 +46,7 @@ include = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/tigre"]
+include = ["src/tigre/py.typed"]
 
 [tool.uv]
 cache-keys = [{ file = "pyproject.toml" }, { git = { commit = true, tags = true }}]
