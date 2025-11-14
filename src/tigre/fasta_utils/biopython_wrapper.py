@@ -18,6 +18,7 @@ def biopython_getfasta(
     fasta_in: Path,
     fasta_out: Path,
     bedtools_compatible: bool = False,
+    skip_region: bool = False,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Extract sequences from a FASTA file using Biopython."""
     try:
@@ -36,6 +37,8 @@ def biopython_getfasta(
             usecols=("seqid", "type", "start", "end"),
             dtype={"start": "int64", "end": "int64"},
         )
+        if skip_region:
+            df = df[df["type"] != "region"]
 
         if df.empty:
             log.warning(f"Empty GFF3 file: {gff_in.name}, creating empty FASTA.")
@@ -93,6 +96,7 @@ def biopython_multiple(
     fasta_out_suffix: str = "_intergenic",
     an_column: str = "AN",
     bedtools_compatible: bool = False,
+    skip_region: bool = False,
     overwrite: bool = False,
 ) -> None:
     """Extract sequences from GFF3 files using Biopython."""
@@ -125,6 +129,7 @@ def biopython_multiple(
                 fasta_in_builder.build(an),
                 fasta_out_builder.build(an),
                 bedtools_compatible,
+                skip_region,
             )
             for an in tsv[an_column]
         ]

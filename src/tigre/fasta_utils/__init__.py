@@ -29,6 +29,7 @@ except ImportError:
         fasta_in: "Path",
         fasta_out: "Path",
         bedtools_compatible: bool = False,
+        skip_region: bool = False,
     ) -> tuple[bool, str, list[tuple[int, str]]]:
         """Stub for biopython_getfasta when Biopython is not available."""
         raise ImportError(
@@ -48,6 +49,7 @@ except ImportError:
         fasta_out_suffix: str = "_intergenic",
         an_column: str = "AN",
         bedtools_compatible: bool = False,
+        skip_region: bool = False,
         overwrite: bool = False,
     ) -> None:
         """Stub for biopython_multiple when Biopython is not available."""

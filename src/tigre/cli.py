@@ -373,6 +373,13 @@ def getfasta_group(parser: _Parser) -> None:
         default=False,
         help="Overwrite existing output files. Default: False.",
     )
+    group.add_argument(
+        "--skip-region",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Skip features of type 'region'. Default: False.",
+    )
 
 
 def getfasta_parser(
@@ -440,6 +447,7 @@ def getfasta_command(
             args.fasta_in,
             args.fasta_out,
             args.bedtools_compatible,
+            args.skip_region,
         )
 
         handle_single_result(log, result, "Error extracting sequences single")
@@ -460,6 +468,7 @@ def getfasta_command(
             args.fasta_out_suffix,
             args.an_column,
             args.bedtools_compatible,
+            args.skip_region,
             args.overwrite,
         )
 
