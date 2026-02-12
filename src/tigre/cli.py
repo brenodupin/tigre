@@ -19,6 +19,7 @@ from . import (
     gff3_utils,
     igr,
     log_setup,
+    genes,
 )
 
 C_RESET = "\x1b[0m"
@@ -631,6 +632,137 @@ def clean_command(
 
 
 ################################################
+#############################################
+########## gene command functions ##########
+def gene_group(parser: _Parser) -> None:
+    """Add common arguments for gene command."""
+    group = parser.add_argument_group("gene options")
+    group.add_argument(
+        "--gdict",
+        required=False,
+        type=str,
+        metavar="PATH",
+        dest="gdt",
+        default=None,
+        help="Path to a Gene Dictionary Table (GDT) file to standardize gene names. "
+        "Optional.",
+    )
+    group.add_argument(
+        "--query-string",
+        required=False,
+        type=str,
+        metavar="STR",
+        default=gff3_utils.QS_GENE_TRNA_RRNA_REGION,
+        help=f"pandas query string to filter features in GFF3 file. Default: "
+        f"'{gff3_utils.QS_GENE_TRNA_RRNA_REGION}'.",
+    )
+    group.add_argument(
+        "--keep-orfs",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Keep ORF sequences in the output. Default: False.",
+    )
+    group.add_argument(
+        "--overwrite",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Overwrite existing output files. Default: False.",
+    )
+    group.add_argument(
+        "--extended-filtering",
+        required=False,
+        action="store_true",
+        default=False,
+        dest="ext_filter",
+        help="Enable extended filtering to more aggressively remove ORFs "
+        "and their related features. This may remove more features than intended "
+        "in some cases. Default: False.",
+    )
+    group.add_argument(
+        "--keep-type",
+        required=False,
+        type=str,
+        metavar="STR",
+        default="gene",
+        choices=["gene", "trna", "rrna"],
+        help="Type of features to keep in the output GFF3 file. Options: 'gene' (keep "
+        "only gene features), 'trna' (keep only tRNA features), 'rrna' (keep only "
+        "rRNA features). Default: 'gene'.",
+    )
+
+
+def gene_parser(
+    sub: _Subparser,
+    global_args: _Parser,
+) -> None:
+    """Create gene command parser and add it to the subparsers."""
+    gene = sub.add_parser(
+        "gene",
+        help="Extraction of just gene features.",
+        parents=[global_args],
+    )
+    gene_group(gene)
+
+    sub = gene.add_subparsers(metavar="mode", dest="mode", required=True)
+
+    single_parser = sub.add_parser(
+        "single",
+        help="Process a single GFF3 file",
+        parents=[global_args],
+    )
+    clean_group(single_parser)
+    single = single_parser.add_argument_group("single file options")
+    args_single(single, "gff", "in")
+    args_single(single, "gff", "out")
+
+    multiple_parser = sub.add_parser(
+        "multiple",
+        help="Process multiple GFF3 files from TSV",
+        parents=[global_args],
+    )
+    gene_group(multiple_parser)
+    multiple = multiple_parser.add_argument_group("multiple file options")
+    args_tsv(multiple, "gene")
+    args_multiple(multiple, "gff", "in", ".gff3", "")
+    args_multiple(multiple, "gff", "out", ".gff3", "_clean")
+
+
+def gene_command(
+    args: _Args,
+    log: log_setup.GDTLogger,
+) -> None:
+    """Execute the gene command based on the provided arguments."""
+    if args.mode == "single":
+        raise NotImplementedError("The 'gene' command is not yet implemented for single mode. Please use 'clean single' with appropriate query string and keep-type options as a workaround.")
+
+    if not args.gdt:
+        log.error("The 'gene' command currently requires a Gene Dictionary Table (GDT) file. Please provide one with the --gdict option.")
+        sys.exit(1)
+    
+    args.tsv = Path(args.tsv).resolve()
+    ensure_exists(log, args.tsv, "TSV file")
+
+    genes.genes_multiple(
+        log,
+        args.tsv,
+        _workers_count(args.workers),
+        clean_gdt.load_gdt(log, args.gdt),
+        args.gff_in_ext,
+        args.gff_in_suffix,
+        args.gff_out_ext,
+        args.gff_out_suffix,
+        args.an_column,
+        args.query_string,
+        args.keep_orfs,
+        args.overwrite,
+        args.ext_filter,
+        args.keep_type,
+    )
+
+
+################################################
 
 
 #############################################
@@ -758,6 +890,7 @@ def cli_entrypoint() -> int:
     extract_parser(subs, global_args)
     getfasta_parser(subs, global_args)
     combine_parser(subs, global_args)
+    gene_parser(subs, global_args)
 
     args = main.parse_args()
 
@@ -796,6 +929,9 @@ def cli_entrypoint() -> int:
 
         elif args.cmd == "combine":
             combine_command(args, log)
+
+        elif args.cmd == "gene":
+            gene_command(args, log)
 
     except KeyboardInterrupt:
         log.warning("Process interrupted by user (Ctrl+C)")
