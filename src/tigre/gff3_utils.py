@@ -36,6 +36,16 @@ QS_GENE_TRNA_RRNA_REGION = "type in ('gene', 'tRNA', 'rRNA', 'region')"
 _RE_ID = re.compile(r"ID=([^;]+)")
 _RE_region_taxon = re.compile(r"taxon:([^;,]+)")
 
+def _ensure_spawn(log: log_setup.GDTLogger) -> None:
+    """Configure multiprocessing to use spawn mode."""
+    import multiprocessing as mp
+    log.debug(f"Ensuring multiprocessing start method is set to 'spawn'")
+    try:
+        mp.set_start_method("spawn")
+    except RuntimeError:
+        log.debug("Multiprocessing start method already set, proceeding with 'spawn'")
+
+
 
 def load_gff3(
     filename: str | Path,
