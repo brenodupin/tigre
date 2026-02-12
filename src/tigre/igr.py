@@ -397,6 +397,7 @@ def extract_multiple(
                             with "_merged".
 
     """
+    gff3_utils._ensure_spawn(log)
     tsv = pd.read_csv(tsv_path, sep="\t")
 
     gff_in_builder = gff3_utils.PathBuilder(gff_in_ext).use_folder_builder(

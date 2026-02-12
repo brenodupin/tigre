@@ -17,6 +17,7 @@ authors = [
 
 dependencies = [
     "pandas>=1.5.3,<3.0.0",
+    "polars>=1.0.0",
 ]
 
 [project.optional-dependencies]

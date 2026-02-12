@@ -34,9 +34,9 @@ def biopython_getfasta(
 
         df = gff3_utils.load_gff3(
             gff_in,  # idx 0      1       2       3
-            usecols=("seqid", "type", "start", "end"),
-            dtype={"start": "int64", "end": "int64"},
+            usecols=("seqid", "type", "start", "end", "attributes"),
         )
+        df = df.astype({"start": "int64", "end": "int64"})
         if skip_region:
             df = df[df["type"] != "region"]
 
@@ -100,6 +100,7 @@ def biopython_multiple(
     overwrite: bool = False,
 ) -> None:
     """Extract sequences from GFF3 files using Biopython."""
+    gff3_utils._ensure_spawn(log)  # Ensure spawn method is set for multiprocessing
     tsv = pd.read_csv(tsv_path, sep="\t")
 
     gff_in_builder = gff3_utils.PathBuilder(gff_in_ext).use_folder_builder(

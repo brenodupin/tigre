@@ -98,6 +98,15 @@ def clean_multiple_gdt(
         ext_filter: Whether to use extended filtering for ORFs
 
     """
+    gff3_utils._ensure_spawn(log)  # Ensure spawn method is set for multiprocessing
+
+    try:
+        query_expr = gff3_utils._parse_query_to_polars(query_string)
+        log.info(f"Using query expression: {query_expr}")
+    except Exception as e:
+        log.error(f"Error parsing query string '{query_string}': {e}")
+        raise
+
     tsv = pd.read_csv(tsv_path, sep="\t")
     # subtracting the server process from the count, but it should never be 0
     workers = max(1, workers - 1)
@@ -143,7 +152,7 @@ def clean_multiple_gdt(
                     gff_in_builder.build(an),
                     gff_out_builder.build(an),
                     names_func,
-                    query_string,
+                    query_expr,
                     keep_orfs,
                     ext_filter,
                 )

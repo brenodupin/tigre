@@ -125,6 +125,7 @@ def combine_multiple(
         overwrite: Whether to overwrite existing output files
 
     """
+    gff3_utils._ensure_spawn(log)
     tsv = pd.read_csv(tsv_path, sep="\t")
 
     gff_in_builder_1 = gff3_utils.PathBuilder(gff_in_ext_1).use_folder_builder(

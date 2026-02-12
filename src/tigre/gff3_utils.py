@@ -13,9 +13,10 @@ import sys
 import types
 from functools import partial
 from pathlib import Path
-from typing import Any, Callable
+from typing import Callable, Literal, overload
 
 import pandas as pd
+import polars as pl
 
 from . import log_setup
 
@@ -33,30 +34,81 @@ GFF3_COLUMNS: tuple[str, ...] = (
 QS_GENE_REGION = "type in ('gene', 'region')"
 QS_GENE_TRNA_RRNA_REGION = "type in ('gene', 'tRNA', 'rRNA', 'region')"
 
+QE_GENE_REGION = pl.col("type").is_in(["gene", "region"])
+QE_GENE_TRNA_RRNA_REGION = pl.col("type").is_in(["gene", "tRNA", "rRNA", "region"])
+
 _RE_ID = re.compile(r"ID=([^;]+)")
 _RE_region_taxon = re.compile(r"taxon:([^;,]+)")
+
 
 def _ensure_spawn(log: log_setup.GDTLogger) -> None:
     """Configure multiprocessing to use spawn mode."""
     import multiprocessing as mp
-    log.debug(f"Ensuring multiprocessing start method is set to 'spawn'")
+
+    log.debug("Ensuring multiprocessing start method is set to 'spawn'")
     try:
         mp.set_start_method("spawn")
     except RuntimeError:
         log.debug("Multiprocessing start method already set, proceeding with 'spawn'")
 
 
+def _parse_query_to_polars(query_string: str) -> pl.Expr:
+    """Convert simple pandas query string to polars expression.
 
+    Currently handles: type in ('val1', 'val2', ...)
+    """
+    match = re.match(r"(\w+)\s+in\s+\(([^)]+)\)", query_string.strip())
+    if match:
+        column = match.group(1)
+        values_str = match.group(2)
+        values = [v.strip().strip("'\"") for v in values_str.split(",")]
+        return pl.col(column).is_in(values)
+
+    raise ValueError(f"Query string format not supported: {query_string}")
+
+
+@overload
 def load_gff3(
     filename: str | Path,
     sep: str = "\t",
+    *,
     comment: str = "#",
     header: int | None = None,
     names: tuple[str, ...] = GFF3_COLUMNS,
     usecols: tuple[str, ...] = ("type", "start", "end", "attributes"),
     query_string: str | None = None,
-    **kwargs: Any,
-) -> pd.DataFrame:
+    query_expr: pl.Expr | None = None,
+    return_polars: Literal[False] = False,
+) -> pd.DataFrame: ...
+
+
+@overload
+def load_gff3(
+    filename: str | Path,
+    sep: str = "\t",
+    *,
+    comment: str = "#",
+    header: int | None = None,
+    names: tuple[str, ...] = GFF3_COLUMNS,
+    usecols: tuple[str, ...] = ("type", "start", "end", "attributes"),
+    query_string: str | None = None,
+    query_expr: pl.Expr | None = None,
+    return_polars: Literal[True],
+) -> pl.DataFrame: ...
+
+
+def load_gff3(
+    filename: str | Path,
+    sep: str = "\t",
+    *,
+    comment: str = "#",
+    header: int | None = None,
+    names: tuple[str, ...] = GFF3_COLUMNS,
+    usecols: tuple[str, ...] = ("type", "start", "end", "attributes"),
+    query_string: str | None = None,
+    query_expr: pl.Expr | None = None,
+    return_polars: bool = False,
+) -> pd.DataFrame | pl.DataFrame:
     """Load a GFF3 file into a pandas DataFrame, optionally filtering by a query string.
 
     Args:
@@ -65,41 +117,61 @@ def load_gff3(
         comment (str): Comment character in the file.
         header (int | None): Row number to use as the column names, None if no header.
         names (tuple[str, ...]): Tuple of column names to use.
-        usecols (list[str]): List of columns to read from the file.
+        usecols (tuple[str, ...]): Columns to read from the file.
         query_string (str | None): Query string to filter the DataFrame.
                                    Defaults to None, which means no filtering.
-        **kwargs: Additional keyword arguments passed to `pd.read_csv`.
+        query_expr (pl.Expr | None): Polars expression to filter the DataFrame.
+                                     If provided, takes precedence over query_string.
+        return_polars (bool): If True, returns a Polars DataFrame instead of pandas
 
     Returns:
         pd.DataFrame: DataFrame containing the filtered GFF3 data.
 
     """
-    if query_string:
-        df: pd.DataFrame = (
-            pd.read_csv(
-                filename,
-                sep=sep,
-                comment=comment,
-                header=header,
-                names=names,
-                usecols=usecols,
-                **kwargs,
+    # Use lazy reading for better performance
+    lf = pl.scan_csv(
+        filename,
+        separator=sep,
+        comment_prefix=comment,
+        has_header=header is not None,
+        new_columns=list(names) if header is None else None,
+        quote_char=None,
+    )
+
+    if usecols:
+        lf = lf.select(usecols)
+
+    if query_expr is not None:
+        lf = lf.filter(query_expr)
+
+    elif query_string:
+        try:
+            filter_expr = _parse_query_to_polars(query_string)
+            lf = lf.filter(filter_expr)
+        except ValueError:
+            # Fallback to pandas query for unsupported patterns
+            if return_polars:
+                raise ValueError(
+                    "query_string contains unsupported patterns for polars. "
+                    "Please provide a query_expr instead."
+                )
+            df = lf.collect()
+            return (
+                df.to_pandas()
+                .query(query_string)
+                .sort_values(
+                    by=["start", "end", "attributes"],
+                    ascending=[True, False, False],
+                    ignore_index=True,
+                )
             )
-            .query(query_string)
-            .sort_values(by=["start", "end"], ascending=[True, False], ignore_index=True)
-        )
+
+    df = lf.sort(["start", "end", "attributes"], descending=[False, True, True]).collect()
+
+    if return_polars:
         return df
 
-    df = pd.read_csv(
-        filename,
-        sep=sep,
-        comment=comment,
-        header=header,
-        names=names,
-        usecols=usecols,
-        **kwargs,
-    ).sort_values(by=["start", "end"], ascending=[True, False], ignore_index=True)
-    return df
+    return df.to_pandas()
 
 
 def filter_orfs(
@@ -301,7 +373,7 @@ class PathBuilder:
 
 def check_files(
     log: log_setup.GDTLogger,
-    df: pd.DataFrame,
+    df: pd.DataFrame | pl.DataFrame,
     file_builder: PathBuilder,
     an_column: str = "AN",
     *,

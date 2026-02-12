@@ -5,7 +5,7 @@ import concurrent.futures as cf
 import re
 import traceback
 from pathlib import Path
-from typing import Callable, TypeAlias, cast
+from typing import TYPE_CHECKING, Callable, TypeAlias, cast
 
 import pandas as pd
 
@@ -16,6 +16,9 @@ species_url = "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id="
 HEADER_BASE: str = (
     "##gff-version 3\n" "#!gff-spec-version 1.26\n" "#!processor TIGRE clean.py\n"
 )
+
+if TYPE_CHECKING:
+    import polars as pl
 
 _RE_name = re.compile(r"name=([^;]+);")
 _RE_source = re.compile(r"source=([^;]+);")
@@ -318,7 +321,7 @@ def clean_an(
     gff_in: Path,
     gff_out: Path,
     names_func: _NamesType,
-    query_string: str,
+    query_expr: "pl.Expr",
     keep_orfs: bool,
     ext_filter: bool = False,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
@@ -329,7 +332,7 @@ def clean_an(
         gff_in: Path to the input GFF3 file
         gff_out: Path to the output GFF3 file
         names_func: Function to clean attributes in each row
-        query_string: Query string to filter the GFF3 file
+        query_expr: Query string to filter the GFF3 file
         keep_orfs: Whether to keep ORFs in the GFF3 file
         ext_filter: Whether to use extended filtering for ORFs
 
@@ -341,7 +344,7 @@ def clean_an(
         df = gff3_utils.load_gff3(
             gff_in,
             usecols=gff3_utils.GFF3_COLUMNS,
-            query_string=query_string,
+            query_expr=query_expr,
         )
         if not keep_orfs:
             df = gff3_utils.filter_orfs(df, extended=ext_filter)
@@ -433,7 +436,14 @@ def clean_multiple(
         ext_filter: Whether to use extended filtering for ORFs
 
     """
+    gff3_utils._ensure_spawn(log)  # Ensure spawn method is set for multiprocessing
     tsv = pd.read_csv(tsv_path, sep="\t")
+    try:
+        query_expr = gff3_utils._parse_query_to_polars(query_string)
+        log.info(f"Using query expression: {query_expr}")
+    except Exception as e:
+        log.error(f"Error parsing query string '{query_string}': {e}")
+        raise
 
     gff_in_builder = gff3_utils.PathBuilder(gff_in_ext).use_folder_builder(
         tsv_path.parent,
@@ -470,7 +480,7 @@ def clean_multiple(
                 gff_in_builder.build(an),
                 gff_out_builder.build(an),
                 get_names,
-                query_string,
+                query_expr,
                 keep_orfs,
                 ext_filter,
             )
