@@ -32,10 +32,9 @@ GFF3_COLUMNS: tuple[str, ...] = (
     "attributes",
 )
 QS_GENE_REGION = "type in ('gene', 'region')"
+QS_GENE_TRNA_REGION = "type in ('gene', 'tRNA', 'region')"
+QS_GENE_RRNA_REGION = "type in ('gene', 'rRNA', 'region')"
 QS_GENE_TRNA_RRNA_REGION = "type in ('gene', 'tRNA', 'rRNA', 'region')"
-
-QE_GENE_REGION = pl.col("type").is_in(["gene", "region"])
-QE_GENE_TRNA_RRNA_REGION = pl.col("type").is_in(["gene", "tRNA", "rRNA", "region"])
 
 _RE_ID = re.compile(r"ID=([^;]+)")
 _RE_region_taxon = re.compile(r"taxon:([^;,]+)")

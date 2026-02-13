@@ -6,7 +6,7 @@ import multiprocessing as mp
 import tempfile
 from functools import partial
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal, TypeAlias
+from typing import TYPE_CHECKING, Callable, Literal, TypeAlias
 
 import polars as pl
 
@@ -15,25 +15,115 @@ from . import clean, clean_gdt, gff3_utils, log_setup
 if TYPE_CHECKING:
     import gdt
 
-trna_labels = {"TA", "TX"}
+trna_labels = {
+    "TA",
+    "TASX",
+    "TC",
+    "TD",
+    "TE",
+    "TER",
+    "TF",
+    "TFM",
+    "TG",
+    "TGLX",
+    "TH",
+    "TI",
+    "TK",
+    "TL1|2",
+    "TM",
+    "TN",
+    "TP",
+    "TQ",
+    "TR",
+    "TRMR",
+    "TRNX",
+    "TS1|2",
+    "TSEC",
+    "TSUP",
+    "TT",
+    "TU",
+    "TV",
+    "TW",
+    "TX",
+    "TXLE",
+    "TY",
+}
 
-rrna_labels = {"16S", "23S", "5S"}
+rrna_labels = {
+    "RNR12",
+    "RNR15",
+    "RNR16",
+    "RNR18",
+    "RNR21",
+    "RNR23",
+    "RNR26",
+    "RNR28",
+    "RNR4",
+    "RNR4.5",
+    "RNR5",
+    "RNR9",
+    "RNRL",
+    "RNRS",
+    "RRNA",
+}
 
 _ReqQueue: TypeAlias = "mp.queues.Queue[tuple[list[str], mp.connection.Connection]]"
+_NamesTypeNoPandas: TypeAlias = (
+    "Callable[[list[str], log_setup.TempLogger], tuple[list[str], log_setup.TempLogger]]"
+)
 
 
-def pre_filter_gff3(
+def get_names_server(
+    queue: _ReqQueue,
+    gene_ids: list[str],
+    log: log_setup.TempLogger,
+) -> "tuple[list[str], log_setup.TempLogger]":
+    """Get labels for a subset of gene IDs using the dictionary server."""
+    try:
+        worker_conn, server_conn = mp.Pipe()
+        queue.put((gene_ids, server_conn))
+        results: list[str] = worker_conn.recv()
+        worker_conn.close()
+
+        # Create a Series with the same index as the subset
+        return results, log
+
+    except Exception as e:
+        log.error(f"Error communicating with dictionary server: {e}")
+        return [], log
+
+
+def get_names_gdt(
+    gdict: "gdt.GeneDict",
+    gene_list: list[str],
+    log: log_setup.TempLogger,
+) -> "tuple[list[str], log_setup.TempLogger]":
+    """Get labels for a subset of gene IDs using the GeneDict."""
+    results: list[str] = []
+    for gene_id in gene_list:
+        result = gdict.get(gene_id, None)
+        if result is not None:
+            results.append(result.label)
+        else:
+            log.warning(f"Gene ID '{gene_id}' not found in dictionary")
+            results.append(gene_id)
+
+    return results, log
+
+
+def pre_filter_gff(
     log: log_setup.TempLogger,
     gff_in: Path,
     gff_out: Path,
-    queue: _ReqQueue,
+    pre_names_func: _NamesTypeNoPandas,
     keep_type: Literal["gene", "trna", "rrna"],
-    names_func: clean._NamesType,
+    clean_names_func: clean._NamesType,
     query_expr: "pl.Expr",
     keep_orfs: bool,
     ext_filter: bool = False,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Pre-filter GFF3 file to keep only relevant features for overlap cleaning."""
+    log.debug(f"[{gff_in.name}] -- Start --")
     df = gff3_utils.load_gff3(
         gff_in,
         usecols=gff3_utils.GFF3_COLUMNS,
@@ -54,12 +144,11 @@ def pre_filter_gff3(
     )
     gene_ids = df["gene_id"].unique().to_list()
 
-    worker_conn, server_conn = mp.Pipe()
-    queue.put((gene_ids, server_conn))
-    results: list[str] = worker_conn.recv()
-    worker_conn.close()
-
+    log.trace(f"Extracted {len(gene_ids)} unique genes. {gene_ids}")
+    results, log = pre_names_func(gene_ids, log)
+    log.trace(f"Received gene labels for {len(results)} genes. {results}")
     results = [r.replace("MIT-", "").replace("PLT-", "") for r in results]
+    log.trace(f"Cleaned gene labels: {results}")
 
     results_dict = dict(zip(gene_ids, results))
     df = df.with_columns(pl.col("gene_id").replace_strict(results_dict).alias("gene_label"))
@@ -73,6 +162,7 @@ def pre_filter_gff3(
     elif keep_type == "gene":
         # for gene keep, remove rows that are in the trna_labels or rrna_labels sets
         set_to_remove = trna_labels.union(rrna_labels)
+        log.trace(f"Filtering out features with labels in {set_to_remove}")
         df = df.filter(~pl.col("gene_label").is_in(set_to_remove))
 
     # write df to a tmpfile and call clean_an with the tmpfile as input
@@ -80,16 +170,17 @@ def pre_filter_gff3(
     df = pl.concat([region_df, df])
 
     with tempfile.NamedTemporaryFile(mode="w", suffix=".gff3") as tmp_gff:
-        tmp_path = Path(tmp_gff.name)
-        tmp_gff.write("\n".join(header) + "\n")
-        df.write_csv(tmp_gff, separator="\t", include_header=False)
-        tmp_gff.flush()
+        tmp_path = Path(tmp_gff.name).resolve()
+        log.trace(f"Writing pre-filtered GFF3 to temporary file: {tmp_path}")
+        with open(tmp_gff.name, "w") as f:
+            f.write("".join(header) + "\n")
+            df.write_csv(f, separator="\t", include_header=False)
 
         return clean.clean_an(
             log,
             tmp_path,
             gff_out,
-            names_func,
+            clean_names_func,
             query_expr,
             keep_orfs,
             ext_filter,
@@ -173,20 +264,21 @@ def genes_multiple(
     try:
         log.info("Starting dictionary server...")
         server_process, req_queue = clean_gdt.create_dict_server(gdict, log.spawn_buffer())
-        names_func = partial(clean_gdt.get_names_server, req_queue)
+        clean_names_func = partial(clean_gdt.get_names_server, req_queue)
+        pre_names_func = partial(get_names_server, req_queue)
 
         log.info(f"Submitiing tasks for {tsv.shape[0]} ANs with {workers} workers...")
         with cf.ProcessPoolExecutor(max_workers=workers) as executor:
             tasks = []
             for an in tsv[an_column]:
                 task = executor.submit(
-                    pre_filter_gff3,
+                    pre_filter_gff,
                     log.spawn_buffer(),
                     gff_in_builder.build(an),
                     gff_out_builder.build(an),
-                    req_queue,
+                    pre_names_func,
                     keep_type,
-                    names_func,
+                    clean_names_func,
                     query_expr,
                     keep_orfs,
                     ext_filter,

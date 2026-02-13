@@ -16,10 +16,10 @@ from . import (
     clean_gdt,
     combine,
     fasta_utils,
+    genes,
     gff3_utils,
     igr,
     log_setup,
-    genes,
 )
 
 C_RESET = "\x1b[0m"
@@ -41,6 +41,12 @@ BANNER = f""" T   I   G   {C_GREEN}E   {C_YELLOW}R{C_RESET}   \\    /\\
  r"""
 
 MAX_CPU: int = os.cpu_count() or 1
+
+QS_DICT = {
+    "gene": gff3_utils.QS_GENE_REGION,
+    "trna": gff3_utils.QS_GENE_TRNA_REGION,
+    "rrna": gff3_utils.QS_GENE_RRNA_REGION,
+}
 
 _Subparser: TypeAlias = "argparse._SubParsersAction[argparse.ArgumentParser]"
 _Parser: TypeAlias = "argparse.ArgumentParser"
@@ -652,9 +658,11 @@ def gene_group(parser: _Parser) -> None:
         required=False,
         type=str,
         metavar="STR",
-        default=gff3_utils.QS_GENE_TRNA_RRNA_REGION,
-        help=f"pandas query string to filter features in GFF3 file. Default: "
-        f"'{gff3_utils.QS_GENE_TRNA_RRNA_REGION}'.",
+        default="",
+        help=f"pandas query string to filter features in GFF3 file. Default is dependent "
+        f"on the value of `--keep-type`: `gene` -> '{gff3_utils.QS_GENE_REGION}', "
+        f"`trna` -> '{gff3_utils.QS_GENE_TRNA_REGION}', "
+        f" `rrna` -> '{gff3_utils.QS_GENE_RRNA_REGION}'.",
     )
     group.add_argument(
         "--keep-orfs",
@@ -726,7 +734,7 @@ def gene_parser(
     multiple = multiple_parser.add_argument_group("multiple file options")
     args_tsv(multiple, "gene")
     args_multiple(multiple, "gff", "in", ".gff3", "")
-    args_multiple(multiple, "gff", "out", ".gff3", "_clean")
+    args_multiple(multiple, "gff", "out", ".gff3", "_genes")
 
 
 def gene_command(
@@ -734,32 +742,64 @@ def gene_command(
     log: log_setup.GDTLogger,
 ) -> None:
     """Execute the gene command based on the provided arguments."""
-    if args.mode == "single":
-        raise NotImplementedError("The 'gene' command is not yet implemented for single mode. Please use 'clean single' with appropriate query string and keep-type options as a workaround.")
-
     if not args.gdt:
-        log.error("The 'gene' command currently requires a Gene Dictionary Table (GDT) file. Please provide one with the --gdict option.")
+        log.error(
+            "The 'gene' command currently requires a Gene Dictionary Table (GDT) file."
+            "Please provide one with the --gdict option."
+        )
         sys.exit(1)
-    
-    args.tsv = Path(args.tsv).resolve()
-    ensure_exists(log, args.tsv, "TSV file")
 
-    genes.genes_multiple(
-        log,
-        args.tsv,
-        _workers_count(args.workers),
-        clean_gdt.load_gdt(log, args.gdt),
-        args.gff_in_ext,
-        args.gff_in_suffix,
-        args.gff_out_ext,
-        args.gff_out_suffix,
-        args.an_column,
-        args.query_string,
-        args.keep_orfs,
-        args.overwrite,
-        args.ext_filter,
-        args.keep_type,
-    )
+    args.gdt = Path(args.gdt).resolve()
+    ensure_exists(log, args.gdt, "Gene Dictionary Table (GDT) file")
+
+    query_string = args.query_string if args.query_string else QS_DICT[args.keep_type]
+    query_exp = gff3_utils._parse_query_to_polars(query_string)
+
+    if args.mode == "single":
+        args.gff_in = Path(args.gff_in).resolve()
+        args.gff_out = Path(args.gff_out).resolve()
+
+        ensure_exists(log, args.gff_in, "GFF3 input")
+        ensure_overwrite(log, args.gff_out, "GFF3 output", args.overwrite)
+
+        gdict = clean_gdt.load_gdt(log, args.gdt)
+        pre_names_func = partial(genes.get_names_gdt, gdict)
+        clean_names_func = partial(clean_gdt.get_names_gdt, gdict)
+
+        result = genes.pre_filter_gff(
+            log.spawn_buffer(),
+            args.gff_in,
+            args.gff_out,
+            pre_names_func,
+            args.keep_type,
+            clean_names_func,
+            query_exp,
+            args.keep_orfs,
+            args.ext_filter,
+        )
+
+        handle_single_result(log, result, "Error extracting genes single")
+
+    elif args.mode == "multiple":
+        args.tsv = Path(args.tsv).resolve()
+        ensure_exists(log, args.tsv, "TSV file")
+
+        genes.genes_multiple(
+            log,
+            args.tsv,
+            _workers_count(args.workers),
+            clean_gdt.load_gdt(log, args.gdt),
+            args.gff_in_ext,
+            args.gff_in_suffix,
+            args.gff_out_ext,
+            args.gff_out_suffix,
+            args.an_column,
+            query_string,
+            args.keep_orfs,
+            args.overwrite,
+            args.ext_filter,
+            args.keep_type,
+        )
 
 
 ################################################
