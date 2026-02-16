@@ -15,8 +15,8 @@ from . import (
     clean,
     clean_gdt,
     combine,
-    fasta_utils,
     genes,
+    getfasta,
     gff3_utils,
     igr,
     log_setup,
@@ -432,7 +432,7 @@ def getfasta_command(
     log: log_setup.GDTLogger,
 ) -> None:
     """Execute the Biopython getfasta command based on the provided arguments."""
-    if not fasta_utils.BIOPYTHON_AVAILABLE:
+    if not getfasta.BIOPYTHON_AVAILABLE:
         log.error(
             "Biopython is not available. Please install it with: "
             "pip install biopython or pip install tigre[bio]"
@@ -448,7 +448,7 @@ def getfasta_command(
         ensure_exists(log, args.fasta_in, "Fasta input")
         ensure_overwrite(log, args.fasta_out, "Fasta output", args.overwrite)
 
-        result = fasta_utils.biopython_wrapper.biopython_getfasta(
+        result = getfasta.getfasta_single(
             log.spawn_buffer(),
             args.gff_in,
             args.fasta_in,
@@ -463,7 +463,7 @@ def getfasta_command(
         args.tsv = Path(args.tsv).resolve()
         ensure_exists(log, args.tsv, "TSV file")
 
-        fasta_utils.biopython_wrapper.biopython_multiple(
+        getfasta.gefasta_multiple(
             log,
             args.tsv,
             _workers_count(args.workers),
