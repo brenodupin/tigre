@@ -13,12 +13,15 @@ import sys
 import types
 from functools import partial
 from pathlib import Path
-from typing import Callable, Literal, overload
+from typing import TYPE_CHECKING, Callable, Literal, overload
 
 import pandas as pd
 import polars as pl
 
 from . import log_setup
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 GFF3_COLUMNS: tuple[str, ...] = (
     "seqid",
@@ -173,32 +176,63 @@ def load_gff3(
     return df.to_pandas()
 
 
+@overload
 def filter_orfs(
-    gff3_df: pd.DataFrame,
+    gff3_df: pd.DataFrame | pl.DataFrame,
     orfs_strings: list[str] = ["Name=ORF", "Name=orf"],
     *,
     extended: bool = False,
-) -> pd.DataFrame:
+    return_polars: Literal[False] = False,
+) -> pd.DataFrame: ...
+
+
+@overload
+def filter_orfs(
+    gff3_df: pd.DataFrame | pl.DataFrame,
+    orfs_strings: list[str] = ["Name=ORF", "Name=orf"],
+    *,
+    extended: bool = False,
+    return_polars: Literal[True],
+) -> pl.DataFrame: ...
+
+
+def filter_orfs(
+    gff3_df: pd.DataFrame | pl.DataFrame,
+    orfs_strings: list[str] = ["Name=ORF", "Name=orf"],
+    *,
+    extended: bool = False,
+    return_polars: bool = False,
+) -> pd.DataFrame | pl.DataFrame:
     """Filter out ORFs from a GFF3 DataFrame.
 
     Args:
-        gff3_df (pd.DataFrame): DataFrame containing GFF3 data.
+        gff3_df: DataFrame containing GFF3 data (pandas or polars).
         orfs_strings (list): List of strings to identify ORFs.
             Defaults to ['Name=ORF', 'Name=orf'].
         extended (bool): If True, adds more strings to filter out ORFs.
             Defaults to False. If True, adds ['gene=ORF', 'gene=orf', 'gene=Orf',
             'Name=Orf'] to the filter list.
+        return_polars: If True, returns a polars DataFrame. If False, returns pandas.
+            Defaults to False.
 
     Returns:
-        pd.DataFrame: DataFrame with ORFs removed.
+        DataFrame with ORFs removed (pandas or polars based on return_polars flag).
 
     """
     if extended:
         orfs_strings.extend(["gene=ORF", "gene=orf", "gene=Orf", "Name=Orf"])
 
-    return gff3_df[~gff3_df["attributes"].str.contains("|".join(orfs_strings))].reset_index(
-        drop=True
-    )
+    if not isinstance(gff3_df, pl.DataFrame):
+        df = pl.from_pandas(gff3_df)
+    else:
+        df = gff3_df
+
+    df = df.filter(~pl.col("attributes").str.contains("|".join(orfs_strings)))
+
+    if return_polars:
+        return df
+    else:
+        return df.to_pandas()
 
 
 # will be pre-compiled by the PathBuilder class
