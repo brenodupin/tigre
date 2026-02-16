@@ -3,22 +3,10 @@
 
 import concurrent.futures as cf
 from pathlib import Path
-from typing import TypeAlias
 
-import pandas as pd
+import polars as pl
 
 from . import clean, gff3_utils, log_setup
-
-START_IDX = 3
-END_IDX = 4
-
-NAME_LEFT_IDX = 9  # df['name_left']
-SOURCE_LEFT_IDX = 10  # df['source_left']
-
-NAME_RIGHT_IDX = 11  # df['name_right']
-SOURCE_RIGHT_IDX = 12  # df['source_right']
-
-_SStr: TypeAlias = "clean._SStr"
 
 
 def update_header_annotator(header: list[str]) -> list[str]:
@@ -76,33 +64,30 @@ def extract_intergenic_regions(
                 header.append(line.strip())
 
             df = gff3_utils.load_gff3(
-                gff_in,
-                usecols=gff3_utils.GFF3_COLUMNS,
+                gff_in, usecols=gff3_utils.GFF3_COLUMNS, return_polars=True
             )
         header = update_header_annotator(header)
-        # pop region line out of df
-        region = df.iloc[0]
-        df = df.iloc[1:].reset_index(drop=True)
 
-        if df.empty:
+        # pop region line out of df
+        region_df = df.head(1)
+        seqid = region_df.item(0, "seqid")
+        df = df.slice(1)
+
+        if df.is_empty():
             log.warning(f"No features found in {gff_in}.")
             write_gff3(
                 log,
-                pd.DataFrame(),
+                pl.DataFrame(),
+                region_df,
                 gff_out,
-                region.seqid,
-                region.source,
-                region.end,
                 header,
-                region,
                 add_region,
             )
-            return True, region.seqid, log.get_records()
+            return True, seqid, log.get_records()
 
-        region_size = region.iat[END_IDX]
-        seqid = region.at["seqid"]
-        source = region.at["source"]
-        circular = "is_circular=true" in region.at["attributes"].lower()
+        region_size = region_df.item(0, "end")
+        source = region_df.item(0, "source")
+        circular = "is_circular=true" in region_df.item(0, "attributes").lower()
 
         log.debug(
             f"AN: {seqid} | Source: {source} | Size: {region_size} | "
@@ -130,50 +115,56 @@ def extract_intergenic_regions(
             feature_type,
         )
 
-        if df_ig.empty and not boundary:
+        if df_ig.is_empty() and not boundary:
             log.warning(
                 f"No intergenic regions found. Did {gff_in.name} contain any features?"
             )
             write_gff3(
                 log,
-                pd.DataFrame(),
+                pl.DataFrame(),
+                region_df,
                 gff_out,
-                seqid,
-                source,
-                region_size,
                 header,
-                region,
                 add_region,
             )
             return True, seqid, log.get_records()
 
         if boundary:
-            df_ig = (
-                pd.concat([df_ig, pd.DataFrame(boundary)])
-                .sort_values(by=["start", "end"])
-                .reset_index(drop=True)
+            df_ig = pl.concat([df_ig, pl.DataFrame(boundary)]).sort(
+                ["start", "end"], descending=[False, True]
             )
 
-        start = 2 if f"{feature_type}_merged" in df_ig["type"].values else 1
-        df_ig["attributes"] = [
-            f"ID={seqid}_{feature_type}_{i};{attr}"
-            for i, attr in enumerate(df_ig["attributes"], start)
-        ]
+        start = 2 if df_ig["type"].is_in([f"{feature_type}_merged"]).any() else 1
+
+        df_ig = df_ig.with_columns(
+            pl.Series(
+                [
+                    f"ID={seqid}_{feature_type}_{i};name_up={name_up};source_up={source_up};name_dw={name_dw};source_dw={source_dw};"
+                    for i, (name_up, source_up, name_dw, source_dw) in enumerate(
+                        zip(
+                            df_ig["name_up"],
+                            df_ig["source_up"],
+                            df_ig["name_dw"],
+                            df_ig["source_dw"],
+                        ),
+                        start=start,
+                    )
+                ]
+            ).alias("attributes")
+        ).drop(["name_up", "source_up", "name_dw", "source_dw"])
 
         write_gff3(
             log,
             df_ig,
+            region_df,
             gff_out,
-            seqid,
-            source,
-            region_size,
             header,
-            region,
             add_region,
         )
-
         return True, seqid, log.get_records()
+
     except Exception as e:
+        print(e)
         an_error = seqid if "seqid" in locals() else gff_in.name
         log.error(f"Error in {an_error}: {e}")
         return False, an_error, log.get_records()
@@ -181,13 +172,10 @@ def extract_intergenic_regions(
 
 def write_gff3(
     log: log_setup.TempLogger,
-    df: pd.DataFrame,
+    df: pl.DataFrame,
+    region: pl.DataFrame,
     gff_out: Path,
-    seqid: str,
-    source: str,
-    region_size: int,
     header: list[str],
-    region: pd.Series,
     add_region: bool = False,
 ) -> None:
     """Write a DataFrame to a GFF3 file with optional region line."""
@@ -195,17 +183,13 @@ def write_gff3(
     with open(gff_out, "w") as f:
         f.write("\n".join(header) + "\n")
         if add_region:
-            log.trace("Adding region line to output.")
-            f.write(
-                f"{seqid}\t{source}\tregion\t1\t{region_size}\t.\t+\t.\t"
-                f"{region.attributes}\n"
-            )
-        df.to_csv(f, sep="\t", index=False, header=False)
+            df = pl.concat([region, df])
+        df.write_csv(f, separator="\t", include_header=False)
 
 
 def _solve_boundaries(
     log: log_setup.TempLogger,
-    df: pd.DataFrame,
+    df: pl.DataFrame,
     region_size: int,
     seqid: str,
     source: str,
@@ -217,9 +201,9 @@ def _solve_boundaries(
     # [== igr ==] intergenic region
     # || genome boundary, i.e. position where region_size rolls over to 1
 
-    first_start = df.iat[0, START_IDX]  # of a feature
-    last_end = df.iat[-1, END_IDX]  # of a feature
-    log.debug(f"First start: {first_start}, Last end: {last_end}")
+    first_start = df.item(0, "start")  # of a feature
+    last_end = df.item(-1, "end")  # of a feature
+    # log.debug(f"First start: {first_start}, Last end: {last_end}")
 
     # ...---][== igr ==]||[== igr ==][---...
     # if the first start is greater than 1 and the last end is less than
@@ -238,10 +222,10 @@ def _solve_boundaries(
                 "score": ".",
                 "strand": "+",
                 "phase": ".",
-                "attributes": f"name_up={df.iat[-1, NAME_RIGHT_IDX]};"
-                f"source_up={df.iat[-1, SOURCE_RIGHT_IDX]};"
-                f"name_dw={df.iat[0, NAME_LEFT_IDX]};"
-                f"source_dw={df.iat[0, SOURCE_LEFT_IDX]};",
+                "name_up": df.item(-1, "name_right"),
+                "source_up": df.item(-1, "source_right"),
+                "name_dw": df.item(0, "name_left"),
+                "source_dw": df.item(0, "source_left"),
             }
         ]
 
@@ -261,12 +245,10 @@ def _solve_boundaries(
                 "score": ".",
                 "strand": "+",
                 "phase": ".",
-                "attributes": "name_up="
-                f"{df.iat[-1, NAME_RIGHT_IDX] if circular else 'region_start'};"
-                "source_up="
-                f"{df.iat[-1, SOURCE_RIGHT_IDX] if circular else 'region_start'};"
-                f"name_dw={df.iat[0, NAME_LEFT_IDX]};"
-                f"source_dw={df.iat[0, SOURCE_LEFT_IDX]};",
+                "name_up": df.item(-1, "name_right") if circular else "region_start",
+                "source_up": df.item(-1, "source_right") if circular else "region_start",
+                "name_dw": df.item(0, "name_left"),
+                "source_dw": df.item(0, "source_left"),
             }
         )
     # [---...][== igr ==]||...
@@ -284,12 +266,10 @@ def _solve_boundaries(
                 "score": ".",
                 "strand": "+",
                 "phase": ".",
-                "attributes": f"name_up={df.iat[-1, NAME_RIGHT_IDX]};"
-                f"source_up={df.iat[-1, SOURCE_RIGHT_IDX]};"
-                "name_dw="
-                f"{df.iat[0, NAME_LEFT_IDX] if circular else 'region_end'};"
-                "source_dw="
-                f"{df.iat[0, SOURCE_LEFT_IDX] if circular else 'region_end'};",
+                "name_up": df.item(-1, "name_right"),
+                "source_up": df.item(-1, "source_right"),
+                "name_dw": df.item(0, "name_left") if circular else "region_end",
+                "source_dw": df.item(0, "source_left") if circular else "region_end",
             }
         )
     return regions
@@ -297,70 +277,94 @@ def _solve_boundaries(
 
 def _create_intergenic(
     log: log_setup.TempLogger,
-    df: pd.DataFrame,
+    df: pl.DataFrame,
     seqid: str,
     source: str,
     feature_type: str,
-) -> pd.DataFrame:
+) -> pl.DataFrame:
 
-    # we change the original df, so as to not have to copy it
-    df["start"] = df["start"] - 1
-    df["end"] = df["end"] + 1
+    df = df.with_columns(
+        [
+            (pl.col("start") - 1).alias("start"),
+            (pl.col("end") + 1).alias("end"),
+        ]
+    )
 
-    # we create a shifted version with only the data we'll use
-    shifted = df[["end", "name_right", "source_right"]].shift(1)
+    shifted = df.select(["end", "name_right", "source_right"]).shift(1)
     valid_gaps = shifted["end"] <= df["start"]
 
     if not valid_gaps.any():
-        return pd.DataFrame()
+        return pl.DataFrame()
 
-    attributes = [
-        f"name_up={nu};source_up={su};name_dw={nd};source_dw={sd};"
-        for nu, su, nd, sd in zip(
-            shifted["name_right"][valid_gaps],
-            shifted["source_right"][valid_gaps],
-            df["name_left"][valid_gaps],
-            df["source_left"][valid_gaps],
-        )
-    ]
+    shifted = shifted.filter(valid_gaps)
+    df = df.filter(valid_gaps)
 
-    return pd.DataFrame(
+    return pl.DataFrame(
         {
             "seqid": seqid,
             "source": source,
             "type": feature_type,
-            "start": shifted["end"][valid_gaps].values.astype("int64"),
-            "end": df["start"][valid_gaps].values,
+            "start": shifted["end"].cast(pl.Int64),
+            "end": df["start"],
             "score": ".",
             "strand": "+",
             "phase": ".",
-            "attributes": attributes,
+            "name_up": shifted["name_right"],
+            "source_up": shifted["source_right"],
+            "name_dw": df["name_left"],
+            "source_dw": df["source_left"],
         }
     )
 
 
 def _split_attributes(
     log: log_setup.TempLogger,
-    df: pd.DataFrame,
-) -> pd.DataFrame:
-
-    attrs = df["attributes"].str
-
-    nm_left: _SStr = attrs.extract(clean._RE_name_left, expand=False).astype("string")  # type: ignore[call-overload]
-    nm_right: _SStr = attrs.extract(clean._RE_name_right, expand=False).astype("string")  # type: ignore[call-overload]
-    nm_general: _SStr = attrs.extract(clean._RE_name, expand=False).astype("string")  # type: ignore[call-overload]
-
-    src_left: _SStr = attrs.extract(clean._RE_source_left, expand=False).astype("string")  # type: ignore[call-overload]
-    src_right: _SStr = attrs.extract(clean._RE_source_right, expand=False).astype("string")  # type: ignore[call-overload]
-    src_general: _SStr = attrs.extract(clean._RE_source, expand=False).astype("string")  # type: ignore[call-overload]
-
-    df["name_left"] = nm_left.fillna(nm_general)
-    df["source_left"] = src_left.fillna(src_general)
-
-    df["name_right"] = nm_right.fillna(nm_general)
-    df["source_right"] = src_right.fillna(src_general)
-
-    return df
+    df: pl.DataFrame,
+) -> pl.DataFrame:
+    """Extract name and source attributes with fallback to general values."""
+    return (
+        df.with_columns(
+            [
+                # Group 1 extracts the capture group ([^;]+)
+                pl.col("attributes")
+                .str.extract(clean._RE_name.pattern, 1)
+                .alias("name_general"),
+                pl.col("attributes")
+                .str.extract(clean._RE_source.pattern, 1)
+                .alias("source_general"),
+                pl.col("attributes")
+                .str.extract(clean._RE_name_left.pattern, 1)
+                .alias("_name_left"),
+                pl.col("attributes")
+                .str.extract(clean._RE_name_right.pattern, 1)
+                .alias("_name_right"),
+                pl.col("attributes")
+                .str.extract(clean._RE_source_left.pattern, 1)
+                .alias("_source_left"),
+                pl.col("attributes")
+                .str.extract(clean._RE_source_right.pattern, 1)
+                .alias("_source_right"),
+            ]
+        )
+        .with_columns(
+            [
+                pl.coalesce(["_name_left", "name_general"]).alias("name_left"),
+                pl.coalesce(["_name_right", "name_general"]).alias("name_right"),
+                pl.coalesce(["_source_left", "source_general"]).alias("source_left"),
+                pl.coalesce(["_source_right", "source_general"]).alias("source_right"),
+            ]
+        )
+        .drop(
+            [
+                "name_general",
+                "source_general",
+                "_name_left",
+                "_name_right",
+                "_source_left",
+                "_source_right",
+            ]
+        )
+    )
 
 
 def extract_multiple(
@@ -398,7 +402,7 @@ def extract_multiple(
 
     """
     gff3_utils._ensure_spawn(log)
-    tsv = pd.read_csv(tsv_path, sep="\t")
+    tsv = pl.read_csv(tsv_path, separator="\t")
 
     gff_in_builder = gff3_utils.PathBuilder(gff_in_ext).use_folder_builder(
         tsv_path.parent, gff_in_suffix
