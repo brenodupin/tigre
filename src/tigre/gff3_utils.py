@@ -433,7 +433,10 @@ def check_files(
     problem_files = []
     check_type = "Missing" if should_exist else "Existing"
 
-    for an in df[an_column]:
+    if not isinstance(df, pl.DataFrame):
+        df = pl.from_pandas(df)
+
+    for an in df[an_column].to_list():
         file_path = file_builder.build(an)
 
         if file_path.is_file() != should_exist:
