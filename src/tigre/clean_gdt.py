@@ -9,7 +9,7 @@ from pathlib import Path
 from queue import Empty
 from typing import TYPE_CHECKING, TypeAlias, cast
 
-import pandas as pd
+import polars as pl
 
 from . import clean, gff3_utils, log_setup
 
@@ -22,14 +22,10 @@ _ReqQueue: TypeAlias = "mp.queues.Queue[tuple[list[str], mp.connection.Connectio
 
 def get_names_server(
     queue: _ReqQueue,
-    subset: pd.DataFrame,
+    gene_ids: list[str],
     log: log_setup.TempLogger,
-) -> "pd.Series[str]":
+) -> "tuple[list[str], log_setup.TempLogger]":
     """Get labels for a subset of gene IDs using the dictionary server."""
-    if subset.empty:
-        return pd.Series([], dtype=str)
-
-    gene_ids: list[str] = subset["gene_id"].tolist()
     try:
         worker_conn, server_conn = mp.Pipe()
         queue.put((gene_ids, server_conn))
@@ -37,24 +33,21 @@ def get_names_server(
         worker_conn.close()
 
         # Create a Series with the same index as the subset
-        return pd.Series(results, index=subset.index)
+        return results, log
 
     except Exception as e:
         log.error(f"Error communicating with dictionary server: {e}")
-        return pd.Series(gene_ids, index=subset.index)
+        return [], log
 
 
 def get_names_gdt(
     gdict: "gdt.GeneDict",
-    subset: pd.DataFrame,
+    gene_list: list[str],
     log: log_setup.TempLogger,
-) -> "pd.Series[str]":
+) -> "tuple[list[str], log_setup.TempLogger]":
     """Get labels for a subset of gene IDs using the GeneDict."""
-    if subset.empty:
-        return pd.Series([], dtype=str)
-
     results: list[str] = []
-    for gene_id in subset["gene_id"]:
+    for gene_id in gene_list:
         result = gdict.get(gene_id, None)
         if result is not None:
             results.append(result.label)
@@ -62,7 +55,7 @@ def get_names_gdt(
             log.warning(f"Gene ID '{gene_id}' not found in dictionary")
             results.append(gene_id)
 
-    return pd.Series(results, index=subset.index)
+    return results, log
 
 
 def clean_multiple_gdt(
@@ -107,7 +100,7 @@ def clean_multiple_gdt(
         log.error(f"Error parsing query string '{query_string}': {e}")
         raise
 
-    tsv = pd.read_csv(tsv_path, sep="\t")
+    tsv = pl.read_csv(tsv_path, separator="\t")
     # subtracting the server process from the count, but it should never be 0
     workers = max(1, workers - 1)
 
@@ -142,7 +135,7 @@ def clean_multiple_gdt(
         server_process, req_queue = create_dict_server(gdict, log.spawn_buffer())
         names_func = partial(get_names_server, req_queue)
 
-        log.info(f"Submitiing tasks for {tsv.shape[0]} ANs with {workers} workers...")
+        log.info(f"Submiting tasks for {tsv.shape[0]} ANs with {workers} workers...")
         with cf.ProcessPoolExecutor(max_workers=workers) as executor:
             tasks = []
             for an in tsv[an_column]:

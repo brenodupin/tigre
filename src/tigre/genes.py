@@ -2,11 +2,10 @@
 """Module to solve overlaps in GFF3 files."""
 
 import concurrent.futures as cf
-import multiprocessing as mp
 import tempfile
 from functools import partial
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Literal, TypeAlias
+from typing import TYPE_CHECKING, Literal
 
 import polars as pl
 
@@ -67,55 +66,11 @@ rrna_labels = {
     "RRNA",
 }
 
-_ReqQueue: TypeAlias = "mp.queues.Queue[tuple[list[str], mp.connection.Connection]]"
-_NamesTypeNoPandas: TypeAlias = (
-    "Callable[[list[str], log_setup.TempLogger], tuple[list[str], log_setup.TempLogger]]"
-)
-
-
-def get_names_server(
-    queue: _ReqQueue,
-    gene_ids: list[str],
-    log: log_setup.TempLogger,
-) -> "tuple[list[str], log_setup.TempLogger]":
-    """Get labels for a subset of gene IDs using the dictionary server."""
-    try:
-        worker_conn, server_conn = mp.Pipe()
-        queue.put((gene_ids, server_conn))
-        results: list[str] = worker_conn.recv()
-        worker_conn.close()
-
-        # Create a Series with the same index as the subset
-        return results, log
-
-    except Exception as e:
-        log.error(f"Error communicating with dictionary server: {e}")
-        return [], log
-
-
-def get_names_gdt(
-    gdict: "gdt.GeneDict",
-    gene_list: list[str],
-    log: log_setup.TempLogger,
-) -> "tuple[list[str], log_setup.TempLogger]":
-    """Get labels for a subset of gene IDs using the GeneDict."""
-    results: list[str] = []
-    for gene_id in gene_list:
-        result = gdict.get(gene_id, None)
-        if result is not None:
-            results.append(result.label)
-        else:
-            log.warning(f"Gene ID '{gene_id}' not found in dictionary")
-            results.append(gene_id)
-
-    return results, log
-
 
 def pre_filter_gff(
     log: log_setup.TempLogger,
     gff_in: Path,
     gff_out: Path,
-    pre_names_func: _NamesTypeNoPandas,
     keep_type: Literal["gene", "trna", "rrna"],
     clean_names_func: clean._NamesType,
     query_expr: "pl.Expr",
@@ -138,14 +93,12 @@ def pre_filter_gff(
     df = df.slice(1)
 
     df = df.with_columns(
-        pl.col("attributes")
-        .str.extract(gff3_utils._RE_ID.pattern, group_index=1)
-        .alias("gene_id")
+        pl.col("attributes").str.extract(gff3_utils._RS_ID, group_index=1).alias("gene_id")
     )
     gene_ids = df["gene_id"].unique().to_list()
 
     log.trace(f"Extracted {len(gene_ids)} unique genes. {gene_ids}")
-    results, log = pre_names_func(gene_ids, log)
+    results, log = clean_names_func(gene_ids, log)
     log.trace(f"Received gene labels for {len(results)} genes. {results}")
     results = [r.replace("MIT-", "").replace("PLT-", "") for r in results]
     log.trace(f"Cleaned gene labels: {results}")
@@ -265,9 +218,8 @@ def genes_multiple(
         log.info("Starting dictionary server...")
         server_process, req_queue = clean_gdt.create_dict_server(gdict, log.spawn_buffer())
         clean_names_func = partial(clean_gdt.get_names_server, req_queue)
-        pre_names_func = partial(get_names_server, req_queue)
 
-        log.info(f"Submitiing tasks for {tsv.shape[0]} ANs with {workers} workers...")
+        log.info(f"Submiting tasks for {tsv.shape[0]} ANs with {workers} workers...")
         with cf.ProcessPoolExecutor(max_workers=workers) as executor:
             tasks = []
             for an in tsv[an_column]:
@@ -276,7 +228,6 @@ def genes_multiple(
                     log.spawn_buffer(),
                     gff_in_builder.build(an),
                     gff_out_builder.build(an),
-                    pre_names_func,
                     keep_type,
                     clean_names_func,
                     query_expr,

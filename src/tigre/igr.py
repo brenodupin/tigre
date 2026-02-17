@@ -326,23 +326,21 @@ def _split_attributes(
         df.with_columns(
             [
                 # Group 1 extracts the capture group ([^;]+)
+                pl.col("attributes").str.extract(clean._RS_name, 1).alias("name_general"),
                 pl.col("attributes")
-                .str.extract(clean._RE_name.pattern, 1)
-                .alias("name_general"),
-                pl.col("attributes")
-                .str.extract(clean._RE_source.pattern, 1)
+                .str.extract(clean._RS_source, 1)
                 .alias("source_general"),
                 pl.col("attributes")
-                .str.extract(clean._RE_name_left.pattern, 1)
+                .str.extract(clean._RS_name_left, 1)
                 .alias("_name_left"),
                 pl.col("attributes")
-                .str.extract(clean._RE_name_right.pattern, 1)
+                .str.extract(clean._RS_name_right, 1)
                 .alias("_name_right"),
                 pl.col("attributes")
-                .str.extract(clean._RE_source_left.pattern, 1)
+                .str.extract(clean._RS_source_left, 1)
                 .alias("_source_left"),
                 pl.col("attributes")
-                .str.extract(clean._RE_source_right.pattern, 1)
+                .str.extract(clean._RS_source_right, 1)
                 .alias("_source_right"),
             ]
         )

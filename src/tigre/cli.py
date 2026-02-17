@@ -61,11 +61,11 @@ def _print_version() -> str:
         result += f"\npython version {sys.version.split()[0]} at {sys.executable}"
 
         try:
-            import pandas as pd
+            import polars as pl
 
-            result += f"\npandas version {pd.__version__} at {pd.__file__}"
+            result += rf"\polars version {pl.__version__} at {pl.__file__}"
         except ImportError:
-            result += "\npandas version not available (it's a required dependency)"
+            result += "\npolars version not available (it's a required dependency)"
 
         try:
             import gdt
@@ -763,14 +763,12 @@ def gene_command(
         ensure_overwrite(log, args.gff_out, "GFF3 output", args.overwrite)
 
         gdict = clean_gdt.load_gdt(log, args.gdt)
-        pre_names_func = partial(genes.get_names_gdt, gdict)
         clean_names_func = partial(clean_gdt.get_names_gdt, gdict)
 
         result = genes.pre_filter_gff(
             log.spawn_buffer(),
             args.gff_in,
             args.gff_out,
-            pre_names_func,
             args.keep_type,
             clean_names_func,
             query_exp,

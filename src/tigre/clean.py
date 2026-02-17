@@ -2,12 +2,11 @@
 """Module to solve overlaps in GFF3 files."""
 
 import concurrent.futures as cf
-import re
 import traceback
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, TypeAlias, cast
+from typing import Callable, TypeAlias
 
-import pandas as pd
+import polars as pl
 
 from . import gff3_utils, log_setup
 
@@ -17,156 +16,146 @@ HEADER_BASE: str = (
     "##gff-version 3\n" "#!gff-spec-version 1.26\n" "#!processor TIGRE clean.py\n"
 )
 
-if TYPE_CHECKING:
-    import polars as pl
+_RS_name = r"name=([^;]+);"
+_RS_source = r"source=([^;]+);"
 
-_RE_name = re.compile(r"name=([^;]+);")
-_RE_source = re.compile(r"source=([^;]+);")
+_RS_name_up = r"name_up=([^;]+);"
+_RS_source_up = r"source_up=([^;]+);"
 
-_RE_name_up = re.compile(r"name_up=([^;]+);")
-_RE_source_up = re.compile(r"source_up=([^;]+);")
+_RS_name_dw = r"name_dw=([^;]+);"
+_RS_source_dw = r"source_dw=([^;]+);"
 
-_RE_name_dw = re.compile(r"name_dw=([^;]+);")
-_RE_source_dw = re.compile(r"source_dw=([^;]+);")
+_RS_name_left = r"name_left=([^;]+);"
+_RS_source_left = r"source_left=([^;]+);"
 
-_RE_name_left = re.compile(r"name_left=([^;]+);")
-_RE_source_left = re.compile(r"source_left=([^;]+);")
-
-_RE_name_right = re.compile(r"name_right=([^;]+);")
-_RE_source_right = re.compile(r"source_right=([^;]+);")
-
-_SStr: TypeAlias = "pd.Series[pd.StringDtype]"
-
-START_IDX = 3
-END_IDX = 4
-
-NAME_LEFT_IDX = 10  # df['name_left']
-SOURCE_LEFT_IDX = 11  # df['source_left']
-
-NAME_RIGHT_IDX = 12  # df['name_right']
-SOURCE_RIGHT_IDX = 13  # df['source_right']
-
-
-def _get_column_indices(df: pd.DataFrame) -> None:
-    """Update global indices for name and source columns."""
-    global START_IDX, END_IDX, NAME_LEFT_IDX
-    global NAME_RIGHT_IDX, SOURCE_LEFT_IDX, SOURCE_RIGHT_IDX
-
-    assert df.columns.is_unique, "DataFrame columns must be unique"
-
-    # cast to int to satisfy mypy, since is_unique guarantees the
-    # column exists and is unique
-    START_IDX = cast(int, df.columns.get_loc("start"))
-    END_IDX = cast(int, df.columns.get_loc("end"))
-    NAME_LEFT_IDX = cast(int, df.columns.get_loc("name_left"))
-    NAME_RIGHT_IDX = cast(int, df.columns.get_loc("name_right"))
-    SOURCE_LEFT_IDX = cast(int, df.columns.get_loc("source_left"))
-    SOURCE_RIGHT_IDX = cast(int, df.columns.get_loc("source_right"))
+_RS_name_right = r"name_right=([^;]+);"
+_RS_source_right = r"source_right=([^;]+);"
 
 
 def adjust_coords(
     log: log_setup.TempLogger,
-    df: pd.DataFrame,
+    df: pl.DataFrame,
     region_end: int,
-) -> pd.DataFrame:
+) -> pl.DataFrame:
     """Adjust features with 'end' and 'start' bigger than the region."""
+    mask = (df["end"] > region_end) & (df["start"] > region_end)
+
+    if not mask.any():
+        return df
+
     log.warning(f"Feature with 'end' and 'start' bigger than region: {region_end}")
 
-    for index, row in df[(df["end"] > region_end) & (df["start"] > region_end)].iterrows():
+    for row in df.filter(mask).iter_rows(named=True):
         log.warning(
-            f" s: {row.start} e: {row.end} | t: {row.type} | nl: {row.name_left} |"
-            f" nr: {row.name_right}"
+            f" s: {row['start']} e: {row['end']} | t: {row['type']} | "
+            f"nl: {row['name_left']} | nr: {row['name_right']}"
         )
+        log.debug(f" Adjusted s: {row['start'] - region_end} e: {row['end'] - region_end}")
 
-        df.at[index, "start"] = row.start - region_end
-        df.at[index, "end"] = row.end - region_end
-        log.debug(f" Adjusted s: {df.at[index, 'start']} e: {df.at[index, 'end']}")
-
-    return df
+    return df.with_columns(
+        pl.when(mask)
+        .then(pl.col("start") - region_end)
+        .otherwise(pl.col("start"))
+        .alias("start"),
+        pl.when(mask)
+        .then(pl.col("end") - region_end)
+        .otherwise(pl.col("end"))
+        .alias("end"),
+    ).sort(["start", "type"], maintain_order=True)
 
 
 def bigger_than_region_solver(
     log: log_setup.TempLogger,
-    df: pd.DataFrame,
+    df: pl.DataFrame,
     region_end: int,
-) -> pd.DataFrame:
+) -> pl.DataFrame:
     """Handle features with 'end' bigger than the region."""
+    mask = (df["end"] > region_end) & (df["start"] <= region_end)
+    subset = df.filter(mask)
+
+    if subset.is_empty():
+        return df
+
     log.warning(f"Feature with 'end' bigger than region: {region_end}")
-    for t in df[df["end"] > region_end].itertuples():
+
+    for row in subset.iter_rows(named=True):
         log.warning(
-            f" s: {t.start} e: {t.end} | t: {t.type} | nl: {t.name_left} |"
-            f" nr: {t.name_right}"
+            f" s: {row['start']} e: {row['end']} | t: {row['type']} | "
+            f"nl: {row['name_left']} | nr: {row['name_right']}"
         )
-
-    new_rows = []
-    for index, row in df[df["end"] > region_end].iterrows():
+        if row["end"] // region_end > 1:
+            log.error(f" Feature is bigger than region! g:{row['end']} r:{region_end}")
         log.debug(
-            f"Processing {row.type}: nl: {row.name_left} sr: {row.source_left} |"
-            f" nr: {row.name_right} sl: {row.source_right}"
-        )
-
-        if row.end // region_end > 1:
-            log.error(f" Feature is bigger than region! g:{row.end} r:{region_end}")
-
-        # Handle overlap row
-        overlap = row.end - region_end
-        df.at[index, "end"] = region_end
-        df.at[index, "type"] = row.type + "_fragment"
-
-        # Create new row
-        new_row = row.copy()
-        new_row.start = 1
-        new_row.end = overlap
-        new_row.type = row.type + "_fragment"
-        new_rows.append(new_row)
-
-        log.debug(
-            f" 1 s: {row.start} | e: {region_end} | nl: {row.name_left} |"
-            f" nr: {row.name_right}"
+            f"Processing {row['type']}: nl: {row['name_left']} sr: {row['source_left']} |"
+            f" nr: {row['name_right']} sl: {row['source_right']}"
         )
         log.debug(
-            f" 2 s: {new_row.start} | e: {new_row.end} | nl: {new_row.name_left} |"
-            f" nr: {new_row.name_right}"
+            f" 1 s: {row['start']} | e: {region_end} | nl: {row['name_left']} |"
+            f" nr: {row['name_right']}"
+        )
+        log.debug(
+            f" 2 s: 1 | e: {row['end'] - region_end} | nl: {row['name_left']} |"
+            f" nr: {row['name_right']}"
         )
 
-    return pd.concat([df, pd.DataFrame(new_rows)])
+    overlap = subset.with_columns(
+        pl.lit(1, dtype=df.schema["start"]).alias("start"),
+        (pl.col("end") - region_end).alias("end"),
+        (pl.col("type") + "_fragment").alias("type"),
+    )
+
+    df = df.with_columns(
+        pl.col("end").clip(upper_bound=region_end),
+        pl.when(mask)
+        .then(pl.col("type") + "_fragment")
+        .otherwise(pl.col("type"))
+        .alias("type"),
+    )
+
+    return pl.concat([df, overlap])
 
 
 def overlaps_chooser(
     log: log_setup.TempLogger,
-    overlaps_in: list[pd.Series | pd.DataFrame],
+    overlaps: pl.DataFrame,
 ) -> str:
     """Choose the best overlap from a list of overlaps."""
-    overlaps = pd.DataFrame(overlaps_in).sort_values("start", ignore_index=True)
+    overlaps = overlaps.sort("start", maintain_order=True)
 
-    left = overlaps[overlaps.start == overlaps.start.min()]
-    if left.shape[0] > 1:
-        log.trace(f" More than one feature with the lowest start: {overlaps.start.min()}")
-        left = left[left.end == left.end.max()]
-        if left.shape[0] > 1 and left.end.max() == overlaps.end.max():
+    min_start = overlaps["start"].min()
+    max_end = overlaps["end"].max()
+    left = overlaps.filter(pl.col("start") == min_start)
+
+    if len(left) > 1:
+        log.trace(f" More than one feature with the lowest start: {min_start!s}")
+        left_max_end = left["end"].max()
+        left = left.filter(pl.col("end") == left_max_end)
+        if len(left) > 1 and left_max_end == max_end:
+            row = left.row(0, named=True)
             log.trace(
                 " Features with coinciding coordinates, choosing the first: "
-                f"nl: {left.iat[0, NAME_LEFT_IDX]} nr: {left.iat[0, NAME_RIGHT_IDX]} | "
-                f"att: {left.iat[0, 8]}"
+                f"nl: {row['name_left']} nr: {row['name_right']} | "
+                f"att: {row['attributes']}"
             )
-
             return (
-                f"name_left={left.iat[0, NAME_LEFT_IDX]};"
-                f"source_left={left.iat[0, SOURCE_LEFT_IDX]};"
-                f"name_right={left.iat[0, NAME_RIGHT_IDX]};"
-                f"source_right={left.iat[0, SOURCE_RIGHT_IDX]};"
+                f"name_left={row['name_left']};"
+                f"source_left={row['source_left']};"
+                f"name_right={row['name_right']};"
+                f"source_right={row['source_right']};"
             )
 
-    right = overlaps[overlaps.end == overlaps.end.max()]
-    if right.shape[0] > 1:
-        log.trace(f" More than one feature with the highest end: {overlaps.end.max()}")
-        right = right[right.start == right.start.min()]
+    right = overlaps.filter(pl.col("end") == max_end)
+    if len(right) > 1:
+        log.trace(f" More than one feature with the highest end: {max_end!s}")
+        right = right.filter(pl.col("start") == right["start"].min())
 
+    left_row = left.row(0, named=True)
+    right_row = right.row(0, named=True)
     return (
-        f"name_left={left.iat[0, NAME_LEFT_IDX]};"
-        f"source_left={left.iat[0, SOURCE_LEFT_IDX]};"
-        f"name_right={right.iat[0, NAME_RIGHT_IDX]};"
-        f"source_right={right.iat[0, SOURCE_RIGHT_IDX]};"
+        f"name_left={left_row['name_left']};"
+        f"source_left={left_row['source_left']};"
+        f"name_right={right_row['name_right']};"
+        f"source_right={right_row['source_right']};"
     )
 
 
@@ -183,137 +172,156 @@ def create_header(
 
 def overlap_solver(
     log: log_setup.TempLogger,
-    df: pd.DataFrame,
-    df_region: pd.DataFrame,
-) -> pd.DataFrame:
+    df: pl.DataFrame,
+) -> pl.DataFrame:
     """Solve overlaps in the GFF3 file."""
-    next_index = 0
-    rows = []
-    for index, row in df.iterrows():
-        # since both index and next_index are int, we cant use 'is' here
-        # due to python int caching values between -5 and 256 (implementation detail)
-        # dont ask how i know that
-        if index != next_index:
-            continue
+    df = df.with_columns(
+        (pl.col("start") > pl.col("end").shift(1).cum_max())
+        .fill_null(False)
+        .cast(pl.Int32)
+        .cum_sum()
+        .alias("_group")
+    )
 
-        end_region = row.end
-        next_index += 1
-        overlaps = []
+    group_sizes = df["_group"].value_counts().filter(pl.col("count") == 1)["_group"]
+    solo = df.filter(pl.col("_group").is_in(group_sizes))
+    overlapping = df.filter(~pl.col("_group").is_in(group_sizes))
 
-        # peek next rows to check for overlaps
-        while (next_index < len(df)) and (end_region >= df.iat[next_index, START_IDX]):
-            # overlap found, append to list and update next_index
-            # so the while will check the next row
-            overlaps.append(df.loc[next_index])
+    if overlapping.is_empty():
+        return solo.drop("_group")
 
-            if end_region < df.iat[next_index, END_IDX]:
-                end_region = df.iat[next_index, END_IDX]
+    merged_rows = []
+    for group_df in overlapping.partition_by("_group", maintain_order=True):
+        group_df = group_df.sort("start", maintain_order=True)
+        end_region = group_df["end"].max()
+        row = group_df.row(0, named=True)
 
-            next_index += 1
-
-        if overlaps:
-            overlaps.insert(0, row.copy())  # insert current row at index 0
-            log.debug(
-                f"overlap found, region: {row.start} - {end_region} | "
-                f"length: {end_region - row.start + 1}"
+        log.debug(
+            f"overlap found, region: {row['start']} - {end_region!s} | "
+            f"length: {end_region - row['start'] + 1}"
+        )
+        for r in group_df.iter_rows(named=True):
+            log.trace(
+                f" {r['start']} | {r['end']} | {r['type']} | nl: {r['name_left']} |"
+                f" nr: {r['name_right']} | sl: {r['source_left']} | sr: {r['source_right']}"
             )
-            for r in overlaps:
-                log.trace(
-                    f" {r.start} | {r.end} | {r.type} | nl: {r.name_left} | "
-                    f" nr: {r.name_right} | sl: {r.source_left} | sr: {r.source_right}"
-                )
 
-            # modify the current row with overlap results
-            row.end = end_region
-            row.type = "overlapping_feature_set"
-            row.strand = "+"
-            row.attributes = overlaps_chooser(log, overlaps)
-            log.trace(f"Result: {row.attributes}")
+        attributes = overlaps_chooser(log, group_df)
+        log.trace(f"Result: {attributes}")
+        merged_rows.append(
+            {
+                **row,
+                "end": end_region,
+                "type": "overlapping_feature_set",
+                "strand": "+",
+                "attributes": attributes,
+            }
+        )
 
-        # append the current row, be it modified (and therefore overlap) or not
-        rows.append(row)
-
-    df_region = pd.concat([df_region, pd.DataFrame(rows)], ignore_index=True)
-
-    return df_region
-
-
-_NamesType: TypeAlias = "Callable[[pd.DataFrame, log_setup.TempLogger], pd.Series[str]]"
+    merged = pl.DataFrame(merged_rows, schema=df.schema)
+    return (
+        pl.concat([solo, merged])
+        .drop("_group")
+        .sort(["start", "type"], maintain_order=True)
+    )
 
 
-def get_names(subset: pd.DataFrame, log: log_setup.TempLogger) -> "pd.Series[str]":
-    """Get names from a subset of the DataFrame."""
-    return subset["gene_id"]
+_NamesType: TypeAlias = (
+    "Callable[[list[str], log_setup.TempLogger], tuple[list[str], log_setup.TempLogger]]"
+)
+
+
+def get_names(
+    gene_ids: list[str],
+    log: log_setup.TempLogger,
+) -> "tuple[list[str], log_setup.TempLogger]":
+    """Get names from a list of gene IDs."""
+    return gene_ids, log
 
 
 def format_df(
-    df: pd.DataFrame, log: log_setup.TempLogger, names_func: _NamesType
-) -> pd.DataFrame:
+    df: pl.DataFrame, log: log_setup.TempLogger, names_func: _NamesType
+) -> pl.DataFrame:
     """Gather and format the DataFrame to ensure correct data types."""
-    attrs = df["attributes"].str
-
-    nm_up: _SStr = attrs.extract(_RE_name_up, expand=False).astype("string")  # type: ignore[call-overload]
-    nm_left: _SStr = attrs.extract(_RE_name_left, expand=False).astype("string")  # type: ignore[call-overload]
-    nm_dw: _SStr = attrs.extract(_RE_name_dw, expand=False).astype("string")  # type: ignore[call-overload]
-    nm_right: _SStr = attrs.extract(_RE_name_right, expand=False).astype("string")  # type: ignore[call-overload]
-    nm_general: _SStr = attrs.extract(_RE_name, expand=False).astype("string")  # type: ignore[call-overload]
-
-    src_up: _SStr = attrs.extract(_RE_source_up, expand=False).astype("string")  # type: ignore[call-overload]
-    src_left: _SStr = attrs.extract(_RE_source_left, expand=False).astype("string")  # type: ignore[call-overload]
-    src_dw: _SStr = attrs.extract(_RE_source_dw, expand=False).astype("string")  # type: ignore[call-overload]
-    src_right: _SStr = attrs.extract(_RE_source_right, expand=False).astype("string")  # type: ignore[call-overload]
-    src_general: _SStr = attrs.extract(_RE_source, expand=False).astype("string")  # type: ignore[call-overload]
-
-    df["name_left"] = nm_up.fillna(nm_left).fillna(nm_general)
-    df["source_left"] = src_up.fillna(src_left).fillna(src_general)
-
-    df["name_right"] = nm_dw.fillna(nm_right).fillna(nm_general)
-    df["source_right"] = src_dw.fillna(src_right).fillna(src_general)
-
-    # og_row here means original rows, direct from the gff3 file source
-    # meaning they dont have name_left, source_left, name_right or source_right
-    # or any other formatting that we do in subsequent steps
-    og_row = (
-        df["name_left"].isna()
-        | df["source_left"].isna()
-        | df["name_right"].isna()
-        | df["source_right"].isna()
+    df = (
+        df.with_row_index("_idx")
+        .with_columns(
+            pl.col("attributes").str.extract(_RS_name_up, 1).alias("_nm_up"),
+            pl.col("attributes").str.extract(_RS_name_left, 1).alias("_nm_left"),
+            pl.col("attributes").str.extract(_RS_name_dw, 1).alias("_nm_dw"),
+            pl.col("attributes").str.extract(_RS_name_right, 1).alias("_nm_right"),
+            pl.col("attributes").str.extract(_RS_name, 1).alias("_nm_general"),
+            pl.col("attributes").str.extract(_RS_source_up, 1).alias("_src_up"),
+            pl.col("attributes").str.extract(_RS_source_left, 1).alias("_src_left"),
+            pl.col("attributes").str.extract(_RS_source_dw, 1).alias("_src_dw"),
+            pl.col("attributes").str.extract(_RS_source_right, 1).alias("_src_right"),
+            pl.col("attributes").str.extract(_RS_source, 1).alias("_src_general"),
+        )
+        .with_columns(
+            pl.coalesce(["_nm_up", "_nm_left", "_nm_general"]).alias("name_left"),
+            pl.coalesce(["_src_up", "_src_left", "_src_general"]).alias("source_left"),
+            pl.coalesce(["_nm_dw", "_nm_right", "_nm_general"]).alias("name_right"),
+            pl.coalesce(["_src_dw", "_src_right", "_src_general"]).alias("source_right"),
+        )
+        .drop(
+            [
+                "_nm_up",
+                "_nm_left",
+                "_nm_dw",
+                "_nm_right",
+                "_nm_general",
+                "_src_up",
+                "_src_left",
+                "_src_dw",
+                "_src_right",
+                "_src_general",
+            ]
+        )
     )
 
-    if og_row.any():
-        subset = df[og_row]
+    og_row_mask = (
+        df["name_left"].is_null()
+        | df["source_left"].is_null()
+        | df["name_right"].is_null()
+        | df["source_right"].is_null()
+    )
 
-        source_fallback = pd.Series(
-            [
-                f"{seqid}|{typ}|{start}|{end}|{strand}|{gene_id}"
-                for seqid, typ, start, end, strand, gene_id in zip(
-                    subset["seqid"],
-                    subset["type"],
-                    subset["start"].astype(str),
-                    subset["end"].astype(str),
-                    subset["strand"],
-                    subset["gene_id"],
-                )
-            ],
-            index=subset.index,
+    if og_row_mask.any():
+        subset = df.filter(og_row_mask)
+        # think about improving this part, as the input grows, this will become a bottleneck
+        gene_labels, log = names_func(subset["gene_id"].to_list(), log)
+
+        updated_subset = (
+            subset.with_columns(
+                pl.Series("_gene_labels", gene_labels),
+                pl.concat_str(
+                    ["seqid", "type", "start", "end", "strand", "gene_id"],
+                    separator="|",
+                ).alias("_source_fallback"),
+            )
+            .with_columns(
+                pl.coalesce(["name_left", "_gene_labels"]).alias("name_left"),
+                pl.coalesce(["name_right", "_gene_labels"]).alias("name_right"),
+                pl.coalesce(["source_left", "_source_fallback"]).alias("source_left"),
+                pl.coalesce(["source_right", "_source_fallback"]).alias("source_right"),
+            )
+            .with_columns(
+                pl.concat_str(
+                    [
+                        pl.lit("name="),
+                        pl.col("name_left"),
+                        pl.lit(";source="),
+                        pl.col("source_left"),
+                        pl.lit(";"),
+                    ]
+                ).alias("attributes")
+            )
+            .drop(["_gene_labels", "_source_fallback"])
         )
 
-        gene_labels = names_func(subset, log)
+        df = df.update(updated_subset, on="_idx")
 
-        df.loc[og_row, "name_left"] = subset["name_left"].fillna(gene_labels)
-        df.loc[og_row, "name_right"] = subset["name_right"].fillna(gene_labels)
-        df.loc[og_row, "source_left"] = subset["source_left"].fillna(source_fallback)
-        df.loc[og_row, "source_right"] = subset["source_right"].fillna(source_fallback)
-
-        df.loc[og_row, "attributes"] = [
-            f"name={name};source={source};"
-            for name, source in zip(
-                df.loc[og_row, "name_left"],
-                df.loc[og_row, "source_left"],
-            )
-        ]
-
-    return df
+    return df.drop("_idx")
 
 
 def clean_an(
@@ -345,54 +353,50 @@ def clean_an(
             gff_in,
             usecols=gff3_utils.GFF3_COLUMNS,
             query_expr=query_expr,
+            return_polars=True,
         )
         if not keep_orfs:
-            df = gff3_utils.filter_orfs(df, extended=ext_filter)
+            df = gff3_utils.filter_orfs(df, extended=ext_filter, return_polars=True)
 
-        an = df.at[0, "seqid"]
-        header = create_header(an, df.at[0, "attributes"], df.at[0, "end"])
-        df["gene_id"] = df["attributes"].str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
+        region_df = df.head(1)
+        df = df.slice(1)
 
-        if (df["type"] == "region").sum() > 1:
-            log.warning("Multiple regions found:")
-            for row in df[df["type"] == "region"].itertuples():
-                log.warning(f" s: {row.start} e: {row.end} | {row.attributes}")
-            log.warning(" Always choosing the first region and removing the rest.")
+        an = region_df.item(0, "seqid")
+        region_end = region_df.item(0, "end")
+        header = create_header(an, region_df.item(0, "attributes"), region_end)
 
-        df_region = df.iloc[0:1].copy()
-        region_end: int = df_region.at[0, "end"].astype(int)
-        df = df[df["type"] != "region"]
+        df = df.filter(pl.col("type") != "region")
+        df = df.with_columns(
+            pl.col("attributes").str.extract(gff3_utils._RS_ID, 1).alias("gene_id")
+        )
+
         df = format_df(df, log, names_func)
-
-        if ((df["end"] > region_end) & (df["start"] > region_end)).any():
-            df = adjust_coords(log, df, region_end)
-
-        df = df.sort_values(by=["start", "type"], ascending=True, ignore_index=True)
-
-        if ((df["end"] > region_end) & (df["start"] <= region_end)).any():
-            df = bigger_than_region_solver(log, df, region_end)
-
-        df = df.sort_values(by=["start", "type"], ascending=True, ignore_index=True)
+        df = adjust_coords(log, df, region_end)
+        df = bigger_than_region_solver(log, df, region_end)
+        df = df.sort(["start", "type"], maintain_order=True)
 
         log.trace(" Overlaps solver...")
-        _get_column_indices(df)
-        df = overlap_solver(log, df, df_region)
+        df = overlap_solver(log, df)
 
         df = df.drop(
-            columns=[
-                "gene_id",
-                "name_left",
-                "source_left",
-                "name_right",
-                "source_right",
-            ],
-            errors="ignore",
+            [
+                col
+                for col in [
+                    "gene_id",
+                    "name_left",
+                    "source_left",
+                    "name_right",
+                    "source_right",
+                ]
+                if col in df.columns
+            ]
         )
+        df = pl.concat([region_df, df])
 
         # add header to the file
         with open(gff_out, "w", encoding="utf-8") as file_handler:
             file_handler.write(header)
-            df.to_csv(file_handler, sep="\t", header=False, index=False)
+            df.write_csv(file_handler, separator="\t", include_header=False)
 
         log.debug(f"[{an}] -- End --")
         return True, an, log.get_records()
@@ -437,7 +441,7 @@ def clean_multiple(
 
     """
     gff3_utils._ensure_spawn(log)  # Ensure spawn method is set for multiprocessing
-    tsv = pd.read_csv(tsv_path, sep="\t")
+    tsv = pl.read_csv(tsv_path, separator="\t")
     try:
         query_expr = gff3_utils._parse_query_to_polars(query_string)
         log.info(f"Using query expression: {query_expr}")

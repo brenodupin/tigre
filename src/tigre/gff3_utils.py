@@ -42,6 +42,9 @@ QS_GENE_TRNA_RRNA_REGION = "type in ('gene', 'tRNA', 'rRNA', 'region')"
 _RE_ID = re.compile(r"ID=([^;]+)")
 _RE_region_taxon = re.compile(r"taxon:([^;,]+)")
 
+_RS_ID = r"ID=([^;]+)"
+_RS_region_taxon = r"taxon:([^;,]+)"
+
 
 def _ensure_spawn(log: log_setup.GDTLogger) -> None:
     """Configure multiprocessing to use spawn mode."""
