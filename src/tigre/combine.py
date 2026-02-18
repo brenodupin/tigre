@@ -4,7 +4,7 @@
 import concurrent.futures as cf
 from pathlib import Path
 
-import pandas as pd
+import polars as pl
 
 from . import gff3_utils, log_setup
 
@@ -45,28 +45,26 @@ def combine_pair(
             df1 = gff3_utils.load_gff3(
                 gff_file_1,
                 usecols=gff3_utils.GFF3_COLUMNS,
+                return_polars=True,
             )
 
         df2 = gff3_utils.load_gff3(
             gff_file_2,
             usecols=gff3_utils.GFF3_COLUMNS,
+            return_polars=True,
         )
 
         # region line should be the first line in the GFF3 file
-        region = df1.iloc[0].copy()
+        region_df = df1.head(1)
 
-        df1 = df1[df1["type"] != "region"]
-        df2 = df2[df2["type"] != "region"]
+        df1 = df1.filter(pl.col("type") != "region")
+        df2 = df2.filter(pl.col("type") != "region")
 
-        df1_gene_ids: "pd.Series[str]" = (
-            df1["attributes"]
-            .str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
-            .astype("string")
+        df1_gene_ids = (
+            df1["attributes"].str.extract(gff3_utils._RS_ID, 1).cast(pl.String).to_list()
         )
-        df2_gene_ids: "pd.Series[str]" = (
-            df2["attributes"]
-            .str.extract(gff3_utils._RE_ID, expand=False)  # type: ignore[call-overload]
-            .astype("string")
+        df2_gene_ids = (
+            df2["attributes"].str.extract(gff3_utils._RS_ID, 1).cast(pl.String).to_list()
         )
 
         duplicated_ids = set(df1_gene_ids).intersection(df2_gene_ids)
@@ -77,11 +75,11 @@ def combine_pair(
             )
             log.debug(f"Duplicated IDs: {', '.join(duplicated_ids)}")
 
-        combined_df = pd.concat([pd.DataFrame([region]), df1, df2], ignore_index=True)
+        combined_df = pl.concat([region_df, df1, df2], how="vertical")
 
         with open(gff_out, "w") as f:
             f.write("\n".join(header) + "\n")
-            combined_df.to_csv(f, sep="\t", index=False, header=False)
+            combined_df.write_csv(f, separator="\t", include_header=False)
 
         return True, gff_out.stem, log.get_records()
 
@@ -126,7 +124,7 @@ def combine_multiple(
 
     """
     gff3_utils._ensure_spawn(log)
-    tsv = pd.read_csv(tsv_path, sep="\t")
+    tsv = pl.read_csv(tsv_path, separator="\t")
 
     gff_in_builder_1 = gff3_utils.PathBuilder(gff_in_ext_1).use_folder_builder(
         tsv_path.parent,
