@@ -10,18 +10,14 @@ https://github.com/brenodupin/gdt/blob/master/src/gdt/gff3_utils.py
 
 import re
 import sys
-import types
 from functools import partial
 from pathlib import Path
-from typing import TYPE_CHECKING, Callable, Literal, overload
+from types import MethodType
+from typing import Callable
 
-import pandas as pd
 import polars as pl
 
 from . import log_setup
-
-if TYPE_CHECKING:
-    import pandas as pd
 
 GFF3_COLUMNS: tuple[str, ...] = (
     "seqid",
@@ -39,11 +35,8 @@ QS_GENE_TRNA_REGION = "type in ('gene', 'tRNA', 'region')"
 QS_GENE_RRNA_REGION = "type in ('gene', 'rRNA', 'region')"
 QS_GENE_TRNA_RRNA_REGION = "type in ('gene', 'tRNA', 'rRNA', 'region')"
 
-_RE_ID = re.compile(r"ID=([^;]+)")
-_RE_region_taxon = re.compile(r"taxon:([^;,]+)")
-
 _RS_ID = r"ID=([^;]+)"
-_RS_region_taxon = r"taxon:([^;,]+)"
+_RE_region_taxon = re.compile(r"taxon:([^;,]+)")
 
 
 def _ensure_spawn(log: log_setup.GDTLogger) -> None:
@@ -72,36 +65,6 @@ def _parse_query_to_polars(query_string: str) -> pl.Expr:
     raise ValueError(f"Query string format not supported: {query_string}")
 
 
-@overload
-def load_gff3(
-    filename: str | Path,
-    sep: str = "\t",
-    *,
-    comment: str = "#",
-    header: int | None = None,
-    names: tuple[str, ...] = GFF3_COLUMNS,
-    usecols: tuple[str, ...] = ("type", "start", "end", "attributes"),
-    query_string: str | None = None,
-    query_expr: pl.Expr | None = None,
-    return_polars: Literal[False] = False,
-) -> pd.DataFrame: ...
-
-
-@overload
-def load_gff3(
-    filename: str | Path,
-    sep: str = "\t",
-    *,
-    comment: str = "#",
-    header: int | None = None,
-    names: tuple[str, ...] = GFF3_COLUMNS,
-    usecols: tuple[str, ...] = ("type", "start", "end", "attributes"),
-    query_string: str | None = None,
-    query_expr: pl.Expr | None = None,
-    return_polars: Literal[True],
-) -> pl.DataFrame: ...
-
-
 def load_gff3(
     filename: str | Path,
     sep: str = "\t",
@@ -113,7 +76,7 @@ def load_gff3(
     query_string: str | None = None,
     query_expr: pl.Expr | None = None,
     return_polars: bool = False,
-) -> pd.DataFrame | pl.DataFrame:
+) -> pl.DataFrame:
     """Load a GFF3 file into a pandas DataFrame, optionally filtering by a query string.
 
     Args:
@@ -130,7 +93,7 @@ def load_gff3(
         return_polars (bool): If True, returns a Polars DataFrame instead of pandas
 
     Returns:
-        pd.DataFrame: DataFrame containing the filtered GFF3 data.
+        DataFrame: DataFrame containing the filtered GFF3 data.
 
     """
     # Use lazy reading for better performance
@@ -154,62 +117,26 @@ def load_gff3(
             filter_expr = _parse_query_to_polars(query_string)
             lf = lf.filter(filter_expr)
         except ValueError:
-            # Fallback to pandas query for unsupported patterns
-            if return_polars:
-                raise ValueError(
-                    "query_string contains unsupported patterns for polars. "
-                    "Please provide a query_expr instead."
-                )
-            df = lf.collect()
-            return (
-                df.to_pandas()
-                .query(query_string)
-                .sort_values(
-                    by=["start", "end", "attributes"],
-                    ascending=[True, False, False],
-                    ignore_index=True,
-                )
+            raise ValueError(
+                "query_string contains unsupported patterns. "
+                "Please provide a valid string instead."
             )
 
     df = lf.sort(["start", "end", "attributes"], descending=[False, True, True]).collect()
-
-    if return_polars:
-        return df
-
-    return df.to_pandas()
-
-
-@overload
-def filter_orfs(
-    gff3_df: pd.DataFrame | pl.DataFrame,
-    orfs_strings: list[str] = ["Name=ORF", "Name=orf"],
-    *,
-    extended: bool = False,
-    return_polars: Literal[False] = False,
-) -> pd.DataFrame: ...
-
-
-@overload
-def filter_orfs(
-    gff3_df: pd.DataFrame | pl.DataFrame,
-    orfs_strings: list[str] = ["Name=ORF", "Name=orf"],
-    *,
-    extended: bool = False,
-    return_polars: Literal[True],
-) -> pl.DataFrame: ...
+    return df
 
 
 def filter_orfs(
-    gff3_df: pd.DataFrame | pl.DataFrame,
+    gff3_df: pl.DataFrame,
     orfs_strings: list[str] = ["Name=ORF", "Name=orf"],
     *,
     extended: bool = False,
     return_polars: bool = False,
-) -> pd.DataFrame | pl.DataFrame:
+) -> pl.DataFrame:
     """Filter out ORFs from a GFF3 DataFrame.
 
     Args:
-        gff3_df: DataFrame containing GFF3 data (pandas or polars).
+        gff3_df: DataFrame containing GFF3 data.
         orfs_strings (list): List of strings to identify ORFs.
             Defaults to ['Name=ORF', 'Name=orf'].
         extended (bool): If True, adds more strings to filter out ORFs.
@@ -219,23 +146,14 @@ def filter_orfs(
             Defaults to False.
 
     Returns:
-        DataFrame with ORFs removed (pandas or polars based on return_polars flag).
+        DataFrame with ORFs removed.
 
     """
     if extended:
         orfs_strings.extend(["gene=ORF", "gene=orf", "gene=Orf", "Name=Orf"])
 
-    if not isinstance(gff3_df, pl.DataFrame):
-        df = pl.from_pandas(gff3_df)
-    else:
-        df = gff3_df
-
-    df = df.filter(~pl.col("attributes").str.contains("|".join(orfs_strings)))
-
-    if return_polars:
-        return df
-    else:
-        return df.to_pandas()
+    gff3_df = gff3_df.filter(~pl.col("attributes").str.contains("|".join(orfs_strings)))
+    return gff3_df
 
 
 # will be pre-compiled by the PathBuilder class
@@ -394,7 +312,7 @@ class PathBuilder:
             print(path)  # Outputs: /custom/path/NC_123456.1_special.gff
 
         """
-        self._build_method = types.MethodType(builder_func, self)
+        self._build_method = MethodType(builder_func, self)
 
         if help_text is None:
             help_text = getattr(builder_func, "__name__", "anonymous_function")
@@ -409,7 +327,7 @@ class PathBuilder:
 
 def check_files(
     log: log_setup.GDTLogger,
-    df: pd.DataFrame | pl.DataFrame,
+    df: pl.DataFrame,
     file_builder: PathBuilder,
     an_column: str = "AN",
     *,

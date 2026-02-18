@@ -175,7 +175,6 @@ wheels = [
 name = "tigre"
 source = { editable = "." }
 dependencies = [
-    { name = "pandas" },
     { name = "polars" },
 ]
 
@@ -197,7 +196,6 @@ requires-dist = [
     { name = "biopython", marker = "extra == 'bio'", specifier = ">=1.80" },
     { name = "gdt", marker = "extra == 'all'", specifier = ">=1.1.3" },
     { name = "gdt", marker = "extra == 'gdt'", specifier = ">=1.1.3" },
-    { name = "pandas", specifier = ">=1.5.3,<3.0.0" },
     { name = "polars", specifier = ">=1.0.0" },
 ]
 provides-extras = ["all", "bio", "gdt"]
