@@ -123,7 +123,7 @@ def load_gff3(
                 "Please provide a valid string instead."
             )
 
-    df = lf.sort(["start", "end", "attributes"], descending=[False, True, True]).collect()
+    df = lf.sort(["start", "end"], descending=[False, True], maintain_order=True).collect()
     return df
 
 
