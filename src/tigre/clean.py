@@ -2,6 +2,7 @@
 """Module to solve overlaps in GFF3 files."""
 
 import concurrent.futures as cf
+import re
 import traceback
 from pathlib import Path
 from typing import Callable, TypeAlias
@@ -30,6 +31,22 @@ _RS_source_left = r"source_left=([^;]+);"
 
 _RS_name_right = r"name_right=([^;]+);"
 _RS_source_right = r"source_right=([^;]+);"
+
+# backwards compatibility
+_RE_name = re.compile(_RS_name)
+_RE_source = re.compile(_RS_source)
+
+_RE_name_up = re.compile(_RS_name_up)
+_RE_source_up = re.compile(_RS_source_up)
+
+_RE_name_dw = re.compile(_RS_name_dw)
+_RE_source_dw = re.compile(_RS_source_dw)
+
+_RE_name_left = re.compile(_RS_name_left)
+_RE_source_left = re.compile(_RS_source_left)
+
+_RE_name_right = re.compile(_RS_name_right)
+_RE_source_right = re.compile(_RS_source_right)
 
 
 def adjust_coords(

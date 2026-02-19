@@ -36,6 +36,7 @@ QS_GENE_RRNA_REGION = "type in ('gene', 'rRNA', 'region')"
 QS_GENE_TRNA_RRNA_REGION = "type in ('gene', 'tRNA', 'rRNA', 'region')"
 
 _RS_ID = r"ID=([^;]+)"
+_RE__ID = re.compile(_RS_ID)
 _RE_region_taxon = re.compile(r"taxon:([^;,]+)")
 
 
