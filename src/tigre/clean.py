@@ -372,11 +372,12 @@ def clean_an(
             query_expr=query_expr,
             return_polars=True,
         )
-        if not keep_orfs:
-            df = gff3_utils.filter_orfs(df, extended=ext_filter, return_polars=True)
 
         region_df = df.head(1)
         df = df.slice(1)
+
+        if not keep_orfs:
+            df = gff3_utils.filter_orfs(df, extended=ext_filter, return_polars=True)
 
         an = region_df.item(0, "seqid")
         region_end = region_df.item(0, "end")
