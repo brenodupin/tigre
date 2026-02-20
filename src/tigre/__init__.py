@@ -12,7 +12,7 @@ from .clean import *
 from .clean_gdt import *
 from .cli import *
 from .combine import *
+from .extract import *
 from .getfasta import *
 from .gff3_utils import *
-from .igr import *
 from .log_setup import *

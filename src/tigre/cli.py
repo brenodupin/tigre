@@ -15,10 +15,10 @@ from . import (
     clean,
     clean_gdt,
     combine,
+    extract,
     genes,
     getfasta,
     gff3_utils,
-    igr,
     log_setup,
 )
 
@@ -329,7 +329,7 @@ def extract_command(
         ensure_exists(log, args.gff_in, "GFF3 input")
         ensure_overwrite(log, args.gff_out, "GFF3 output", args.overwrite)
 
-        result = igr.extract_intergenic_regions(
+        result = extract.extract_intergenic_regions(
             log.spawn_buffer(),
             args.gff_in,
             args.gff_out,
@@ -342,7 +342,7 @@ def extract_command(
         args.tsv = Path(args.tsv).resolve()
         ensure_exists(log, args.tsv, "TSV file")
 
-        igr.extract_multiple(
+        extract.extract_multiple(
             log,
             args.tsv,
             _workers_count(args.workers),
