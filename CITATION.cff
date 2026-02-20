@@ -1,0 +1,53 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: TIGRE - Tool for InterGenic Region Extraction
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - family-names: Dupin
+    given-names: Breno Cesar
+    orcid: 'https://orcid.org/0009-0002-1296-7991'
+    email: bdupin@uwo.ca
+  - family-names: Sanita Lima
+    given-names: Matheus
+    orcid: 'https://orcid.org/0000-0002-4050-4022'
+    email: msanital@uwo.ca
+  - given-names: Alexandre
+    family-names: Rossi Paschoal
+    orcid: 'https://orcid.org/0000-0002-8887-0582'
+    email: Alexandre.Paschoal@rfi.ac.uk
+  - family-names: Smith
+    given-names: David
+    orcid: 'https://orcid.org/0000-0001-9560-5210'
+    email: dsmit242@uwo.ca
+identifiers:
+  - type: doi
+    value: 10.1016/j.xpro.2025.104270
+    description: >-
+      Protocol for extracting intergenic regions from
+      annotated genomes using TIGRE
+repository-code: 'https://github.com/brenodupin/tigre'
+abstract: >-
+  Here, we present a protocol for extracting intergenic
+  regions from annotated genomes using TIGRE (Tool for
+  Intergenic Region Extraction). This protocol describes
+  steps for installing and running TIGRE locally. Via TIGRE,
+  the user can prepare the input data (“clean” command),
+  retrieve the intergenic sequences (“extract” command),
+  obtain the respective intergenic nucleotide sequences
+  (“getfasta” command), and merge different GFF3 files
+  (“combine” command). TIGRE capabilities are demonstrated
+  on the retrieval of intergenic sequences from 1,207 land
+  plant mitochondrial genomes.
+keywords:
+  - bioinformatics
+  - intergenic region
+  - python
+  - cli
+license: MIT
+version: 1.0.3
+date-released: '2025-10-29'
