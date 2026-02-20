@@ -2,6 +2,7 @@
 """Module to extract sequences from GFF3 files using Biopython."""
 
 import concurrent.futures as cf
+import traceback
 from pathlib import Path
 
 import polars as pl
@@ -98,7 +99,8 @@ def getfasta_single(
         return True, seqid, log.get_records()
     except Exception as e:
         an_error = seqid if "seqid" in locals() else gff_in.name
-        log.error(f"Error in biopython_getfasta {an_error}: {e}")
+        error_msg = traceback.format_exc()
+        log.error(f"Error in biopython_getfasta {an_error}: {e} | {error_msg}")
         return False, an_error, log.get_records()
 
 
