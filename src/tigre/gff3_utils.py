@@ -66,6 +66,10 @@ def _parse_query_to_polars(query_string: str) -> pl.Expr:
     raise ValueError(f"Query string format not supported: {query_string}")
 
 
+def _empty_df(columns: tuple[str, ...]) -> pl.DataFrame:
+    return pl.DataFrame(schema={col: pl.Utf8 for col in columns})
+
+
 def load_gff3(
     filename: str | Path,
     sep: str = "\t",
@@ -98,14 +102,17 @@ def load_gff3(
 
     """
     # Use lazy reading for better performance
-    lf = pl.scan_csv(
-        filename,
-        separator=sep,
-        comment_prefix=comment,
-        has_header=header is not None,
-        new_columns=list(names) if header is None else None,
-        quote_char=None,
-    )
+    try:
+        lf = pl.scan_csv(
+            filename,
+            separator=sep,
+            comment_prefix=comment,
+            has_header=header is not None,
+            new_columns=list(names) if header is None else None,
+            quote_char=None,
+        )
+    except pl.exceptions.NoDataError:
+        return _empty_df(usecols if usecols else names)
 
     if usecols:
         lf = lf.select(usecols)
@@ -123,8 +130,12 @@ def load_gff3(
                 "Please provide a valid string instead."
             )
 
-    df = lf.sort(["start", "end"], descending=[False, True], maintain_order=True).collect()
-    return df
+    df = lf.sort(["start", "end"], descending=[False, True], maintain_order=True)
+
+    try:
+        return df.collect()
+    except pl.exceptions.NoDataError:
+        return _empty_df(usecols if usecols else names)
 
 
 def filter_orfs(
