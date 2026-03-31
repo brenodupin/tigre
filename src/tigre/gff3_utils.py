@@ -220,7 +220,7 @@ class PathBuilder:
             raise ValueError(
                 "No build method set. Use one of the 'use_*_builder' methods first."
             )
-        return self._build_method(an)
+        return self._build_method(str(an))
 
     def use_std_builder(
         self,
