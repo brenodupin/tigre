@@ -55,7 +55,7 @@ In `clean` command, TIGRE optionally supports the use of a [GDT](https://github.
 
 **Dependencies:**
 - [Python](https://www.python.org/) `(>=3.12)`
-- [pandas](https://pandas.pydata.org/) `(>=1.5.3,<3.0.0)`
+- [polars](https://pola.rs/) `(>=1.20.0,<2.0.0)`
 
 **Optional Dependencies:**
 - [biopython](https://biopython.org) `(>=1.80)`
@@ -198,7 +198,7 @@ The `clean` command processes GFF3 files by retaining features that match the `-
 
 **Options:**
 - `--gdict PATH`: GDT .gdict file for standardizing gene names.
-- `--query-string STR`: pandas query string for feature filtering (default: `"type in ('gene', 'tRNA', 'rRNA', 'region')"`).
+- `--query-string STR`: pandas-style query string for feature filtering, parsed internally into a Polars expression. Currently supports `column in (val1, val2, ...)` syntax (default: `"type in ('gene', 'tRNA', 'rRNA', 'region')"`).
 - `--keep-orfs`: Keep ORF sequences in output.
 - `--extended-filtering`: Enable extended filtering to more aggressively remove ORFs and their related features. This may remove more features than intended in some cases. Default: False.
 - `--overwrite`: Overwrite existing output files. By default, TIGRE will not even execute if one of the output files already exists, to prevent accidental overwrites.
