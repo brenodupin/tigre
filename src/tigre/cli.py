@@ -928,7 +928,7 @@ def cli_entrypoint() -> int:
     extract_parser(subs, global_args)
     getfasta_parser(subs, global_args)
     combine_parser(subs, global_args)
-    gene_parser(subs, global_args)
+    # gene_parser(subs, global_args)
 
     args = main.parse_args()
 
@@ -968,8 +968,8 @@ def cli_entrypoint() -> int:
         elif args.cmd == "combine":
             combine_command(args, log)
 
-        elif args.cmd == "gene":
-            gene_command(args, log)
+        # elif args.cmd == "gene":
+        #    gene_command(args, log)
 
     except KeyboardInterrupt:
         log.warning("Process interrupted by user (Ctrl+C)")
