@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github.com/brenodupin/tigre/releases/download/v0.1.0-alpha/tigre_logo_dark_mode.png">
     <source media="(prefers-color-scheme: light)" srcset="https://github.com/brenodupin/tigre/releases/download/v0.1.0-alpha/tigre_logo_light_mode.png">
-    <img alt="TIGRE Logo" src="https://raw.githubusercontent.com/brenodupin/tigre/main/assets/tigre_logo_light_mode.png" width="50%">
+    <img alt="TIGRE Logo" src="https://raw.githubusercontent.com/brenodupin/tigre/master/img/tigre_logo_light_mode.png" width="50%">
   </picture>
 
 [![Published in STAR Protocols](https://img.shields.io/badge/published%20in-STAR%20Protocols-blue)](https://doi.org/10.1016/j.xpro.2025.104270)
