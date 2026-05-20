@@ -2,16 +2,17 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://github.com/brenodupin/tigre/releases/download/v0.1.0-alpha/tigre_logo_dark_mode.png">
     <source media="(prefers-color-scheme: light)" srcset="https://github.com/brenodupin/tigre/releases/download/v0.1.0-alpha/tigre_logo_light_mode.png">
-    <img src="https://github.com/brenodupin/tigre/releases/download/v0.1.0-alpha/tigre_logo_light_mode.png" width="50%" alt="TIGRE Logo">
+    <img alt="TIGRE Logo" src="https://raw.githubusercontent.com/brenodupin/tigre/main/assets/tigre_logo_light_mode.png" width="50%">
   </picture>
 
 [![Published in STAR Protocols](https://img.shields.io/badge/published%20in-STAR%20Protocols-blue)](https://doi.org/10.1016/j.xpro.2025.104270)
 [![License](https://img.shields.io/badge/license-MIT-purple)](https://github.com/brenodupin/gdt/blob/master/LICENSE)
-![Build Status](https://img.shields.io/badge/tests-in_development-yellow)
+![PyPI - Version](https://img.shields.io/pypi/v/tigre?label=pypi%20version)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.17177553-1682D4)](https://doi.org/10.5281/zenodo.17177553)
+
 [![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Linting: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![DOI](https://zenodo.org/badge/1013921186.svg)](https://zenodo.org/badge/latestdoi/1013921186)
 </div>
 
 # TIGRE - Tool for InterGenic Region Extraction
