@@ -95,7 +95,8 @@ def clean_multiple_gdt(
 
     try:
         query_expr = gff3_utils._parse_query_to_polars(query_string)
-        log.info(f"Using query expression: {query_expr}")
+        with pl.Config(fmt_table_cell_list_len=-1):
+            log.info(f"Using query expression: {query_expr}")
     except Exception as e:
         log.error(f"Error parsing query string '{query_string}': {e}")
         raise
