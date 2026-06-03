@@ -14,7 +14,7 @@ from . import gff3_utils, log_setup
 species_url = "https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id="
 
 HEADER_BASE: str = (
-    "##gff-version 3\n" "#!gff-spec-version 1.26\n" "#!processor TIGRE clean.py\n"
+    "##gff-version 3\n" "#!gff-spec-version 1.26\n" "#!processor TIGRE {file_name}\n"
 )
 
 _RS_name = r"name=([^;]+);"
@@ -180,11 +180,16 @@ def create_header(
     an: str,
     attributes: str,
     end: int,
+    *,
+    file_name: str = "clean.py",
 ) -> str:
     """Create a GFF3 header with the given attributes."""
     taxon_match = gff3_utils._RE_region_taxon.search(attributes)
     species = species_url + taxon_match.group(1) if taxon_match else "taxon_not_found"
-    return HEADER_BASE + f"##sequence-region {an} 1 {end}\n##species {species}\n"
+    return (
+        HEADER_BASE.format(file_name=file_name)
+        + f"##sequence-region {an} 1 {end}\n##species {species}\n"
+    )
 
 
 def overlap_solver(
