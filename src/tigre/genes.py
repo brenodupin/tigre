@@ -2,7 +2,7 @@
 """Module to solve overlaps in GFF3 files."""
 
 import concurrent.futures as cf
-import tempfile
+import traceback
 from functools import partial
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal
@@ -71,73 +71,108 @@ def pre_filter_gff(
     log: log_setup.TempLogger,
     gff_in: Path,
     gff_out: Path,
-    keep_type: Literal["gene", "trna", "rrna"],
+    keep_type: str,
     clean_names_func: clean._NamesType,
     query_expr: "pl.Expr",
     keep_orfs: bool,
     ext_filter: bool = False,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Pre-filter GFF3 file to keep only relevant features for overlap cleaning."""
-    log.debug(f"[{gff_in.name}] -- Start --")
-    df = gff3_utils.load_gff3(
-        gff_in,
-        usecols=gff3_utils.GFF3_COLUMNS,
-        query_expr=query_expr,
-        return_polars=True,
-    )
-    # save first row of df (polars) as region line, then remove it from the df
-    an = df.item(0, "seqid")
-    header = clean.create_header(an, df.item(0, "attributes"), df.item(0, "end"))
-
-    region_df = df.head(1)
-    df = df.slice(1)
-
-    df = df.with_columns(
-        pl.col("attributes").str.extract(gff3_utils._RS_ID, group_index=1).alias("gene_id")
-    )
-    gene_ids = df["gene_id"].unique().to_list()
-
-    log.trace(f"Extracted {len(gene_ids)} unique genes. {gene_ids}")
-    results, log = clean_names_func(gene_ids, log)
-    log.trace(f"Received gene labels for {len(results)} genes. {results}")
-    results = [r.replace("MIT-", "").replace("PLT-", "") for r in results]
-    log.trace(f"Cleaned gene labels: {results}")
-
-    results_dict = dict(zip(gene_ids, results))
-    df = df.with_columns(pl.col("gene_id").replace_strict(results_dict).alias("gene_label"))
-
-    if keep_type == "trna":
-        df = df.filter(pl.col("gene_label").is_in(trna_labels))
-
-    elif keep_type == "rrna":
-        df = df.filter(pl.col("gene_label").is_in(rrna_labels))
-
-    elif keep_type == "gene":
-        # for gene keep, remove rows that are in the trna_labels or rrna_labels sets
-        set_to_remove = trna_labels.union(rrna_labels)
-        log.trace(f"Filtering out features with labels in {set_to_remove}")
-        df = df.filter(~pl.col("gene_label").is_in(set_to_remove))
-
-    # write df to a tmpfile and call clean_an with the tmpfile as input
-    df = df.drop(["gene_label", "gene_id"])
-    df = pl.concat([region_df, df])
-
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".gff3") as tmp_gff:
-        tmp_path = Path(tmp_gff.name).resolve()
-        log.trace(f"Writing pre-filtered GFF3 to temporary file: {tmp_path}")
-        with open(tmp_gff.name, "w") as f:
-            f.write("".join(header) + "\n")
-            df.write_csv(f, separator="\t", include_header=False)
-
-        return clean.clean_an(
-            log,
-            tmp_path,
-            gff_out,
-            clean_names_func,
-            query_expr,
-            keep_orfs,
-            ext_filter,
+    try:
+        log.debug(f"[{gff_in.name}] -- Start --")
+        df = gff3_utils.load_gff3(
+            gff_in,
+            usecols=gff3_utils.GFF3_COLUMNS,
+            query_expr=query_expr,
+            return_polars=True,
         )
+        if not keep_orfs:
+            df = gff3_utils.filter_orfs(df, extended=ext_filter)
+
+        # We expect the first row to be the region feature.
+        an, region_att, region_end = (
+            df.item(0, "seqid"),
+            df.item(0, "attributes"),
+            df.item(0, "end"),
+        )
+        df = df.filter(pl.col("type") != "region")
+
+        header = clean.create_header(an, region_att, region_end, file_name="genes.py")
+
+        df = df.with_columns(
+            pl.col("attributes")
+            .str.extract(gff3_utils._RS_ID, group_index=1)
+            .alias("gene_id")
+        )
+        gene_ids = df["gene_id"].unique().to_list()
+
+        log.trace(f"Extracted {len(gene_ids)} unique genes. {gene_ids}")
+        results, log = clean_names_func(gene_ids, log)
+        log.trace(f"Received gene labels for {len(results)} genes. {results}")
+
+        results_dict = dict(zip(gene_ids, results))
+        df = df.with_columns(
+            pl.col("gene_id").replace_strict(results_dict).alias("gene_label_raw")
+        )
+        df = df.with_columns(
+            pl.col("gene_label_raw").str.replace_all(r"^MIT-|^PLT-", "").alias("gene_label")
+        )
+        labels = set(df["gene_label"].unique().to_list())
+        log.trace(f"Processed gene labels: {labels}")
+
+        keep_type = "gene trna rrna"
+
+        labels_to_keep = set()
+
+        if "trna" in keep_type:
+            labels_to_keep |= trna_labels
+
+        if "rrna" in keep_type:
+            labels_to_keep |= rrna_labels
+
+        if "gene" in keep_type:
+            # for gene keep, remove rows that are in the trna_labels or rrna_labels sets
+            gene_labels = set(labels) - trna_labels - rrna_labels
+            labels_to_keep |= gene_labels
+
+        df = df.filter(pl.col("gene_label").is_in(labels_to_keep))
+
+        df = df.with_columns(
+            pl.concat_str(
+                ["seqid", "type", "start", "end", "strand", "gene_id"],
+                separator="|",
+            ).alias("_source_fallback"),
+        )
+        df = df.with_columns(
+            pl.Series(
+                [
+                    f"ID={seqid}_{ftype}_{i};name_up={name};source_up={source};name_dw={name};source_dw={source};"
+                    for i, (seqid, ftype, name, source) in enumerate(
+                        zip(
+                            df["seqid"],
+                            df["type"],
+                            df["gene_label_raw"],
+                            df["_source_fallback"],
+                        ),
+                        start=1,
+                    )
+                ]
+            ).alias("attributes")
+        )
+        df = df.drop(["gene_id", "gene_label", "gene_label_raw", "_source_fallback"])
+
+        # add header to the file
+        with open(gff_out, "w", encoding="utf-8") as file_handler:
+            file_handler.write(header)
+            df.write_csv(file_handler, separator="\t", include_header=False)
+
+        return True, an, log.get_records()
+
+    except Exception:
+        an_error: str = an if "an" in locals() else gff_in.name
+        error_msg = traceback.format_exc()
+        log.error(f"Error in {an_error}:\n{error_msg}")
+        return False, an_error, log.get_records()
 
 
 def genes_multiple(
@@ -148,7 +183,7 @@ def genes_multiple(
     gff_in_ext: str = ".gff3",
     gff_in_suffix: str = "",
     gff_out_ext: str = ".gff3",
-    gff_out_suffix: str = "_clean",
+    gff_out_suffix: str = "_genes",
     an_column: str = "AN",
     query_string: str = gff3_utils.QS_GENE_TRNA_RRNA_REGION,
     keep_orfs: bool = False,

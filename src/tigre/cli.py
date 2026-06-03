@@ -658,7 +658,7 @@ def gene_group(parser: _Parser) -> None:
         required=False,
         type=str,
         metavar="STR",
-        default="",
+        default=gff3_utils.QS_GENE_TRNA_RRNA_REGION,
         help=f"pandas query string to filter features in GFF3 file. Default is dependent "
         f"on the value of `--keep-type`: `gene` -> '{gff3_utils.QS_GENE_REGION}', "
         f"`trna` -> '{gff3_utils.QS_GENE_TRNA_REGION}', "
