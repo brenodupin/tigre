@@ -164,7 +164,6 @@ def extract_intergenic_regions(
         return True, seqid, log.get_records()
 
     except Exception as e:
-        print(e)
         an_error = seqid if "seqid" in locals() else gff_in.name
         log.error(f"Error in {an_error}: {e}")
         return False, an_error, log.get_records()
