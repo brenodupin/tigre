@@ -580,6 +580,7 @@ def clean_command(
 
         ensure_exists(log, args.gff_in, "GFF3 input")
         ensure_overwrite(log, args.gff_out, "GFF3 output", args.overwrite)
+        query_expr = gff3_utils._parse_query_to_polars(args.query_string)
 
         name_func = (
             clean.get_names
@@ -592,7 +593,7 @@ def clean_command(
             args.gff_in,
             args.gff_out,
             name_func,
-            args.query_string,
+            query_expr,
             args.keep_orfs,
             args.ext_filter,
         )
