@@ -35,7 +35,7 @@ def extract_intergenic_regions(
     gff_in: Path,
     gff_out: Path,
     add_region: bool = False,
-    feature_type: str = "intergenic_region",
+    feature_type: str = "igr",
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Extract intergenic regions from a GFF3 file and save to a new file.
 
@@ -46,8 +46,8 @@ def extract_intergenic_regions(
         add_region (bool): Whether to add a region line to the output file.
                            Defaults is False.
         feature_type (str): Type of the intergenic region to be used in the output.
-                            Defaults to "intergenic_region". If the feature spans the
-                            genome boundary in circular genomes, it will be appended
+                            Defaults to "igr". If the feature spans the genome
+                            boundary in circular genomes, it will be appended
                             with "_merged".
 
 
@@ -375,7 +375,7 @@ def extract_multiple(
     gff_out_suffix: str = "_intergenic",
     add_region: bool = False,
     overwrite: bool = False,
-    feature_type: str = "intergenic_region",
+    feature_type: str = "igr",
 ) -> None:
     """Extract intergenic regions from multiple GFF3 files listed in a TSV file.
 
@@ -393,9 +393,8 @@ def extract_multiple(
                            Defaults is False.
         overwrite (bool): Whether to overwrite existing output files. Defaults is False.
         feature_type (str): Type of the intergenic region to be used in the output.
-                            Defaults to "intergenic_region". If the feature spans the
-                            genome boundary in circular genomes, it will be appended
-                            with "_merged".
+                            Defaults to "igr". If the feature spans the genome boundary
+                            in circular genomes, it will be appended with "_merged".
 
     """
     gff3_utils._ensure_spawn(log)

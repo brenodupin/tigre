@@ -274,10 +274,10 @@ def extract_group(parser: _Parser) -> None:
         required=False,
         type=str,
         metavar="STR",
-        default="intergenic_region",
+        default="igr",
         help="Feature type name to use for intervening regions in the output GFF3 "
         "file. Features spanning the genome boundary in circular genomes will be "
-        "appended with '_merged'. Default: 'intergenic_region'.",
+        "appended with '_merged'. Default: 'igr'.",
     )
 
 
