@@ -366,12 +366,13 @@ def getfasta_group(parser: _Parser) -> None:
     """Add common arguments for getfasta command."""
     group = parser.add_argument_group("getfasta options")
     group.add_argument(
-        "--bedtools-compatible",
+        "--zero-based",
         required=False,
         action="store_true",
         default=False,
-        help="Adjust FASTA headers to use 0-based indexing for bedtools compatibility. "
-        "Affects headers only, not sequences. Default: False.",
+        help="Append 0-based `start_0`/`end_0` coordinates to FASTA header "
+        "descriptions (the primary start/end fields stay 1-based, matching "
+        "the GFF3). Affects headers only, not sequences. Default: False.",
     )
     group.add_argument(
         "--overwrite",
@@ -453,7 +454,7 @@ def getfasta_command(
             args.gff_in,
             args.fasta_in,
             args.fasta_out,
-            args.bedtools_compatible,
+            args.zero_based,
             args.skip_region,
         )
 
@@ -474,7 +475,7 @@ def getfasta_command(
             args.fasta_out_ext,
             args.fasta_out_suffix,
             args.an_column,
-            args.bedtools_compatible,
+            args.zero_based,
             args.skip_region,
             args.overwrite,
         )

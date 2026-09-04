@@ -20,12 +20,30 @@ except ImportError:
     SeqRecord = None  # type: ignore
 
 
+def _build_description(
+    seqid: str,
+    type_val: str,
+    start: int,
+    end: int,
+    length: int,
+    zero_based: bool,
+) -> str:
+    """Build the space-separated key=value FASTA description string."""
+    description = (
+        f"seqid={seqid} type={type_val} start={start + 1} end={end} length={length}"
+    )
+    if zero_based:
+        description += f" start_0={start} end_0={end}"
+
+    return description
+
+
 def getfasta_single(
     log: log_setup.TempLogger,
     gff_in: Path,
     fasta_in: Path,
     fasta_out: Path,
-    bedtools_compatible: bool = False,
+    zero_based: bool = False,
     skip_region: bool = False,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Extract sequences from a FASTA file using Biopython."""
@@ -36,7 +54,6 @@ def getfasta_single(
             f"fasta_out: {fasta_out.name}"
         )
 
-        idx_fix = 0 if bedtools_compatible else 1
         fasta = SeqIO.read(fasta_in, "fasta").seq  # type: ignore[no-untyped-call]
         records = []
 
@@ -49,6 +66,7 @@ def getfasta_single(
             [
                 pl.col("start").cast(pl.Int64),
                 pl.col("end").cast(pl.Int64),
+                pl.col("attributes").str.extract(gff3_utils._RS_ID, 1).alias("gff_id"),
             ]
         )
 
@@ -57,6 +75,17 @@ def getfasta_single(
 
         if df.is_empty():
             log.warning(f"Empty GFF3 file: {gff_in.name}, creating empty FASTA.")
+            SeqIO.write([], fasta_out, "fasta")
+            return True, gff_in.name, log.get_records()
+
+        if df["gff_id"].is_null().any():
+            log.error(
+                f"A feature in {gff_in.name} lacks the `ID` field, creating empty FASTA."
+            )
+
+            for attrs in df.filter(pl.col("gff_id").is_null())["attributes"]:
+                log.error(f"  att missing ID: {attrs}")
+
             SeqIO.write([], fasta_out, "fasta")
             return True, gff_in.name, log.get_records()
 
@@ -71,26 +100,53 @@ def getfasta_single(
 
         start: int
         end: int
-        type_val: str
+        type_: str
+        gff_id: str
+        view = df_fast.select(["start", "end", "type", "gff_id"])
 
-        for start, end, type_val in df_fast.select(["start", "end", "type"]).iter_rows():
+        for start, end, type_, gff_id in view.iter_rows():
+            seq = fasta[start:end]
+
+            if len(gff_id) > 50:
+                log.warning(f"FASTA id exceeds 50 characters ({len(gff_id)}): {gff_id}")
+
             records.append(
                 SeqRecord(
-                    seq=fasta[start:end],
-                    id=f"{type_val}::{seqid}:{start + idx_fix}-{end}",
-                    description="",
+                    seq=seq,
+                    id=gff_id,
+                    description=_build_description(
+                        seqid,
+                        type_,
+                        start,
+                        end,
+                        len(seq),
+                        zero_based,
+                    ),
                 )
             )
 
         if has_ig_merged:
             start = df.item(-1, "start")
             end = df.item(-1, "end")
-            type_val = df.item(-1, "type")
+            type_ = df.item(-1, "type")
+            gff_id = df.item(-1, "gff_id")
+            seq = fasta[start:] + fasta[: end % seq_len]
+
+            if len(gff_id) > 50:
+                log.warning(f"FASTA id exceeds 50 characters ({len(gff_id)}): {gff_id}")
+
             records.append(
                 SeqRecord(
-                    seq=fasta[start:] + fasta[: end % seq_len],
-                    id=f"{type_val}::{seqid}:{start + idx_fix}-{end}",
-                    description="",
+                    seq=seq,
+                    id=gff_id,
+                    description=_build_description(
+                        seqid,
+                        type_,
+                        start,
+                        end,
+                        len(seq),
+                        zero_based,
+                    ),
                 )
             )
 
@@ -115,7 +171,7 @@ def gefasta_multiple(
     fasta_out_ext: str = ".fasta",
     fasta_out_suffix: str = "_intergenic",
     an_column: str = "AN",
-    bedtools_compatible: bool = False,
+    zero_based: bool = False,
     skip_region: bool = False,
     overwrite: bool = False,
 ) -> None:
@@ -149,7 +205,7 @@ def gefasta_multiple(
                 gff_in_builder.build(an),
                 fasta_in_builder.build(an),
                 fasta_out_builder.build(an),
-                bedtools_compatible,
+                zero_based,
                 skip_region,
             )
             for an in tsv[an_column]
