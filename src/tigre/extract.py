@@ -36,6 +36,7 @@ def extract_intergenic_regions(
     gff_out: Path,
     add_region: bool = False,
     feature_type: str = "igr",
+    include_zero_length: bool = False,
 ) -> tuple[bool, str, list[log_setup._RawMsg]]:
     """Extract intergenic regions from a GFF3 file and save to a new file.
 
@@ -49,6 +50,8 @@ def extract_intergenic_regions(
                             Defaults to "igr". If the feature spans the genome
                             boundary in circular genomes, it will be appended
                             with "_merged".
+        include_zero_length (bool): Whether to include zero-length intergenic regions.
+                                    Defaults is False.
 
 
     """
@@ -104,6 +107,7 @@ def extract_intergenic_regions(
             source,
             circular,
             feature_type,
+            include_zero_length,
         )
 
         # this will alter df! by adding +1 to end and -1 to start
@@ -113,6 +117,7 @@ def extract_intergenic_regions(
             seqid,
             source,
             feature_type,
+            include_zero_length,
         )
 
         if df_ig.is_empty() and not boundary:
@@ -194,6 +199,7 @@ def _solve_boundaries(
     source: str,
     circular: bool,
     feature_type: str,
+    include_zero_length: bool = False,
 ) -> list[dict[str, str | int]]:
     # Legend:
     # [---] feature (gene, trna, rrna)
@@ -202,6 +208,15 @@ def _solve_boundaries(
 
     first_start = df.item(0, "start")  # of a feature
     last_end = df.item(-1, "end")  # of a feature
+
+    # 0 bp junction across the origin: first feature flush with 1, last flush
+    # with region_size, and not two fragments of the same feature
+    zero_at_origin = (
+        include_zero_length
+        and first_start == 1
+        and last_end == region_size
+        and df.item(-1, "source_right") != df.item(0, "source_left")
+    )
     # log.debug(f"First start: {first_start}, Last end: {last_end}")
 
     # ...---][== igr ==]||[== igr ==][---...
@@ -210,7 +225,7 @@ def _solve_boundaries(
     # region, so we create an intergenic region from first_start to
     # last_end. This only happens if the region is circular, otherwise
     # we skip the merge and let the other checks handle the intergenic regions.
-    if circular and first_start > 1 and last_end < region_size:
+    if circular and (zero_at_origin or (first_start > 1 and last_end < region_size)):
         return [
             {
                 "seqid": seqid,
@@ -280,6 +295,7 @@ def _create_intergenic(
     seqid: str,
     source: str,
     feature_type: str,
+    include_zero_length: bool = False,
 ) -> pl.DataFrame:
 
     df = df.with_columns(
@@ -290,7 +306,8 @@ def _create_intergenic(
     )
 
     shifted = df.select(["end", "name_right", "source_right"]).shift(1)
-    valid_gaps = shifted["end"] <= df["start"]
+    slack = 1 if include_zero_length else 0
+    valid_gaps = shifted["end"] <= df["start"] + slack
 
     if not valid_gaps.any():
         return pl.DataFrame()
@@ -376,6 +393,7 @@ def extract_multiple(
     add_region: bool = False,
     overwrite: bool = False,
     feature_type: str = "igr",
+    include_zero_length: bool = False,
 ) -> None:
     """Extract intergenic regions from multiple GFF3 files listed in a TSV file.
 
@@ -395,6 +413,8 @@ def extract_multiple(
         feature_type (str): Type of the intergenic region to be used in the output.
                             Defaults to "igr". If the feature spans the genome boundary
                             in circular genomes, it will be appended with "_merged".
+        include_zero_length (bool): Whether to include zero-length intergenic regions.
+                                    Defaults is False.
 
     """
     gff3_utils._ensure_spawn(log)
@@ -434,6 +454,7 @@ def extract_multiple(
                 gff_out_builder.build(an),
                 add_region,
                 feature_type,
+                include_zero_length,
             )
             for an in tsv[an_column]
         ]

@@ -285,6 +285,14 @@ def extract_group(parser: _Parser) -> None:
         "file. Features spanning the genome boundary in circular genomes will be "
         "appended with '_merged'. Default: 'igr'.",
     )
+    group.add_argument(
+        "--include-zero-length",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Include zero-length intergenic regions in the output GFF3 file. "
+        "Default: False.",
+    )
 
 
 def extract_parser(
@@ -341,6 +349,7 @@ def extract_command(
             args.gff_out,
             args.add_region,
             args.feature_type,
+            args.include_zero_length,
         )
         handle_single_result(log, result, "Error extracting intergenic regions single")
 
@@ -360,6 +369,7 @@ def extract_command(
             args.add_region,
             args.overwrite,
             args.feature_type,
+            args.include_zero_length,
         )
 
 
