@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """CLI Entry Point for tigre - Tool for InterGenic Region Extraction."""
 
-
 import argparse
 import os
 import sys
@@ -247,6 +246,13 @@ def args_log(parser: _Parser) -> None:
         action="store_true",
         default=False,
         help="Suppress console output.",
+    )
+    group.add_argument(
+        "--no-banner",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Suppress the ASCII banner in output.",
     )
 
 
@@ -940,7 +946,7 @@ def cli_entrypoint() -> int:
             "Please choose one or neither."
         )
 
-    if not args.quiet:
+    if not (args.quiet or args.no_banner):
         print(BANNER)
 
     log = log_setup.setup_logger(
