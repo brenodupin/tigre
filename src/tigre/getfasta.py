@@ -76,7 +76,7 @@ def getfasta_single(
         n_rows = df.height
         df = df.filter(pl.col("end") >= pl.col("start"))
         if (n_zero := n_rows - df.height) > 0:
-            log.info(f"Skipped {n_zero} zero-length region(s) in {gff_in.name}")
+            log.trace(f"Skipped {n_zero} zero-length region(s) in {gff_in.name}")
 
         if df.is_empty():
             log.warning(f"Empty GFF3 file: {gff_in.name}, creating empty FASTA.")
